@@ -1,0 +1,91 @@
+Open Source Licenses and Attributions
+=====================================
+
+This website and its backend use several open source libraries. Each library
+retains its own license and copyright notice.
+
+------------------------------------------------------------
+LibreOffice
+License: Mozilla Public License 2.0
+Website: https://www.libreoffice.org/
+
+------------------------------------------------------------
+Ghostscript
+License: GNU Affero General Public License (AGPL)
+Website: https://www.ghostscript.com/
+
+------------------------------------------------------------
+PDF-Lib.js
+License: MIT License
+Copyright (c) 2018 James Hrisho
+Website: https://pdf-lib.js.org/
+
+------------------------------------------------------------
+pdf2pic
+License: MIT License
+Website: https://github.com/yakovmeister/pdf2pic
+
+------------------------------------------------------------
+pdf-parse
+License: MIT License
+Website: https://github.com/modesty/pdf-parse
+
+------------------------------------------------------------
+adm-zip
+License: MIT License
+Website: https://www.npmjs.com/package/adm-zip
+
+------------------------------------------------------------
+tesseract.js
+License: Apache License 2.0
+Website: https://github.com/naptha/tesseract.js
+
+------------------------------------------------------------
+Express
+License: MIT License
+Website: https://expressjs.com/
+
+------------------------------------------------------------
+Multer
+License: MIT License
+Website: https://github.com/expressjs/multer
+
+------------------------------------------------------------
+fs-extra
+License: MIT License
+Website: https://github.com/jprichardson/node-fs-extra
+
+------------------------------------------------------------
+cors
+License: MIT License
+Website: https://github.com/expressjs/cors
+
+------------------------------------------------------------
+dotenv
+License: BSD-2-Clause License
+Website: https://github.com/motdotla/dotenv
+
+------------------------------------------------------------
+PM2
+License: AGPL-3.0
+Website: https://pm2.keymetrics.io/
+
+------------------------------------------------------------
+NGINX
+License: 2-clause BSD License
+Website: https://nginx.org/
+
+------------------------------------------------------------
+Next.js
+License: MIT License
+Website: https://nextjs.org/
+
+------------------------------------------------------------
+React
+License: MIT License
+Website: https://react.dev/
+
+------------------------------------------------------------
+lucide-react
+License: ISC License
+Website: https://lucide.dev/

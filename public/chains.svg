@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="64"
+  height="64"
+  viewBox="0 0 64 64"
+  fill="none"
+  role="img"
+  aria-label="PDFLinx Chains"
+>
+  <title>PDFLinx Chains</title>
+
+  <defs>
+    <!-- Mask to create interlock effect -->
+    <mask id="chain-mask">
+      <rect width="64" height="64" fill="white" />
+      <rect
+        x="34"
+        y="22"
+        width="18"
+        height="12"
+        rx="6"
+        ry="6"
+        fill="none"
+        stroke="black"
+        stroke-width="6"
+      />
+    </mask>
+  </defs>
+
+  <!-- Right chain - RED -->
+  <rect
+    x="34"
+    y="22"
+    width="18"
+    height="12"
+    rx="6"
+    ry="6"
+    fill="none"
+    stroke="#ef4444"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Left chain - RED -->
+  <rect
+    x="12"
+    y="30"
+    width="18"
+    height="12"
+    rx="6"
+    ry="6"
+    fill="none"
+    stroke="#ef4444"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    mask="url(#chain-mask)"
+  />
+
+  <!-- Middle chain - RED (lighter opacity) -->
+  <rect
+    x="23"
+    y="26"
+    width="18"
+    height="12"
+    rx="6"
+    ry="6"
+    fill="none"
+    stroke="#ef4444"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.45"
+  />
+</svg>
