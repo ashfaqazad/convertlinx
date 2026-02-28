@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Download, FileText, Type, CheckCircle, ChevronDown } from 'lucide-react';
 import Script from 'next/script';
-import '@/styles/TextToPDF.css';
+import '@/styles/TextToPdf.css';
 
 export default function TextToPDF() {
   const [text, setText] = useState('');

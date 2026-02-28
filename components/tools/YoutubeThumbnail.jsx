@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Download, Youtube, Copy, CheckCircle, Zap, ChevronDown } from 'lucide-react';
 import Script from 'next/script';
-import '@/styles/YoutubeThumb.css';
+import '@/styles/YouTubeThumb.css';
 
 export default function YouTubeThumbnailDownloader() {
   const [url, setUrl] = useState('');

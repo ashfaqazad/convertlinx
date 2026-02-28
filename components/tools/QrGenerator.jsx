@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
 import { Link, Wifi, MessageCircle, Download, QrCode, ChevronDown } from 'lucide-react';
 import Script from "next/script";
-import '@/styles/QRGenerator.css';
+import '@/styles/QrGenerator.css';
 
 export default function QRGenerator() {
   const [text, setText] = useState('');
