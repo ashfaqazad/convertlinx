@@ -4,251 +4,7 @@ import { useState } from 'react';
 import generatePassword from 'generate-password';
 import { Copy, Shield, Zap, CheckCircle, ChevronDown, RefreshCw } from 'lucide-react';
 import Script from 'next/script';
-
-function PageStyles() {
-  const css = `
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-
-    * { box-sizing: border-box; }
-
-    .pg-page {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #F5F3FF;
-      color: #1a1a2e;
-      min-height: 100vh;
-    }
-
-    .hero-bg {
-      background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 40%, #FAF5FF 100%);
-      position: relative;
-      overflow: hidden;
-    }
-    .hero-blob-1 {
-      position: absolute; width: 480px; height: 480px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
-      top: -160px; right: -80px; pointer-events: none;
-    }
-    .hero-blob-2 {
-      position: absolute; width: 320px; height: 320px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
-      bottom: -80px; left: -60px; pointer-events: none;
-    }
-
-    .tool-card {
-      background: #ffffff;
-      border: 1.5px solid rgba(99,102,241,0.12);
-      box-shadow: 0 4px 6px -1px rgba(99,102,241,0.06), 0 20px 60px -10px rgba(99,102,241,0.1);
-    }
-
-    /* Slider */
-    .length-slider {
-      -webkit-appearance: none;
-      width: 100%;
-      height: 6px;
-      border-radius: 4px;
-      background: #E0DCFF;
-      outline: none;
-      cursor: pointer;
-    }
-    .length-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.4);
-      transition: transform 0.2s;
-    }
-    .length-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
-    .length-slider::-moz-range-thumb {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      cursor: pointer; border: none;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.4);
-    }
-
-    /* Checkbox custom */
-    .pg-checkbox {
-      width: 18px; height: 18px;
-      border: 2px solid #C4B5FD;
-      border-radius: 5px;
-      background: #F8F7FF;
-      cursor: pointer;
-      accent-color: #6366F1;
-      flex-shrink: 0;
-      transition: border-color 0.2s;
-    }
-    .pg-checkbox:checked {
-      background: #6366F1;
-      border-color: #6366F1;
-    }
-
-    /* Checkbox row */
-    .option-row {
-      background: #F8F7FF;
-      border: 1.5px solid #E0DCFF;
-      border-radius: 12px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .option-row:hover {
-      border-color: #A5B4FC;
-      background: #F0EEFF;
-    }
-    .option-row.checked {
-      border-color: rgba(99,102,241,0.3);
-      background: rgba(99,102,241,0.04);
-    }
-
-    /* Password output */
-    .password-output {
-      background: #F8F7FF;
-      border: 1.5px solid #E0DCFF;
-      border-radius: 16px;
-      transition: border-color 0.3s, box-shadow 0.3s;
-    }
-    .password-output.active {
-      border-color: #6366F1;
-      box-shadow: 0 0 0 4px rgba(99,102,241,0.08);
-    }
-
-    /* Generate btn */
-    .generate-btn {
-      background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
-      box-shadow: 0 4px 15px rgba(99,102,241,0.35);
-      transition: all 0.3s ease;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 700;
-    }
-    .generate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(99,102,241,0.45);
-    }
-
-    /* Copy btn */
-    .copy-btn {
-      background: rgba(99,102,241,0.08);
-      border: 1.5px solid rgba(99,102,241,0.2);
-      color: #6366F1;
-      transition: all 0.2s ease;
-      font-weight: 600;
-    }
-    .copy-btn:hover {
-      background: rgba(99,102,241,0.14);
-      border-color: rgba(99,102,241,0.35);
-    }
-    .copy-btn.copied {
-      background: rgba(16,185,129,0.08);
-      border-color: rgba(16,185,129,0.25);
-      color: #10B981;
-    }
-
-    /* Benefit cards */
-    .benefit-card {
-      background: #ffffff;
-      border: 1.5px solid rgba(99,102,241,0.08);
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(99,102,241,0.05);
-    }
-    .benefit-card:hover {
-      border-color: rgba(99,102,241,0.2);
-      box-shadow: 0 8px 24px rgba(99,102,241,0.1);
-      transform: translateY(-3px);
-    }
-
-    .step-card {
-      background: #ffffff;
-      border: 1.5px solid rgba(99,102,241,0.08);
-      box-shadow: 0 2px 8px rgba(99,102,241,0.04);
-    }
-    .step-num {
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      font-weight: 800;
-    }
-
-    .faq-item {
-      background: #ffffff;
-      border: 1.5px solid rgba(99,102,241,0.08);
-      transition: border-color 0.25s, box-shadow 0.25s;
-    }
-    .faq-item:hover {
-      border-color: rgba(99,102,241,0.2);
-      box-shadow: 0 4px 16px rgba(99,102,241,0.08);
-    }
-    .faq-item summary { list-style: none; cursor: pointer; }
-    .faq-item summary::-webkit-details-marker { display: none; }
-
-    .badge-pill {
-      background: rgba(99,102,241,0.08);
-      border: 1px solid rgba(99,102,241,0.2);
-      color: #6366F1;
-      font-weight: 700;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .seo-box {
-      background: #ffffff;
-      border: 1.5px solid rgba(99,102,241,0.08);
-    }
-    .feature-dot { background: linear-gradient(135deg, #6366F1, #8B5CF6); }
-
-    .alt-section { background: #ffffff; }
-    .main-section { background: #F5F3FF; }
-
-    .cta-section {
-      background: linear-gradient(135deg, #6366F1 0%, #7C3AED 50%, #8B5CF6 100%);
-    }
-    .cta-main-btn {
-      background: rgba(255,255,255,0.15);
-      border: 1.5px solid rgba(255,255,255,0.4);
-      backdrop-filter: blur(8px);
-      transition: all 0.3s ease;
-      font-weight: 700;
-    }
-    .cta-main-btn:hover {
-      background: rgba(255,255,255,0.25);
-      transform: translateY(-2px);
-    }
-
-    .mid-divider { border: none; border-top: 1px solid rgba(99,102,241,0.08); }
-    .breadcrumb-link { color: #A5B4FC; transition: color 0.2s; }
-    .breadcrumb-link:hover { color: #6366F1; }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-up { animation: fadeUp 0.5s ease forwards; }
-
-    .grad-text {
-      background: linear-gradient(135deg, #6366F1, #8B5CF6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* Strength bar */
-    .strength-bar-wrap {
-      background: #E0DCFF;
-      border-radius: 4px;
-      height: 5px;
-      overflow: hidden;
-    }
-    .strength-bar {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.4s ease, background 0.4s ease;
-    }
-  `;
-  return <style dangerouslySetInnerHTML={{ __html: css }} />;
-}
+import '@/styles/PasswordGenerator.css';
 
 // Password strength helper
 function getStrength(pwd) {
@@ -259,11 +15,11 @@ function getStrength(pwd) {
   if (/[A-Z]/.test(pwd)) score++;
   if (/[0-9]/.test(pwd)) score++;
   if (/[^A-Za-z0-9]/.test(pwd)) score++;
-  if (score <= 1) return { score: 20, label: 'Weak', color: '#EF4444' };
-  if (score === 2) return { score: 40, label: 'Fair', color: '#F59E0B' };
-  if (score === 3) return { score: 60, label: 'Good', color: '#3B82F6' };
-  if (score === 4) return { score: 80, label: 'Strong', color: '#8B5CF6' };
-  return { score: 100, label: 'Very Strong', color: '#10B981' };
+  if (score <= 1) return { score: 20,  label: 'Weak',       color: '#EF4444' };
+  if (score === 2) return { score: 40,  label: 'Fair',       color: '#F59E0B' };
+  if (score === 3) return { score: 60,  label: 'Good',       color: '#3B82F6' };
+  if (score === 4) return { score: 80,  label: 'Strong',     color: '#8B5CF6' };
+  return             { score: 100, label: 'Very Strong', color: '#10B981' };
 }
 
 export default function PasswordGenerator() {
@@ -276,15 +32,15 @@ export default function PasswordGenerator() {
     excludeSimilar: true,
   });
   const [password, setPassword] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied]     = useState(false);
 
   const generatePass = () => {
     const newPass = generatePassword.generate({
-      length: options.length,
-      numbers: options.numbers,
-      symbols: options.symbols,
-      uppercase: options.uppercase,
-      lowercase: options.lowercase,
+      length:                   options.length,
+      numbers:                  options.numbers,
+      symbols:                  options.symbols,
+      uppercase:                options.uppercase,
+      lowercase:                options.lowercase,
       excludeSimilarCharacters: options.excludeSimilar,
     });
     setPassword(newPass);
@@ -308,8 +64,6 @@ export default function PasswordGenerator() {
 
   return (
     <>
-      <PageStyles />
-
       <Script id="howto-schema-password" type="application/ld+json" strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
@@ -320,8 +74,8 @@ export default function PasswordGenerator() {
             url: "https://convertlyhub.com/password-gen",
             step: [
               { "@type": "HowToStep", name: "Choose Options", text: "Select length, symbols, numbers, uppercase." },
-              { "@type": "HowToStep", name: "Generate", text: "Click generate to get a strong password." },
-              { "@type": "HowToStep", name: "Copy", text: "Copy and use securely in your accounts." }
+              { "@type": "HowToStep", name: "Generate",       text: "Click generate to get a strong password." },
+              { "@type": "HowToStep", name: "Copy",           text: "Copy and use securely in your accounts." }
             ],
             totalTime: "PT20S",
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
@@ -383,10 +137,7 @@ export default function PasswordGenerator() {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   {checkboxOptions.map(({ key, label }) => (
-                    <label
-                      key={key}
-                      className={`option-row ${options[key] ? 'checked' : ''}`}
-                    >
+                    <label key={key} className={`option-row ${options[key] ? 'checked' : ''}`}>
                       <input
                         type="checkbox"
                         checked={options[key]}
@@ -473,9 +224,9 @@ export default function PasswordGenerator() {
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
-                { icon: <Shield className="w-6 h-6" />, color: '#6366F1', bg: 'rgba(99,102,241,0.08)', title: 'Military-Grade Security', desc: 'Random passwords with symbols, numbers, and mixed case — impossible to crack.' },
-                { icon: <Zap className="w-6 h-6" />, color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', title: 'Fully Customizable', desc: 'Choose length (8-50), include/exclude symbols, numbers, and similar characters.' },
-                { icon: <CheckCircle className="w-6 h-6" />, color: '#10B981', bg: 'rgba(16,185,129,0.08)', title: 'Fast, Private & Free', desc: 'Unlimited passwords instantly. No signup, no data stored, completely private.' },
+                { icon: <Shield className="w-6 h-6" />,      color: '#6366F1', bg: 'rgba(99,102,241,0.08)',  title: 'Military-Grade Security', desc: 'Random passwords with symbols, numbers, and mixed case — impossible to crack.' },
+                { icon: <Zap className="w-6 h-6" />,         color: '#F59E0B', bg: 'rgba(245,158,11,0.08)',  title: 'Fully Customizable',      desc: 'Choose length (8-50), include/exclude symbols, numbers, and similar characters.' },
+                { icon: <CheckCircle className="w-6 h-6" />, color: '#10B981', bg: 'rgba(16,185,129,0.08)',  title: 'Fast, Private & Free',    desc: 'Unlimited passwords instantly. No signup, no data stored, completely private.' },
               ].map((b, i) => (
                 <div key={i} className="benefit-card rounded-2xl p-7">
                   <div className="p-3 rounded-xl inline-flex mb-5" style={{ background: b.bg, color: b.color }}>
@@ -500,7 +251,7 @@ export default function PasswordGenerator() {
               {[
                 { num: '1', title: 'Customize Options', desc: 'Set length and choose characters — numbers, symbols, uppercase.' },
                 { num: '2', title: 'Generate Password', desc: 'Click generate to create a strong, random password instantly.' },
-                { num: '3', title: 'Copy & Use', desc: 'Copy the password and use it securely for your accounts.' },
+                { num: '3', title: 'Copy & Use',        desc: 'Copy the password and use it securely for your accounts.' },
               ].map((s, i) => (
                 <div key={i} className="step-card rounded-2xl p-7 text-center">
                   <div className="step-num w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-5 text-lg text-white">
@@ -528,7 +279,6 @@ export default function PasswordGenerator() {
                 Control the length, include symbols and numbers, and exclude confusing characters.
               </p>
             </div>
-
             <div>
               <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>Why Use a Strong Password?</h3>
               <p className="leading-7 text-sm">
@@ -537,7 +287,6 @@ export default function PasswordGenerator() {
                 virtually impossible to guess or brute-force.
               </p>
             </div>
-
             <div>
               <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Who Should Use This?</h3>
               <div className="grid sm:grid-cols-2 gap-3">
@@ -555,7 +304,6 @@ export default function PasswordGenerator() {
                 ))}
               </div>
             </div>
-
             <div className="seo-box rounded-2xl p-6">
               <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Features</h3>
               <div className="grid sm:grid-cols-2 gap-3">
@@ -588,12 +336,12 @@ export default function PasswordGenerator() {
             </h2>
             <div className="space-y-3">
               {[
-                { q: 'Is the password generator free?', a: 'Yes — completely free with unlimited password generation and no hidden charges.' },
-                { q: 'Can I customize the password length?', a: 'Absolutely. Use the slider to create passwords from 8 to 50 characters.' },
-                { q: 'What options can I include?', a: 'Uppercase, lowercase, numbers, and symbols — turn any on or off as needed.' },
-                { q: 'What does "Exclude similar characters" mean?', a: 'It removes look-alike characters like 1, l, I, 0, O — making passwords easier to read.' },
-                { q: 'Are generated passwords stored?', a: 'No. We never store your passwords — they remain completely private to you.' },
-                { q: 'Does it work on mobile?', a: 'Yes — fully optimized for phones, tablets, and desktop computers.' },
+                { q: 'Is the password generator free?',             a: 'Yes — completely free with unlimited password generation and no hidden charges.' },
+                { q: 'Can I customize the password length?',        a: 'Absolutely. Use the slider to create passwords from 8 to 50 characters.' },
+                { q: 'What options can I include?',                 a: 'Uppercase, lowercase, numbers, and symbols — turn any on or off as needed.' },
+                { q: 'What does "Exclude similar characters" mean?',a: 'It removes look-alike characters like 1, l, I, 0, O — making passwords easier to read.' },
+                { q: 'Are generated passwords stored?',             a: 'No. We never store your passwords — they remain completely private to you.' },
+                { q: 'Does it work on mobile?',                     a: 'Yes — fully optimized for phones, tablets, and desktop computers.' },
               ].map((faq, i) => (
                 <details key={i} className="faq-item rounded-xl p-5">
                   <summary className="flex items-center justify-between gap-4">
@@ -630,10 +378,6 @@ export default function PasswordGenerator() {
     </>
   );
 }
-
-
-
-
 
 
 

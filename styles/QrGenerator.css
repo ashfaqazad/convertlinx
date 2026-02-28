@@ -1,0 +1,201 @@
+/* ============================================
+   QR Code Generator — Light Theme CSS
+   styles/QRGenerator.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+.qr-page {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F5F3FF;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.hero-bg {
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 40%, #FAF5FF 100%);
+  position: relative;
+  overflow: hidden;
+}
+.hero-blob-1 {
+  position: absolute; width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 70%);
+  top: -160px; right: -80px; pointer-events: none;
+}
+.hero-blob-2 {
+  position: absolute; width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 70%);
+  bottom: -80px; left: -60px; pointer-events: none;
+}
+
+/* ── TOOL CARD ── */
+.tool-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.12);
+  box-shadow: 0 4px 6px -1px rgba(99,102,241,0.06),
+              0 20px 60px -10px rgba(99,102,241,0.1);
+}
+
+/* ── INPUT ── */
+.qr-input {
+  background: #F8F7FF;
+  border: 1.5px solid #E0DCFF;
+  color: #1a1a2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.qr-input:focus {
+  outline: none;
+  border-color: #6366F1;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+}
+.qr-input::placeholder { color: #A5B4FC; }
+
+/* ── CANVAS WRAP ── */
+.qr-canvas-wrap {
+  background: #ffffff;
+  border: 1.5px solid #E0DCFF;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.qr-canvas-wrap.active {
+  border-color: #6366F1;
+  box-shadow: 0 0 0 5px rgba(99,102,241,0.08),
+              0 8px 32px rgba(99,102,241,0.15);
+}
+
+/* ── PLACEHOLDER ── */
+.qr-placeholder-wrap {
+  border: 2px dashed #D4D0FF;
+  background: #F8F7FF;
+}
+
+/* ── DOWNLOAD BUTTON ── */
+.download-btn {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  box-shadow: 0 4px 15px rgba(99,102,241,0.35),
+              0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+}
+.download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(99,102,241,0.45);
+}
+.download-btn:disabled {
+  background: #D1D5DB;
+  color: rgba(255,255,255,0.7);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── BENEFIT CARDS ── */
+.benefit-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.05);
+}
+.benefit-card:hover {
+  border-color: rgba(99,102,241,0.2);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.1);
+  transform: translateY(-3px);
+}
+
+/* ── STEP CARDS ── */
+.step-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  box-shadow: 0 2px 8px rgba(99,102,241,0.04);
+}
+.step-num {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  font-weight: 800;
+}
+
+/* ── FAQ ── */
+.faq-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.faq-item:hover {
+  border-color: rgba(99,102,241,0.2);
+  box-shadow: 0 4px 16px rgba(99,102,241,0.08);
+}
+.faq-item summary { list-style: none; cursor: pointer; }
+.faq-item summary::-webkit-details-marker { display: none; }
+
+/* ── BADGES ── */
+.badge-pill {
+  background: rgba(99,102,241,0.08);
+  border: 1px solid rgba(99,102,241,0.2);
+  color: #6366F1;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ready-pill {
+  background: rgba(99,102,241,0.06);
+  border: 1px solid rgba(99,102,241,0.15);
+}
+
+/* ── SEO BOX ── */
+.seo-box {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+}
+.feature-dot {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+}
+
+/* ── SECTION BACKGROUNDS ── */
+.alt-section  { background: #ffffff; }
+.main-section { background: #F5F3FF; }
+
+/* ── CTA ── */
+.cta-section {
+  background: linear-gradient(135deg, #6366F1 0%, #7C3AED 50%, #8B5CF6 100%);
+}
+.cta-main-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  font-weight: 700;
+}
+.cta-main-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── MISC ── */
+.mid-divider { border: none; border-top: 1px solid rgba(99,102,241,0.08); }
+.breadcrumb-link { color: #A5B4FC; transition: color 0.2s; }
+.breadcrumb-link:hover { color: #6366F1; }
+
+.grad-text {
+  background: linear-gradient(135deg, #6366F1, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.5s ease forwards; }
+
+@keyframes scalePop {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.scale-pop { animation: scalePop 0.35s ease forwards; }

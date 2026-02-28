@@ -1,0 +1,270 @@
+/* ============================================
+   Text to PDF — Light Theme CSS
+   styles/TextToPDF.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+/* ── BASE ── */
+.tp-page {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F5F3FF;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.tp-hero {
+  background: linear-gradient(135deg, #EFF6FF 0%, #F5F3FF 45%, #EEF2FF 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 64px 24px 52px;
+  text-align: center;
+}
+.tp-blob-1 {
+  position: absolute;
+  width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+  top: -160px; right: -80px; pointer-events: none;
+}
+.tp-blob-2 {
+  position: absolute;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+  bottom: -80px; left: -60px; pointer-events: none;
+}
+
+/* ── BADGE ── */
+.tp-badge {
+  background: rgba(59,130,246,0.08);
+  border: 1px solid rgba(59,130,246,0.2);
+  color: #2563EB;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+/* ── BREADCRUMB ── */
+.tp-breadcrumb-link {
+  color: #A5B4FC;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.tp-breadcrumb-link:hover { color: #2563EB; }
+
+/* ── GRAD TEXT ── */
+.tp-grad-text {
+  background: linear-gradient(135deg, #2563EB, #4F46E5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── TOOL CARD ── */
+.tp-tool-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(59,130,246,0.12);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(59,130,246,0.06),
+              0 20px 60px -10px rgba(59,130,246,0.08);
+}
+
+/* ── TEXTAREA ── */
+.tp-textarea {
+  width: 100%;
+  height: 300px;
+  padding: 18px;
+  font-size: 0.9rem;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F8F9FF;
+  border: 1.5px solid #DBEAFE;
+  border-radius: 14px;
+  resize: vertical;
+  outline: none;
+  color: #1a1a2e;
+  line-height: 1.75;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.tp-textarea:focus {
+  border-color: #3B82F6;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.08);
+}
+.tp-textarea::placeholder { color: #A5B4FC; }
+
+/* ── CHAR COUNT ── */
+.tp-char-count {
+  font-size: 11px;
+  color: #9CA3AF;
+  text-align: right;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+/* ── DOWNLOAD BUTTON ── */
+.tp-dl-btn {
+  background: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.32);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 0.95rem;
+  padding: 15px 36px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+.tp-dl-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(37,99,235,0.42);
+}
+.tp-dl-btn:disabled {
+  background: #D1D5DB;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── TRUST ROW ── */
+.tp-trust-item {
+  font-size: 12px;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tp-trust-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #BFDBFE;
+}
+
+/* ── SECTION BACKGROUNDS ── */
+.tp-section-alt  { background: #ffffff; }
+.tp-section-main { background: #F5F3FF; }
+
+/* ── DIVIDER ── */
+.tp-divider {
+  border: none;
+  border-top: 1px solid rgba(59,130,246,0.08);
+}
+
+/* ── BENEFIT CARDS ── */
+.tp-benefit-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(59,130,246,0.08);
+  border-radius: 18px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.04);
+}
+.tp-benefit-card:hover {
+  border-color: rgba(59,130,246,0.2);
+  box-shadow: 0 8px 24px rgba(59,130,246,0.08);
+  transform: translateY(-3px);
+}
+.tp-benefit-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ── STEP CARDS ── */
+.tp-step-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(59,130,246,0.08);
+  border-radius: 18px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.04);
+}
+.tp-step-num {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2563EB, #4F46E5);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+/* ── SEO BOX ── */
+.tp-seo-box {
+  background: #ffffff;
+  border: 1.5px solid rgba(59,130,246,0.1);
+  border-radius: 18px;
+  padding: 24px;
+}
+.tp-feature-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB, #4F46E5);
+  flex-shrink: 0;
+}
+
+/* ── FAQ ── */
+.tp-faq-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(59,130,246,0.08);
+  border-radius: 14px;
+  padding: 20px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.tp-faq-item:hover {
+  border-color: rgba(59,130,246,0.2);
+  box-shadow: 0 4px 16px rgba(59,130,246,0.07);
+}
+.tp-faq-item summary { list-style: none; cursor: pointer; }
+.tp-faq-item summary::-webkit-details-marker { display: none; }
+
+/* ── CTA ── */
+.tp-cta-section {
+  background: linear-gradient(135deg, #1D4ED8 0%, #3730A3 50%, #4F46E5 100%);
+  padding: 80px 24px;
+  text-align: center;
+}
+.tp-cta-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 14px 36px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+.tp-cta-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes tp-fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tp-fade-up { animation: tp-fadeUp 0.5s ease forwards; }

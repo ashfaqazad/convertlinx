@@ -1,0 +1,328 @@
+/* ============================================
+   YouTube Thumbnail Downloader — Light Theme
+   styles/YoutubeThumb.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+/* ── BASE ── */
+.yt-page {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F5F3FF;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.yt-hero {
+  background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 40%, #FAF5FF 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 64px 24px 52px;
+  text-align: center;
+}
+.yt-blob-1 {
+  position: absolute;
+  width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(220,38,38,0.08) 0%, transparent 70%);
+  top: -160px; right: -80px; pointer-events: none;
+}
+.yt-blob-2 {
+  position: absolute;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(99,102,241,0.07) 0%, transparent 70%);
+  bottom: -80px; left: -60px; pointer-events: none;
+}
+
+/* ── BADGE ── */
+.yt-badge {
+  background: rgba(220,38,38,0.07);
+  border: 1px solid rgba(220,38,38,0.18);
+  color: #DC2626;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+/* ── BREADCRUMB ── */
+.yt-breadcrumb-link {
+  color: #A5B4FC;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.yt-breadcrumb-link:hover { color: #6366F1; }
+
+/* ── GRAD TEXT ── */
+.yt-grad-text {
+  background: linear-gradient(135deg, #DC2626, #DB2777);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── TOOL CARD ── */
+.yt-tool-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.12);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(99,102,241,0.06),
+              0 20px 60px -10px rgba(99,102,241,0.1);
+}
+
+/* ── INPUT ROW ── */
+.yt-input {
+  background: #F8F7FF;
+  border: 1.5px solid #E0DCFF;
+  color: #1a1a2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.yt-input:focus {
+  border-color: #DC2626;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(220,38,38,0.08);
+}
+.yt-input::placeholder { color: #A5B4FC; }
+
+/* ── GET BUTTON ── */
+.yt-get-btn {
+  background: linear-gradient(135deg, #DC2626 0%, #DB2777 100%);
+  box-shadow: 0 4px 15px rgba(220,38,38,0.3);
+  transition: all 0.3s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 0.95rem;
+  padding: 14px 24px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.yt-get-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(220,38,38,0.4);
+}
+.yt-get-btn:disabled {
+  background: #D1D5DB;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── THUMBNAIL CARDS ── */
+.yt-thumb-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.05);
+  transition: all 0.3s ease;
+}
+.yt-thumb-card:hover {
+  border-color: rgba(99,102,241,0.18);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.1);
+  transform: translateY(-2px);
+}
+.yt-thumb-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+/* ── THUMB ACTION BUTTONS ── */
+.yt-dl-btn {
+  background: rgba(16,185,129,0.08);
+  border: 1.5px solid rgba(16,185,129,0.2);
+  color: #059669;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.yt-dl-btn:hover {
+  background: rgba(16,185,129,0.14);
+  border-color: rgba(16,185,129,0.35);
+}
+
+.yt-copy-btn {
+  background: rgba(99,102,241,0.07);
+  border: 1.5px solid rgba(99,102,241,0.18);
+  color: #6366F1;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.yt-copy-btn:hover {
+  background: rgba(99,102,241,0.12);
+  border-color: rgba(99,102,241,0.3);
+}
+.yt-copy-btn.copied {
+  background: rgba(16,185,129,0.07);
+  border-color: rgba(16,185,129,0.2);
+  color: #059669;
+}
+
+/* ── TRUST ROW ── */
+.yt-trust-item {
+  font-size: 12px;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.yt-trust-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #A5B4FC;
+}
+
+/* ── SECTION BACKGROUNDS ── */
+.yt-section-alt  { background: #ffffff; }
+.yt-section-main { background: #F5F3FF; }
+
+/* ── DIVIDER ── */
+.yt-divider {
+  border: none;
+  border-top: 1px solid rgba(99,102,241,0.08);
+}
+
+/* ── BENEFIT CARDS ── */
+.yt-benefit-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  border-radius: 18px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.05);
+}
+.yt-benefit-card:hover {
+  border-color: rgba(99,102,241,0.2);
+  box-shadow: 0 8px 24px rgba(99,102,241,0.1);
+  transform: translateY(-3px);
+}
+.yt-benefit-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ── STEP CARDS ── */
+.yt-step-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  border-radius: 18px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(99,102,241,0.04);
+}
+.yt-step-num {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #DC2626, #DB2777);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+/* ── SEO BOX ── */
+.yt-seo-box {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  border-radius: 18px;
+  padding: 24px;
+}
+.yt-feature-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DC2626, #DB2777);
+  flex-shrink: 0;
+}
+
+/* ── FAQ ── */
+.yt-faq-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(99,102,241,0.08);
+  border-radius: 14px;
+  padding: 20px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.yt-faq-item:hover {
+  border-color: rgba(99,102,241,0.2);
+  box-shadow: 0 4px 16px rgba(99,102,241,0.08);
+}
+.yt-faq-item summary { list-style: none; cursor: pointer; }
+.yt-faq-item summary::-webkit-details-marker { display: none; }
+
+/* ── CTA ── */
+.yt-cta-section {
+  background: linear-gradient(135deg, #DC2626 0%, #9333EA 50%, #DB2777 100%);
+  padding: 80px 24px;
+  text-align: center;
+}
+.yt-cta-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 14px 36px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+.yt-cta-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes yt-fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.yt-fade-up { animation: yt-fadeUp 0.5s ease forwards; }

@@ -18,7 +18,6 @@ export default function Contact() {
     setStatus("Sending your message...");
 
     try {
-      // ✅ Recommended: send to an API route
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -28,7 +27,7 @@ export default function Contact() {
       const data = await res.json();
 
       if (data?.success) {
-        setStatus("Thanks! I got your message — I'll reply soon 😊");
+        setStatus("Thanks! I got your message — I’ll reply soon 😊");
         setName("");
         setEmail("");
         setMessage("");
@@ -58,8 +57,8 @@ export default function Contact() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Got a question, suggestion, bug report, or just wanna say hi?
             <br />
-            I&apos;m the guy behind PDF Linx — drop me a message. I read
-            everything and reply when I can.
+            I&apos;m the builder behind <strong>ConvertlyHub</strong> — drop me a
+            message. I read everything and reply when I can.
           </p>
         </section>
 
@@ -122,9 +121,9 @@ export default function Contact() {
                 {isSubmitting ? "Sending..." : "Send Message"}
               </button>
 
-              {/* ✅ Privacy disclosure line */}
+              {/* Privacy disclosure */}
               <p className="text-xs text-gray-500 text-center">
-                By submitting this form, you agree that PDF Linx may use your
+                By submitting this form, you agree that ConvertlyHub may use your
                 name and email to respond to your request. Please review our{" "}
                 <a
                   href="/privacy-policy"
@@ -158,12 +157,11 @@ export default function Contact() {
               <p>Best way: Just use the form — I check it regularly.</p>
               <p>Or email me directly at:</p>
 
-              {/* ✅ Fix mailto */}
               <a
-                href="mailto:support@pdflinx.com"
+                href="mailto:support@convertlyhub.com"
                 className="font-semibold text-indigo-600 hover:text-indigo-800 transition break-all"
               >
-                support@pdflinx.com
+                support@convertlyhub.com
               </a>
 
               <p className="mt-4">
@@ -173,19 +171,242 @@ export default function Contact() {
 
               <p className="italic text-gray-600 mt-4">
                 Seriously — feedback, ideas, bug reports, even a simple
-                &quot;thanks&quot; — all welcome. Makes my day.
+                &quot;thanks&quot; — all welcome. It genuinely helps.
               </p>
             </div>
           </div>
         </div>
 
         <p className="text-center mt-12 text-gray-500 text-base italic">
-          Made with ❤️ by a fellow PDF hater who just wanted better tools
+          Built with ❤️ to make everyday tools feel simple.
         </p>
       </div>
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+
+// import { useState } from "react";
+// import { Mail, MessageSquare } from "lucide-react";
+
+// export default function Contact() {
+//   const [name, setName] = useState("");
+//   const [email, setEmail] = useState("");
+//   const [message, setMessage] = useState("");
+//   const [status, setStatus] = useState("");
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     if (!name || !email || !message) return;
+
+//     setIsSubmitting(true);
+//     setStatus("Sending your message...");
+
+//     try {
+//       // ✅ Recommended: send to an API route
+//       const res = await fetch("/api/contact", {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ name, email, message }),
+//       });
+
+//       const data = await res.json();
+
+//       if (data?.success) {
+//         setStatus("Thanks! I got your message — I'll reply soon 😊");
+//         setName("");
+//         setEmail("");
+//         setMessage("");
+//       } else {
+//         setStatus("Oops, something went wrong. Try again?");
+//       }
+//     } catch (error) {
+//       setStatus("Couldn't send — maybe check your connection?");
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   const isSuccess =
+//     status.toLowerCase().includes("thanks") ||
+//     status.toLowerCase().includes("reply") ||
+//     status.toLowerCase().includes("got your message");
+
+//   return (
+//     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 py-8 px-4">
+//       <div className="max-w-4xl mx-auto">
+//         {/* Hero Section */}
+//         <section className="text-center mb-8">
+//           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-indigo-900">
+//             Hey, Let&apos;s Talk!
+//           </h1>
+//           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+//             Got a question, suggestion, bug report, or just wanna say hi?
+//             <br />
+//             I&apos;m the guy behind PDF Linx — drop me a message. I read
+//             everything and reply when I can.
+//           </p>
+//         </section>
+
+//         <div className="grid md:grid-cols-2 gap-8">
+//           {/* Contact Form */}
+//           <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
+//             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+//               <MessageSquare className="w-6 h-6 text-indigo-600" />
+//               Send me a message
+//             </h2>
+
+//             <form onSubmit={handleSubmit} className="space-y-4">
+//               <div>
+//                 <label className="block text-gray-700 font-medium mb-1 text-sm">
+//                   Your Name
+//                 </label>
+//                 <input
+//                   type="text"
+//                   value={name}
+//                   onChange={(e) => setName(e.target.value)}
+//                   required
+//                   placeholder="Your Name"
+//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition bg-gray-50"
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-gray-700 font-medium mb-1 text-sm">
+//                   Email
+//                 </label>
+//                 <input
+//                   type="email"
+//                   value={email}
+//                   onChange={(e) => setEmail(e.target.value)}
+//                   required
+//                   placeholder="you@example.com"
+//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition bg-gray-50"
+//                 />
+//               </div>
+
+//               <div>
+//                 <label className="block text-gray-700 font-medium mb-1 text-sm">
+//                   Message
+//                 </label>
+//                 <textarea
+//                   rows={5}
+//                   value={message}
+//                   onChange={(e) => setMessage(e.target.value)}
+//                   required
+//                   placeholder="Hey, I love the tool... or I found a bug... or add this feature?"
+//                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition resize-none bg-gray-50"
+//                 />
+//               </div>
+
+//               <button
+//                 type="submit"
+//                 disabled={isSubmitting}
+//                 className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-md disabled:opacity-70"
+//               >
+//                 {isSubmitting ? "Sending..." : "Send Message"}
+//               </button>
+
+//               {/* ✅ Privacy disclosure line */}
+//               <p className="text-xs text-gray-500 text-center">
+//                 By submitting this form, you agree that PDF Linx may use your
+//                 name and email to respond to your request. Please review our{" "}
+//                 <a
+//                   href="/privacy-policy"
+//                   className="text-indigo-600 hover:underline"
+//                 >
+//                   Privacy Policy
+//                 </a>
+//                 .
+//               </p>
+
+//               {status && (
+//                 <p
+//                   className={`text-center mt-3 font-medium text-sm ${
+//                     isSuccess ? "text-green-600" : "text-red-600"
+//                   }`}
+//                 >
+//                   {status}
+//                 </p>
+//               )}
+//             </form>
+//           </div>
+
+//           {/* Contact Info */}
+//           <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl shadow-lg border border-indigo-100 p-6 md:p-8 flex flex-col justify-center">
+//             <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+//               <Mail className="w-6 h-6 text-indigo-600" />
+//               Other Ways to Reach Me
+//             </h2>
+
+//             <div className="space-y-4 text-gray-700 text-base">
+//               <p>Best way: Just use the form — I check it regularly.</p>
+//               <p>Or email me directly at:</p>
+
+//               {/* ✅ Fix mailto */}
+//               <a
+//                 href="mailto:support@pdflinx.com"
+//                 className="font-semibold text-indigo-600 hover:text-indigo-800 transition break-all"
+//               >
+//                 support@pdflinx.com
+//               </a>
+
+//               <p className="mt-4">
+//                 I&apos;m usually replying on evenings or weekends (building this
+//                 solo in my free time).
+//               </p>
+
+//               <p className="italic text-gray-600 mt-4">
+//                 Seriously — feedback, ideas, bug reports, even a simple
+//                 &quot;thanks&quot; — all welcome. Makes my day.
+//               </p>
+//             </div>
+//           </div>
+//         </div>
+
+//         <p className="text-center mt-12 text-gray-500 text-base italic">
+//           Made with ❤️ by a fellow PDF hater who just wanted better tools
+//         </p>
+//       </div>
+//     </main>
+//   );
+// }
 
 
 

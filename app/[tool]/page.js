@@ -5,11 +5,6 @@ const SITE_URL = "https://pdflinx.com";
 
 // 🔹 Lazy import map (BASE tools only)
 const componentMap = {
-  "pdf-to-word": () => import("@/components/tools/PdfToWord"),
-  "word-to-pdf": () => import("@/components/tools/WordToPdf"),
-  "image-to-pdf": () => import("@/components/tools/ImageToPdf"),
-
-  "excel-pdf": () => import("@/components/tools/ExcelToPdf"),
   "qr-generator": () => import("@/components/tools/QrGenerator"),
   "password-gen": () => import("@/components/tools/PasswordGen"),
   "unit-converter": () => import("@/components/tools/UnitConverter"),
@@ -20,15 +15,6 @@ const componentMap = {
   "heic-to-jpg": () => import("@/components/tools/HeicToJpg"),
   "text-to-pdf": () => import("@/components/tools/TextToPdf"),
   "image-converter": () => import("@/components/tools/ImageConverter"),
-  "pdf-to-jpg": () => import("@/components/tools/PdfToJpg"),
-  "add-watermark": () => import("@/components/tools/AddWatermark"),
-  "ppt-to-pdf": () => import("@/components/tools/PptToPdf"),
-  "protect-pdf": () => import("@/components/tools/ProtectPdf"),
-  "unlock-pdf": () => import("@/components/tools/UnlockPdf"),
-  "rotate-pdf": () => import("@/components/tools/RotatePdf"),
-  "sign-pdf": () => import("@/components/tools/SignPdf"),
-  "ocr-pdf": () => import("@/components/tools/OCRPdf"),
-  "edit-pdf": () => import("@/components/tools/EditPdf"),
   // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
 
 };

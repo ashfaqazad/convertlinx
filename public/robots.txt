@@ -1,56 +1,7 @@
-# ============================
-# Allow all major AI and search crawlers
-# ============================
+# robots.txt for https://pdflinx.com
+# Allow all search engines and AI crawlers
 
-# General access to all crawlers
 User-agent: *
 Allow: /
 
-# --- AI Crawlers ---
-User-agent: ChatGPT-User
-Allow: /
-
-User-agent: GPTBot
-Allow: /
-
-User-agent: ChatGPT-GPTBot
-Allow: /
-
-User-agent: Google-Extended
-Allow: /
-
-User-agent: PerplexityBot
-Allow: /
-
-User-agent: Claude-Web
-Allow: /
-
-User-agent: ClaudeBot
-Allow: /
-
-User-agent: Grok
-Allow: /
-
-User-agent: Grok-Web
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: BingPreview
-Allow: /
-
-# --- Other useful AI and data crawlers ---
-User-agent: CCBot
-Allow: /
-
-User-agent: Applebot
-Allow: /
-
-User-agent: DuckAssistBot
-Allow: /
-
-# ============================
-# Sitemap for SEO indexing
-# ============================
 Sitemap: https://pdflinx.com/sitemap.xml
