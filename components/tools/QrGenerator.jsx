@@ -58,7 +58,7 @@ export default function QRGenerator() {
             "@type": "HowTo",
             name: "How to Create a QR Code Online for Free",
             description: "Generate QR codes for URLs, text, WiFi, vCard in seconds.",
-            url: "https://convertlyhub.com/qr-generator",
+            url: "https://convertlinx.com/qr-generator",
             step: [
               { "@type": "HowToStep", name: "Enter Data", text: "Paste URL, text, or contact details." },
               { "@type": "HowToStep", name: "Preview", text: "QR code generates instantly." },
@@ -67,6 +67,78 @@ export default function QRGenerator() {
             totalTime: "PT30S",
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
           }, null, 2)
+        }}
+      />
+
+      <Script
+        id="breadcrumb-schema-qr"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Home",
+                item: "https://convertlinx.com"
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "QR Code Generator",
+                item: "https://convertlinx.com/qr-generator"
+              }
+            ]
+          })
+        }}
+      />
+
+      <Script
+        id="faq-schema-qr"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Is the QR Code Generator free?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes, the QR Code Generator on Convertlinx is completely free. You can generate unlimited QR codes without sign-up."
+                }
+              },
+              {
+                "@type": "Question",
+                name: "What types of QR codes can I create?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "You can generate QR codes for URLs, text, WiFi passwords, WhatsApp links, email addresses, and contact details."
+                }
+              },
+              {
+                "@type": "Question",
+                name: "Do I need to install anything?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "No installation is required. The QR code generator works directly in your browser."
+                }
+              },
+              {
+                "@type": "Question",
+                name: "Can I use QR codes for printing?",
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: "Yes. The tool generates high-quality PNG QR codes suitable for posters, flyers, packaging, and business cards."
+                }
+              }
+            ]
+          })
         }}
       />
 
@@ -219,7 +291,8 @@ export default function QRGenerator() {
         <hr className="mid-divider" />
         <section className="alt-section py-16 px-6">
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
-            <div>
+
+            {/* <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
                 Free QR Code Generator — ConvertlyHub
               </h2>
@@ -227,7 +300,27 @@ export default function QRGenerator() {
                 The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub QR Code Generator</span> lets
                 you create high-quality QR codes in seconds — no sign-up, no watermarks, no software needed.
               </p>
+            </div> */}
+
+            <div>
+              <h3 className="font-bold text-lg mb-3">Online QR Code Generator Tool</h3>
+
+              <p className="leading-7 text-sm">
+                Our <strong>free QR code generator</strong> allows you to instantly create {" "}
+                <strong>QR codes for URLs, WiFi passwords, WhatsApp links, contact cards, and text</strong>.
+                This browser-based <strong>online QR code maker</strong> works without signup and
+                lets you download <strong>high-resolution QR code PNG files</strong>.
+              </p>
+
+              <p className="leading-7 text-sm mt-3">
+                You can use this <strong>QR code creator</strong> for
+                business cards, restaurant menus, product packaging,
+                marketing flyers, and contactless payments.
+                The generated codes are compatible with
+                <strong>Android, iPhone, and all QR scanner apps</strong>.
+              </p>
             </div>
+
 
             <div>
               <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>What Is a QR Code?</h3>
@@ -274,7 +367,52 @@ export default function QRGenerator() {
                 ))}
               </div>
             </div>
+
+          {/* Related Tools (Tailwind) */}
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+            <p className="text-sm font-semibold text-slate-700 mb-3">
+              You may also find these free tools helpful:
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              <a
+                href="/image-to-text"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Image to Text
+              </a>
+
+              <a
+                href="/image-compressor"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Image Compressor
+              </a>
+
+              <a
+                href="/image-converter"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Image Converter
+              </a>
+
+              <a
+                href="/text-to-pdf"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Text to PDF
+              </a>
+
+              <a
+                href="/youtube-thumbnail"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                YouTube Thumbnail
+              </a>
+            </div>
           </div>
+          </div>
+
         </section>
 
         {/* ── FAQ ── */}
