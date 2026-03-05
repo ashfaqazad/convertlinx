@@ -57,7 +57,7 @@ export default function Contact() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
             Got a question, suggestion, bug report, or just wanna say hi?
             <br />
-            I&apos;m the builder behind <strong>ConvertlyHub</strong> — drop me a
+            I&apos;m the builder behind <strong>ConvertLinx</strong> — drop me a
             message. I read everything and reply when I can.
           </p>
         </section>
@@ -123,7 +123,7 @@ export default function Contact() {
 
               {/* Privacy disclosure */}
               <p className="text-xs text-gray-500 text-center">
-                By submitting this form, you agree that ConvertlyHub may use your
+                By submitting this form, you agree that ConvertLinx may use your
                 name and email to respond to your request. Please review our{" "}
                 <a
                   href="/privacy-policy"
@@ -158,10 +158,10 @@ export default function Contact() {
               <p>Or email me directly at:</p>
 
               <a
-                href="mailto:support@convertlyhub.com"
+                href="mailto:support@convertlinx.com"
                 className="font-semibold text-indigo-600 hover:text-indigo-800 transition break-all"
               >
-                support@convertlyhub.com
+                support@convertlinx.com
               </a>
 
               <p className="mt-4">

@@ -7,14 +7,14 @@ export default function About() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    name: "About ConvertlyHub",
+    name: "About ConvertLinx",
     description:
-      "Learn about ConvertlyHub — a fast, clean collection of free online utility tools built for simplicity and privacy.",
-    url: "https://convertlyhub.com/about",
+      "Learn about ConvertLinx — a fast, clean collection of free online utility tools built for simplicity and privacy.",
+    url: "https://convertlinx.com/about",
     publisher: {
       "@type": "Organization",
-      name: "ConvertlyHub",
-      url: "https://convertlyhub.com",
+      name: "ConvertLinx",
+      url: "https://convertlinx.com",
     },
   };
 
@@ -32,13 +32,13 @@ export default function About() {
         {/* Hero Section */}
         <section className="text-center mb-12 bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-indigo-900">
-            About <strong>ConvertlyHub</strong>
+            About <strong>ConvertLinx</strong>
           </h1>
 
           <div className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed text-left space-y-4">
             
             <p>
-              ConvertlyHub started with a simple frustration.
+              ConvertLinx started with a simple frustration.
             </p>
 
             <p>
@@ -84,7 +84,7 @@ export default function About() {
             </p>
 
             <p>
-              ConvertlyHub exists to do the opposite.
+              ConvertLinx exists to do the opposite.
             </p>
 
             <p>
@@ -175,7 +175,7 @@ export default function About() {
 
             <p className="text-gray-600 italic">
               Have an idea or found something that can be improved?
-              Email <strong>support@convertlyhub.com</strong> — I read everything.
+              Email <strong>support@ConvertLinx.com</strong> — I read everything.
             </p>
 
           </div>
