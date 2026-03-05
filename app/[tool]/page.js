@@ -15,6 +15,10 @@ const componentMap = {
   "heic-to-jpg": () => import("@/components/tools/HeicToJpg"),
   "text-to-pdf": () => import("@/components/tools/TextToPdf"),
   "image-converter": () => import("@/components/tools/ImageConverter"),
+  "image-resizer": () => import("@/components/tools/ImageResizer"),
+  "image-cropper": () => import("@/components/tools/ImageCropper"),
+
+
   // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
 
 };

@@ -45,7 +45,7 @@ export default function QRGenerator() {
     const url = out.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'qrcode-convertlyhub.png';
+    a.download = 'qrcode-convertlinx.png';
     a.click();
   };
 
@@ -242,7 +242,7 @@ export default function QRGenerator() {
         <section className="alt-section py-16 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub?
+              Why Use Convertlinx?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
@@ -411,6 +411,7 @@ export default function QRGenerator() {
               </a>
             </div>
           </div>
+          
           </div>
 
         </section>

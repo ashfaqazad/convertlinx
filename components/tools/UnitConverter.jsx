@@ -17,11 +17,11 @@ export default function UnitConverter() {
   const [result, setResult] = useState(null);
 
   const categories = {
-    Length:      ['m', 'cm', 'mm', 'km', 'in', 'ft', 'yd', 'mile'],
-    Weight:      ['kg', 'g', 'mg', 'lb', 'oz', 't', 'us_ton', 'uk_ton'],
+    Length: ['m', 'cm', 'mm', 'km', 'in', 'ft', 'yd', 'mile'],
+    Weight: ['kg', 'g', 'mg', 'lb', 'oz', 't', 'us_ton', 'uk_ton'],
     Temperature: ['C', 'F', 'K'],
-    Volume:      ['l', 'ml', 'gal', 'cup', 'tbsp', 'tsp', 'fl-oz'],
-    Area:        ['m2', 'cm2', 'km2', 'ft2', 'in2', 'acre'],
+    Volume: ['l', 'ml', 'gal', 'cup', 'tbsp', 'tsp', 'fl-oz'],
+    Area: ['m2', 'cm2', 'km2', 'ft2', 'in2', 'acre'],
   };
 
   const labels = {
@@ -63,14 +63,14 @@ export default function UnitConverter() {
   const handleSwap = () => { setFrom(to); setTo(from); };
 
   const quickLinks = [
-    { label: '1 m → ft',      val: 1,   f: 'm',  t: 'ft'  },
-    { label: '100 kg → lbs',  val: 100, f: 'kg', t: 'lb'  },
-    { label: '25°C → °F',     val: 25,  f: 'C',  t: 'F'   },
-    { label: '500 ml → cup',  val: 500, f: 'ml', t: 'cup' },
-    { label: '1 km → mile',   val: 1,   f: 'km', t: 'mile'},
-    { label: '1 acre → m²',   val: 1,   f: 'acre',t:'m2'  },
-    { label: '1 gal → liter', val: 1,   f: 'gal',t: 'l'   },
-    { label: '1 ft → cm',     val: 1,   f: 'ft', t: 'cm'  },
+    { label: '1 m → ft', val: 1, f: 'm', t: 'ft' },
+    { label: '100 kg → lbs', val: 100, f: 'kg', t: 'lb' },
+    { label: '25°C → °F', val: 25, f: 'C', t: 'F' },
+    { label: '500 ml → cup', val: 500, f: 'ml', t: 'cup' },
+    { label: '1 km → mile', val: 1, f: 'km', t: 'mile' },
+    { label: '1 acre → m²', val: 1, f: 'acre', t: 'm2' },
+    { label: '1 gal → liter', val: 1, f: 'gal', t: 'l' },
+    { label: '1 ft → cm', val: 1, f: 'ft', t: 'cm' },
   ];
 
   return (
@@ -82,7 +82,7 @@ export default function UnitConverter() {
             "@type": "HowTo",
             name: "How to Convert Units Online for Free",
             description: "Convert length, weight, temperature, volume instantly.",
-            url: "https://convertlyhub.com/unit-converter",
+            url: "https://convertlinx.com/unit-converter",
             step: [
               { "@type": "HowToStep", name: "Enter Value", text: "Type the value to convert." },
               { "@type": "HowToStep", name: "Select Units", text: "Choose From and To units." },
@@ -91,6 +91,66 @@ export default function UnitConverter() {
             totalTime: "PT20S",
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
           }, null, 2),
+        }}
+      />
+
+      <Script
+        id="breadcrumb-schema-unit"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://convertlinx.com" },
+              { "@type": "ListItem", position: 2, name: "Unit Converter", item: "https://convertlinx.com/unit-converter" }
+            ]
+          })
+        }}
+      />
+
+      <Script
+        id="faq-schema-unit"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: "Is the Unit Converter free?",
+                acceptedAnswer: { "@type": "Answer", text: "Yes — completely free with unlimited conversions and no hidden charges." }
+              },
+              {
+                "@type": "Question",
+                name: "What units can I convert?",
+                acceptedAnswer: { "@type": "Answer", text: "Length, weight, temperature, volume, and area — all major categories." }
+              },
+              {
+                "@type": "Question",
+                name: "How do I use it?",
+                acceptedAnswer: { "@type": "Answer", text: "Enter a value, select From and To units, and the result appears instantly." }
+              },
+              {
+                "@type": "Question",
+                name: "Does it work in real-time?",
+                acceptedAnswer: { "@type": "Answer", text: "Yes — conversion updates instantly as you change the value or switch units." }
+              },
+              {
+                "@type": "Question",
+                name: "Are my conversions stored?",
+                acceptedAnswer: { "@type": "Answer", text: "No — nothing is stored. It calculates locally for instant results." }
+              },
+              {
+                "@type": "Question",
+                name: "Can I use this on my phone?",
+                acceptedAnswer: { "@type": "Answer", text: "Absolutely — works on phones, tablets, and desktops." }
+              }
+            ]
+          })
         }}
       />
 
@@ -222,13 +282,13 @@ export default function UnitConverter() {
         <section className="uc-section-alt py-16 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-3xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub?
+              Why Use ConvertLinx?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
-                { icon: <Ruler className="w-6 h-6" />,       color: '#6366F1', bg: 'rgba(99,102,241,0.08)',  title: 'All Major Units',   desc: 'Length, weight, temperature, volume, area — everything covered in one place.' },
-                { icon: <Zap className="w-6 h-6" />,         color: '#F59E0B', bg: 'rgba(245,158,11,0.08)',  title: 'Instant Results',   desc: 'Real-time conversion as you type — no button press needed.' },
-                { icon: <CheckCircle className="w-6 h-6" />, color: '#10B981', bg: 'rgba(16,185,129,0.08)',  title: 'Accurate & Free',   desc: 'Professional-grade accuracy. Unlimited conversions, completely free.' },
+                { icon: <Ruler className="w-6 h-6" />, color: '#6366F1', bg: 'rgba(99,102,241,0.08)', title: 'All Major Units', desc: 'Length, weight, temperature, volume, area — everything covered in one place.' },
+                { icon: <Zap className="w-6 h-6" />, color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', title: 'Instant Results', desc: 'Real-time conversion as you type — no button press needed.' },
+                { icon: <CheckCircle className="w-6 h-6" />, color: '#10B981', bg: 'rgba(16,185,129,0.08)', title: 'Accurate & Free', desc: 'Professional-grade accuracy. Unlimited conversions, completely free.' },
               ].map((b, i) => (
                 <div key={i} className="uc-benefit-card">
                   <div className="uc-benefit-icon" style={{ background: b.bg, color: b.color }}>
@@ -251,9 +311,9 @@ export default function UnitConverter() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { num: '1', title: 'Enter Value',   desc: 'Type the number you want to convert.' },
-                { num: '2', title: 'Select Units',  desc: 'Choose From and To units from dropdowns.' },
-                { num: '3', title: 'Get Result',    desc: 'Instant accurate conversion appears right away.' },
+                { num: '1', title: 'Enter Value', desc: 'Type the number you want to convert.' },
+                { num: '2', title: 'Select Units', desc: 'Choose From and To units from dropdowns.' },
+                { num: '3', title: 'Get Result', desc: 'Instant accurate conversion appears right away.' },
               ].map((s, i) => (
                 <div key={i} className="uc-step-card">
                   <div className="uc-step-num">{s.num}</div>
@@ -271,13 +331,26 @@ export default function UnitConverter() {
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free Unit Converter — ConvertlyHub
+                Free Unit Converter — ConvertLinx
               </h2>
+
               <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Unit Converter</span> helps
+              The <strong>Convertlinx Unit Converter</strong> helps you convert units instantly with accurate results.
+              Use this <strong>online unit converter</strong> to switch between
+              <strong>length conversion</strong> (cm to inches, meters to feet),
+              <strong>weight conversion</strong> (kg to lbs, grams to ounces),
+              <strong>temperature conversion</strong> (Celsius to Fahrenheit),
+              and <strong>volume conversion</strong> (liters to gallons).
+
+              This free tool works directly in your browser, updates results in real-time,
+              and is perfect for students, engineers, travelers, and everyday calculations.
+              </p>
+
+              {/* <p className="leading-7 text-sm">
+                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertLinx Unit Converter</span> helps
                 you convert everyday measurements instantly — no formula, no calculator, no signup needed.
                 Just enter a value, choose your units, and get the result right away.
-              </p>
+              </p> */}
             </div>
 
             <div>
@@ -326,6 +399,52 @@ export default function UnitConverter() {
                 ))}
               </div>
             </div>
+
+            {/* Related Tools (Tailwind) */}
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+              <p className="text-sm font-semibold text-slate-700 mb-3">
+                You may also find these free tools helpful:
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {/* <a href="/qr-generator" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  QR Generator
+                </a> */}
+
+                {/* <a href="/password-gen" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Password Generator
+                </a> */}
+
+                <a href="/image-compressor" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Image Compressor
+                </a>
+
+                {/* <a href="/image-to-text" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Image to Text
+                </a> */}
+
+                <a href="/heic-to-jpg" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  HEIC to JPG
+                </a>
+
+                <a href="/image-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Image Converter
+                </a>
+
+                <a href="/signature-maker" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Signature Maker
+                </a>
+
+                {/* <a href="/text-to-pdf" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Text to PDF
+                </a>
+
+                <a href="/youtube-thumbnail" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  YouTube Thumbnail
+                </a> */}
+              </div>
+            </div>
+
           </div>
         </section>
 
@@ -338,12 +457,12 @@ export default function UnitConverter() {
             </h2>
             <div className="space-y-3">
               {[
-                { q: 'Is the Unit Converter free?',         a: 'Yes — completely free with unlimited conversions and no hidden charges.' },
-                { q: 'What units can I convert?',           a: 'Length, weight, temperature, volume, and area — all major categories.' },
-                { q: 'How do I use it?',                    a: 'Enter a value, select From and To units, and the result appears instantly.' },
-                { q: 'Does it work in real-time?',          a: 'Yes — conversion updates instantly as you change the value or switch units.' },
-                { q: 'Are my conversions stored?',          a: 'No — inputs are only used to calculate the result. Nothing is stored.' },
-                { q: 'Can I use this on my phone?',         a: 'Absolutely — works perfectly on phones, tablets, and desktops.' },
+                { q: 'Is the Unit Converter free?', a: 'Yes — completely free with unlimited conversions and no hidden charges.' },
+                { q: 'What units can I convert?', a: 'Length, weight, temperature, volume, and area — all major categories.' },
+                { q: 'How do I use it?', a: 'Enter a value, select From and To units, and the result appears instantly.' },
+                { q: 'Does it work in real-time?', a: 'Yes — conversion updates instantly as you change the value or switch units.' },
+                { q: 'Are my conversions stored?', a: 'No — inputs are only used to calculate the result. Nothing is stored.' },
+                { q: 'Can I use this on my phone?', a: 'Absolutely — works perfectly on phones, tablets, and desktops.' },
               ].map((faq, i) => (
                 <details key={i} className="uc-faq-item">
                   <summary className="flex items-center justify-between gap-4">

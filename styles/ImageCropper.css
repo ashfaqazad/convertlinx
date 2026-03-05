@@ -1,0 +1,317 @@
+/* ============================================
+   Image Cropper — Light Theme CSS
+   styles/ImageCropper.css
+   Prefix: icp-
+   Accent: Amber → Orange (#F59E0B → #EA580C)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+/* ── BASE ── */
+.icp-page {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F5F3FF;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.icp-hero-bg {
+  background: linear-gradient(135deg, #FFFBEB 0%, #F5F3FF 40%, #FFF7ED 100%);
+  position: relative;
+  overflow: hidden;
+}
+.icp-hero-blob-1 {
+  position: absolute; width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(245,158,11,0.12) 0%, transparent 70%);
+  top: -160px; right: -80px; pointer-events: none;
+}
+.icp-hero-blob-2 {
+  position: absolute; width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(234,88,12,0.08) 0%, transparent 70%);
+  bottom: -80px; left: -60px; pointer-events: none;
+}
+
+/* ── TOOL CARD ── */
+.icp-tool-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(245,158,11,0.15);
+  box-shadow: 0 4px 6px -1px rgba(245,158,11,0.06),
+              0 20px 60px -10px rgba(245,158,11,0.1);
+}
+
+/* ── UPLOAD AREA ── */
+.icp-upload-area {
+  border: 2px dashed #FCD34D;
+  background: #FFFBEB;
+  border-radius: 16px;
+  transition: border-color 0.25s, background 0.25s;
+  cursor: pointer;
+}
+.icp-upload-area:hover,
+.icp-upload-area.drag-over {
+  border-color: #F59E0B;
+  background: #FEF3C7;
+}
+
+/* ── CANVAS CONTAINER ── */
+.icp-canvas-container {
+  background: #1a1a2e;         /* dark bg so image pops */
+  border: 1.5px solid #FCD34D;
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  cursor: crosshair;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+
+/* ── CROP OVERLAY ── */
+.icp-crop-overlay {
+  position: absolute;
+  border: 2px solid #F59E0B;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.50);
+  pointer-events: none;
+  cursor: move;
+}
+
+/* ── GRID LINES (rule of thirds) ── */
+.icp-grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.28);
+  pointer-events: none;
+}
+
+/* ── CORNER HANDLES ── */
+.icp-handle {
+  position: absolute;
+  width: 13px; height: 13px;
+  background: #F59E0B;
+  border: 2px solid #ffffff;
+  border-radius: 3px;
+  pointer-events: all;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.icp-handle.tl { top: -7px;    left: -7px;    cursor: nwse-resize; }
+.icp-handle.tr { top: -7px;    right: -7px;   cursor: nesw-resize; }
+.icp-handle.bl { bottom: -7px; left: -7px;    cursor: nesw-resize; }
+.icp-handle.br { bottom: -7px; right: -7px;   cursor: nwse-resize; }
+
+/* ── FIELD LABEL ── */
+.icp-field-label {
+  color: #F59E0B;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* ── PRESET BUTTONS ── */
+.icp-preset-btn {
+  background: #FFFBEB;
+  border: 1.5px solid #FCD34D;
+  color: #92400E;
+  border-radius: 10px;
+  padding: 5px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.icp-preset-btn:hover {
+  background: #FEF3C7;
+  border-color: #F59E0B;
+}
+.icp-preset-btn.active {
+  background: rgba(245,158,11,0.15);
+  border-color: #F59E0B;
+  color: #B45309;
+  box-shadow: 0 0 0 2px rgba(245,158,11,0.2);
+}
+
+/* ── INPUTS ── */
+.icp-input {
+  background: #FFFBEB;
+  border: 1.5px solid #FCD34D;
+  color: #1a1a2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  text-align: center;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.icp-input:focus {
+  outline: none;
+  border-color: #F59E0B;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
+}
+.icp-input::placeholder { color: #FCD34D; }
+/* remove spinner arrows */
+.icp-input::-webkit-inner-spin-button,
+.icp-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.icp-input[type=number] { -moz-appearance: textfield; }
+
+/* ── SELECT ── */
+.icp-select {
+  background: #FFFBEB;
+  border: 1.5px solid #FCD34D;
+  color: #1a1a2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.icp-select:focus {
+  outline: none;
+  border-color: #F59E0B;
+  box-shadow: 0 0 0 4px rgba(245,158,11,0.12);
+}
+
+/* ── CROP & DOWNLOAD BUTTON ── */
+.icp-crop-btn {
+  background: linear-gradient(135deg, #F59E0B 0%, #EA580C 100%);
+  box-shadow: 0 4px 15px rgba(245,158,11,0.35), 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+.icp-crop-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(245,158,11,0.45);
+}
+.icp-crop-btn:disabled {
+  background: #D1D5DB;
+  color: rgba(255,255,255,0.6);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── RESET BUTTON ── */
+.icp-reset-btn {
+  background: #FFFBEB;
+  border: 1.5px solid #FCD34D;
+  color: #92400E;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.icp-reset-btn:hover {
+  background: #FEF3C7;
+  border-color: #F59E0B;
+  color: #78350F;
+}
+
+/* ── BENEFIT CARDS ── */
+.icp-benefit-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(245,158,11,0.08);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(245,158,11,0.04);
+}
+.icp-benefit-card:hover {
+  border-color: rgba(245,158,11,0.25);
+  box-shadow: 0 8px 24px rgba(245,158,11,0.1);
+  transform: translateY(-3px);
+}
+
+/* ── STEP CARDS ── */
+.icp-step-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(245,158,11,0.08);
+  box-shadow: 0 2px 8px rgba(245,158,11,0.04);
+}
+.icp-step-num {
+  background: linear-gradient(135deg, #F59E0B, #EA580C);
+  font-weight: 800;
+}
+
+/* ── FAQ ── */
+.icp-faq-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(245,158,11,0.08);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.icp-faq-item:hover {
+  border-color: rgba(245,158,11,0.25);
+  box-shadow: 0 4px 16px rgba(245,158,11,0.08);
+}
+.icp-faq-item summary { list-style: none; cursor: pointer; }
+.icp-faq-item summary::-webkit-details-marker { display: none; }
+
+/* ── BADGES ── */
+.icp-badge-pill {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.25);
+  color: #B45309;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── SEO BOX ── */
+.icp-seo-box {
+  background: #ffffff;
+  border: 1.5px solid rgba(245,158,11,0.1);
+}
+.icp-feature-dot {
+  background: linear-gradient(135deg, #F59E0B, #EA580C);
+  flex-shrink: 0;
+}
+
+/* ── SECTION BACKGROUNDS ── */
+.icp-alt-section  { background: #ffffff; }
+.icp-main-section { background: #F5F3FF; }
+
+/* ── CTA ── */
+.icp-cta-section {
+  background: linear-gradient(135deg, #F59E0B 0%, #EA580C 60%, #DC2626 100%);
+}
+.icp-cta-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  font-weight: 700;
+  cursor: pointer;
+}
+.icp-cta-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── MISC ── */
+.icp-mid-divider { border: none; border-top: 1px solid rgba(245,158,11,0.1); }
+
+.icp-breadcrumb-link { color: #FCD34D; text-decoration: none; transition: color 0.2s; }
+.icp-breadcrumb-link:hover { color: #F59E0B; }
+
+.icp-grad-text {
+  background: linear-gradient(135deg, #F59E0B, #EA580C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes icp-fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.icp-fade-up { animation: icp-fadeUp 0.5s ease forwards; }
+
+@keyframes icp-scalePop {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.icp-scale-pop { animation: icp-scalePop 0.35s ease forwards; }

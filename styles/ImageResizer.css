@@ -1,0 +1,462 @@
+/* ============================================
+   Image Resizer — Light Theme CSS
+   styles/ImageResizer.css
+   Prefix: ir-
+   Accent: Rose → Violet (#F43F5E → #8B5CF6)
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+* { box-sizing: border-box; }
+
+.ir-page {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F5F3FF;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.ir-hero-bg {
+  background: linear-gradient(135deg, #FFF1F2 0%, #F5F3FF 40%, #FDF4FF 100%);
+  position: relative;
+  overflow: hidden;
+}
+.ir-hero-blob-1 {
+  position: absolute; width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(244,63,94,0.1) 0%, transparent 70%);
+  top: -160px; right: -80px; pointer-events: none;
+}
+.ir-hero-blob-2 {
+  position: absolute; width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%);
+  bottom: -80px; left: -60px; pointer-events: none;
+}
+
+/* ── TOOL CARD ── */
+.ir-tool-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(244,63,94,0.12);
+  box-shadow: 0 4px 6px -1px rgba(244,63,94,0.06),
+              0 20px 60px -10px rgba(244,63,94,0.08);
+}
+
+/* ── UPLOAD AREA ── */
+.ir-upload-area {
+  border: 2px dashed #FECDD3;
+  background: #FFF1F2;
+  border-radius: 16px;
+  transition: border-color 0.25s, background 0.25s;
+  cursor: pointer;
+}
+.ir-upload-area:hover,
+.ir-upload-area.drag-over {
+  border-color: #F43F5E;
+  background: #FFE4E6;
+}
+
+/* ── TAB BAR ── */
+.ir-tab-bar {
+  display: flex;
+  background: #FFF1F2;
+  border: 1.5px solid #FECDD3;
+  border-radius: 12px;
+  padding: 4px;
+  gap: 2px;
+}
+.ir-tab {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #9CA3AF;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.ir-tab:hover { color: #F43F5E; }
+.ir-tab.active {
+  background: #ffffff;
+  color: #F43F5E;
+  box-shadow: 0 2px 8px rgba(244,63,94,0.15);
+}
+
+/* ── INPUTS ── */
+.ir-input {
+  background: #FFF1F2;
+  border: 1.5px solid #FECDD3;
+  color: #1a1a2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  text-align: center;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+.ir-input:focus {
+  outline: none;
+  border-color: #F43F5E;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(244,63,94,0.1);
+}
+.ir-input::placeholder { color: #FDA4AF; }
+.ir-input::-webkit-inner-spin-button,
+.ir-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.ir-input[type=number] { -moz-appearance: textfield; }
+
+/* ── SELECT ── */
+.ir-select {
+  background: #FFF1F2;
+  border: 1.5px solid #FECDD3;
+  color: #1a1a2e;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.ir-select:focus {
+  outline: none;
+  border-color: #F43F5E;
+  box-shadow: 0 0 0 4px rgba(244,63,94,0.1);
+}
+
+/* ── LOCK CHECKBOX ROW ── */
+.ir-lock-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.ir-lock-row input[type="checkbox"] {
+  accent-color: #F43F5E;
+  width: 16px; height: 16px;
+  cursor: pointer;
+}
+.ir-lock-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+/* ── ORIGINAL SIZE BAR ── */
+.ir-size-bar {
+  background: #FFF1F2;
+  border: 1px solid #FECDD3;
+  border-radius: 10px;
+  padding: 9px 16px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #BE123C;
+}
+
+/* ── FIELD LABEL ── */
+.ir-field-label {
+  color: #F43F5E;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* ── PRESET GRID ── */
+.ir-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.ir-preset-btn {
+  background: #FFF1F2;
+  border: 1.5px solid #FECDD3;
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.ir-preset-btn:hover {
+  border-color: #F43F5E;
+  background: #FFE4E6;
+}
+.ir-preset-btn.active {
+  border-color: #F43F5E;
+  background: rgba(244,63,94,0.06);
+  box-shadow: 0 0 0 2px rgba(244,63,94,0.15);
+}
+.ir-preset-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.2;
+}
+.ir-preset-size {
+  font-size: 11px;
+  color: #9CA3AF;
+  margin-top: 2px;
+}
+
+/* ── PERCENTAGE DISPLAY ── */
+.ir-pct-value {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #F43F5E, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+/* ── QUALITY SLIDER ── */
+.ir-quality-slider {
+  -webkit-appearance: none;
+  width: 100%; height: 6px;
+  border-radius: 4px;
+  background: #FECDD3;
+  outline: none;
+  cursor: pointer;
+}
+.ir-quality-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F43F5E, #8B5CF6);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(244,63,94,0.4);
+  transition: transform 0.2s;
+}
+.ir-quality-slider::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.ir-quality-slider::-moz-range-thumb {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #F43F5E, #8B5CF6);
+  cursor: pointer; border: none;
+}
+
+/* ── PREVIEW WRAP ── */
+.ir-preview-wrap {
+  background: #FFF1F2;
+  border: 1.5px solid #FECDD3;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.ir-preview-wrap.active {
+  border-color: #F43F5E;
+  box-shadow: 0 0 0 4px rgba(244,63,94,0.08),
+              0 8px 32px rgba(244,63,94,0.12);
+}
+
+/* ── INFO PILL ── */
+.ir-info-pill {
+  background: rgba(244,63,94,0.06);
+  border: 1px solid rgba(244,63,94,0.15);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #BE123C;
+  font-weight: 600;
+}
+
+/* ── RESIZE BUTTON ── */
+.ir-resize-btn {
+  background: linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%);
+  box-shadow: 0 4px 15px rgba(244,63,94,0.35), 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+.ir-resize-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(244,63,94,0.45);
+}
+.ir-resize-btn:disabled {
+  background: #D1D5DB;
+  color: rgba(255,255,255,0.6);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── DOWNLOAD BUTTON ── */
+.ir-download-btn {
+  background: linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%);
+  box-shadow: 0 4px 12px rgba(244,63,94,0.3);
+  transition: all 0.3s ease;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+.ir-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(244,63,94,0.4);
+}
+
+/* ── BENEFIT CARDS ── */
+.ir-benefit-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(244,63,94,0.08);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(244,63,94,0.04);
+}
+.ir-benefit-card:hover {
+  border-color: rgba(244,63,94,0.2);
+  box-shadow: 0 8px 24px rgba(244,63,94,0.08);
+  transform: translateY(-3px);
+}
+
+/* ── STEP CARDS ── */
+.ir-step-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(244,63,94,0.08);
+  box-shadow: 0 2px 8px rgba(244,63,94,0.04);
+}
+.ir-step-num {
+  background: linear-gradient(135deg, #F43F5E, #8B5CF6);
+  font-weight: 800;
+}
+
+/* ── FAQ ── */
+.ir-faq-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(244,63,94,0.08);
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.ir-faq-item:hover {
+  border-color: rgba(244,63,94,0.2);
+  box-shadow: 0 4px 16px rgba(244,63,94,0.08);
+}
+.ir-faq-item summary { list-style: none; cursor: pointer; }
+.ir-faq-item summary::-webkit-details-marker { display: none; }
+
+/* ── BADGES ── */
+.ir-badge-pill {
+  background: rgba(244,63,94,0.08);
+  border: 1px solid rgba(244,63,94,0.2);
+  color: #F43F5E;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* ── SEO BOX ── */
+.ir-seo-box {
+  background: #ffffff;
+  border: 1.5px solid rgba(244,63,94,0.08);
+}
+.ir-feature-dot {
+  background: linear-gradient(135deg, #F43F5E, #8B5CF6);
+  flex-shrink: 0;
+}
+
+/* ── SECTIONS ── */
+.ir-alt-section  { background: #ffffff; }
+.ir-main-section { background: #F5F3FF; }
+
+/* ── CTA ── */
+.ir-cta-section {
+  background: linear-gradient(135deg, #F43F5E 0%, #8B5CF6 100%);
+}
+.ir-cta-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.4);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ir-cta-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── MISC ── */
+.ir-mid-divider { border: none; border-top: 1px solid rgba(244,63,94,0.08); }
+.ir-breadcrumb-link { color: #FDA4AF; text-decoration: none; transition: color 0.2s; }
+.ir-breadcrumb-link:hover { color: #F43F5E; }
+.ir-grad-text {
+  background: linear-gradient(135deg, #F43F5E, #8B5CF6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── FILE LIST ── */
+.ir-file-list {
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 2px;
+}
+.ir-file-list::-webkit-scrollbar { width: 4px; }
+.ir-file-list::-webkit-scrollbar-track { background: #FFF1F2; border-radius: 4px; }
+.ir-file-list::-webkit-scrollbar-thumb { background: #FECDD3; border-radius: 4px; }
+
+.ir-file-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #FFF1F2;
+  border: 1.5px solid #FECDD3;
+  border-radius: 12px;
+  padding: 8px 10px;
+  transition: border-color 0.2s;
+}
+.ir-file-row.done {
+  background: rgba(16,185,129,0.04);
+  border-color: rgba(16,185,129,0.3);
+}
+.ir-file-row.error {
+  background: rgba(244,63,94,0.04);
+  border-color: rgba(244,63,94,0.3);
+}
+
+/* ── INDIVIDUAL DOWNLOAD BUTTON ── */
+.ir-dl-single-btn {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+  color: #059669;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.ir-dl-single-btn:hover {
+  background: rgba(16,185,129,0.18);
+  border-color: #10B981;
+}
+
+/* ── DOWNLOAD ALL BUTTON ── */
+.ir-download-all-btn {
+  background: rgba(244,63,94,0.06);
+  border: 1.5px solid rgba(244,63,94,0.2);
+  color: #BE123C;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.ir-download-all-btn:hover {
+  background: rgba(244,63,94,0.12);
+  border-color: #F43F5E;
+  transform: translateY(-1px);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes ir-fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.ir-fade-up { animation: ir-fadeUp 0.5s ease forwards; }
+
+@keyframes ir-scalePop {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.ir-scale-pop { animation: ir-scalePop 0.35s ease forwards; }

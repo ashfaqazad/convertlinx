@@ -83,6 +83,44 @@ export default function PasswordGenerator() {
         }}
       />
 
+      <Script
+        id="breadcrumb-schema-password"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: "https://convertlinx.com" },
+              { "@type": "ListItem", position: 2, name: "Password Generator", item: "https://convertlinx.com/password-gen" }
+            ]
+          })
+        }}
+      />
+
+      <Script
+        id="faq-schema-password"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              { "@type": "Question", "name": "Is the password generator free?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes — it’s completely free with unlimited password generation and no signup required." } },
+              { "@type": "Question", "name": "Can I customize the password length?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. You can generate passwords from 8 to 50 characters using the length slider." } },
+              { "@type": "Question", "name": "Are generated passwords stored?",
+                "acceptedAnswer": { "@type": "Answer", "text": "No. Passwords are generated in your browser and are not stored on any server." } },
+              { "@type": "Question", "name": "What does exclude similar characters mean?",
+                "acceptedAnswer": { "@type": "Answer", "text": "It removes look-alike characters like 1, l, I, 0, O to avoid confusion." } }
+            ]
+          })
+        }}
+      />
+
       <main className="pg-page">
 
         {/* ── HERO ── */}
@@ -271,13 +309,26 @@ export default function PasswordGenerator() {
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free Password Generator — ConvertlyHub
+                Free Password Generator — Convertlinx
               </h2>
-              <p className="leading-7 text-sm">
+              {/* <p className="leading-7 text-sm">
                 The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Password Generator</span> creates
                 secure, random passwords instantly — no sign-up, no tracking, and nothing stored.
                 Control the length, include symbols and numbers, and exclude confusing characters.
+              </p> */}
+
+              <p className="leading-7 text-sm">
+              The <strong>Convertlinx password generator</strong> helps you create
+              <strong> strong random passwords</strong> instantly for your online accounts.
+              This <strong>online password generator</strong> allows you to generate
+              <strong> secure passwords</strong> with numbers, symbols, and uppercase letters.
+
+              You can use this <strong>free password generator</strong> to create
+              <strong> unique passwords</strong> for Gmail, Facebook, banking apps,
+              and work accounts. The tool works directly in your browser and generates
+              <strong> secure random passwords</strong> without storing any data.
               </p>
+
             </div>
             <div>
               <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>Why Use a Strong Password?</h3>
@@ -324,7 +375,43 @@ export default function PasswordGenerator() {
                 ))}
               </div>
             </div>
-          </div>
+
+{/* Related Tools (Tailwind) */}
+<div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+  <p className="text-sm font-semibold text-slate-700 mb-3">
+    You may also find these free tools helpful:
+  </p>
+
+  <div className="flex flex-wrap gap-2">
+    <a
+      href="/image-to-text"
+      className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+    >
+      Image to Text
+    </a>
+
+    <a
+      href="/image-compressor"
+      className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+    >
+      Image Compressor
+    </a>
+
+    <a
+      href="/image-converter"
+      className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+    >
+      Image Converter
+    </a>
+
+    <a
+      href="/qr-generator"
+      className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+    >
+      QR Code Generator
+    </a>
+  </div>
+</div>          </div>
         </section>
 
         {/* ── FAQ ── */}
