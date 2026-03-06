@@ -1,7 +1,0 @@
-# robots.txt for https://pdflinx.com
-# Allow all search engines and AI crawlers
-
-User-agent: *
-Allow: /
-
-Sitemap: https://pdflinx.com/sitemap.xml
