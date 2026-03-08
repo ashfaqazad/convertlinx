@@ -157,12 +157,12 @@ export default function HomeContent() {
         </div>
       </section>
 
-      {/* ── WHY CONVERTLYHUB ── */}
+      {/* ── WHY ConvertLinx ── */}
       <hr className="home-divider" />
       <section className="home-section-main py-20 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-14">
-            <h2 className="home-tools-title">Why ConvertlyHub?</h2>
+            <h2 className="home-tools-title">Why ConvertLinx?</h2>
             <p style={{ color: '#6B7280', fontSize: '1.1rem' }}>Built different. Works better.</p>
           </div>
 
@@ -399,12 +399,12 @@ export default function HomeContent() {
 //         </div>
 //       </section>
 
-//       {/* ── WHY CONVERTLYHUB ── */}
+//       {/* ── WHY ConvertLinx ── */}
 //       <hr className="home-divider" />
 //       <section className="home-section-main py-20 px-6">
 //         <div className="max-w-5xl mx-auto">
 //           <div className="text-center mb-14">
-//             <h2 className="home-tools-title">Why ConvertlyHub?</h2>
+//             <h2 className="home-tools-title">Why ConvertLinx?</h2>
 //             <p style={{ color: '#6B7280', fontSize: '1.1rem' }}>Built different. Works better.</p>
 //           </div>
 
@@ -826,7 +826,7 @@ export default function HomeContent() {
 // //         </div>
 // //       </section>
 
-// //       {/* ── WHY CONVERTLYHUB ── */}
+// //       {/* ── WHY ConvertLinx ── */}
 // //       <section className="py-20 px-6 border-t border-white/5">
 // //         <div className="max-w-5xl mx-auto">
 // //           <div className="text-center mb-14">
@@ -834,7 +834,7 @@ export default function HomeContent() {
 // //               style={{ fontFamily: "'Space Grotesk', sans-serif" }}
 // //               className="text-4xl font-bold text-white mb-4"
 // //             >
-// //               Why ConvertlyHub?
+// //               Why ConvertLinx?
 // //             </h2>
 // //             <p className="text-gray-500 text-lg">Built different. Works better.</p>
 // //           </div>

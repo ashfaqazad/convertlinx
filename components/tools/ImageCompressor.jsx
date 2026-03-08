@@ -5,24 +5,26 @@ import imageCompression from 'browser-image-compression';
 import { Upload, Download, Zap, Shield, Image as ImageIcon, ChevronDown } from 'lucide-react';
 import Script from 'next/script';
 import '@/styles/ImageCompressor.css';
+// import PDFLinxEmbedWrapper from "@/components/embeds/PDFLinxEmbedWrapper";
+
 
 export default function ImageCompressor() {
-  const [originals, setOriginals]           = useState([]);
-  const [compresseds, setCompresseds]       = useState([]);
-  const [loading, setLoading]               = useState(false);
-  const [saved, setSaved]                   = useState(0);
-  const [compressionLevel, setCompression]  = useState(1); // 0:Low 1:Medium 2:High
+  const [originals, setOriginals] = useState([]);
+  const [compresseds, setCompresseds] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(0);
+  const [compressionLevel, setCompression] = useState(1); // 0:Low 1:Medium 2:High
 
   const compressionOptions = {
-    0: { initialQuality: 0.95, maxSizeMB: 2   },
-    1: { initialQuality: 0.8,  maxSizeMB: 1   },
-    2: { initialQuality: 0.6,  maxSizeMB: 0.5 },
+    0: { initialQuality: 0.95, maxSizeMB: 2 },
+    1: { initialQuality: 0.8, maxSizeMB: 1 },
+    2: { initialQuality: 0.6, maxSizeMB: 0.5 },
   };
 
   const levels = [
-    { label: 'Low',    sub: 'Best Quality'  },
-    { label: 'Medium', sub: 'Balanced'      },
-    { label: 'High',   sub: 'Max Savings'   },
+    { label: 'Low', sub: 'Best Quality' },
+    { label: 'Medium', sub: 'Balanced' },
+    { label: 'High', sub: 'Max Savings' },
   ];
 
   const handleFile = async (e) => {
@@ -34,11 +36,11 @@ export default function ImageCompressor() {
     setLoading(true);
 
     const opts = {
-      maxSizeMB:        compressionOptions[compressionLevel].maxSizeMB,
+      maxSizeMB: compressionOptions[compressionLevel].maxSizeMB,
       maxWidthOrHeight: 1920,
-      useWebWorker:     true,
-      fileType:         'image/webp',
-      initialQuality:   compressionOptions[compressionLevel].initialQuality,
+      useWebWorker: true,
+      fileType: 'image/webp',
+      initialQuality: compressionOptions[compressionLevel].initialQuality,
     };
 
     try {
@@ -46,13 +48,13 @@ export default function ImageCompressor() {
         files.map(async (file) => {
           const compressed = await imageCompression(file, opts);
           return {
-            file:           compressed,
-            originalSize:   (file.size / 1024 / 1024).toFixed(2),
+            file: compressed,
+            originalSize: (file.size / 1024 / 1024).toFixed(2),
             compressedSize: (compressed.size / 1024 / 1024).toFixed(2),
-            saved:          Math.round(((file.size - compressed.size) / file.size) * 100),
-            name:           file.name.split('.')[0],
-            url:            URL.createObjectURL(compressed),
-            origUrl:        URL.createObjectURL(file),
+            saved: Math.round(((file.size - compressed.size) / file.size) * 100),
+            name: file.name.split('.')[0],
+            url: URL.createObjectURL(compressed),
+            origUrl: URL.createObjectURL(file),
           };
         })
       );
@@ -76,7 +78,7 @@ export default function ImageCompressor() {
   };
 
   const isSingle = originals.length === 1 && compresseds.length === 1;
-  const isBatch  = originals.length > 1;
+  const isBatch = originals.length > 1;
 
   return (
     <>
@@ -87,11 +89,11 @@ export default function ImageCompressor() {
             "@type": "HowTo",
             name: "How to Compress Image Online for Free",
             description: "Reduce image file size up to 90% while maintaining quality.",
-            url: "https://convertlyhub.com/image-compressor",
+            url: "https://ConvertLinx.com/image-compressor",
             step: [
-              { "@type": "HowToStep", name: "Upload Image",   text: "Select JPG, PNG, WebP, HEIC, TIFF, SVG or other formats." },
-              { "@type": "HowToStep", name: "Choose Level",   text: "Pick compression level and compress." },
-              { "@type": "HowToStep", name: "Download",       text: "Download smaller optimized images." }
+              { "@type": "HowToStep", name: "Upload Image", text: "Select JPG, PNG, WebP, HEIC, TIFF, SVG or other formats." },
+              { "@type": "HowToStep", name: "Choose Level", text: "Pick compression level and compress." },
+              { "@type": "HowToStep", name: "Download", text: "Download smaller optimized images." }
             ],
             totalTime: "PT30S",
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
@@ -246,13 +248,13 @@ export default function ImageCompressor() {
         <section className="ic-section-alt py-16 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub?
+              Why Use ConvertLinx?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
-                { icon: <Zap className="w-6 h-6" />,       color: '#059669', bg: 'rgba(5,150,105,0.08)',   title: 'Up to 90% Smaller',      desc: 'Reduce file size dramatically while keeping visuals sharp — ideal for fast websites.' },
-                { icon: <ImageIcon className="w-6 h-6" />, color: '#0284C7', bg: 'rgba(2,132,199,0.08)',   title: 'Multi-Format Support',    desc: 'JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG & more — auto-converts to WebP for best size.' },
-                { icon: <Shield className="w-6 h-6" />,    color: '#6366F1', bg: 'rgba(99,102,241,0.08)',  title: 'Secure & Private',        desc: 'Processed entirely in your browser — nothing uploaded or stored. Batch supported.' },
+                { icon: <Zap className="w-6 h-6" />, color: '#059669', bg: 'rgba(5,150,105,0.08)', title: 'Up to 90% Smaller', desc: 'Reduce file size dramatically while keeping visuals sharp — ideal for fast websites.' },
+                { icon: <ImageIcon className="w-6 h-6" />, color: '#0284C7', bg: 'rgba(2,132,199,0.08)', title: 'Multi-Format Support', desc: 'JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG & more — auto-converts to WebP for best size.' },
+                { icon: <Shield className="w-6 h-6" />, color: '#6366F1', bg: 'rgba(99,102,241,0.08)', title: 'Secure & Private', desc: 'Processed entirely in your browser — nothing uploaded or stored. Batch supported.' },
               ].map((b, i) => (
                 <div key={i} className="ic-benefit-card">
                   <div className="ic-benefit-icon" style={{ background: b.bg, color: b.color }}>
@@ -275,9 +277,9 @@ export default function ImageCompressor() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { num: '1', title: 'Upload Images',         desc: 'Drop or select JPG, PNG, HEIC, TIFF, SVG — or batch upload multiple files.' },
+                { num: '1', title: 'Upload Images', desc: 'Drop or select JPG, PNG, HEIC, TIFF, SVG — or batch upload multiple files.' },
                 { num: '2', title: 'Choose Level & Compress', desc: 'Pick Low, Medium, or High quality and compress to WebP automatically.' },
-                { num: '3', title: 'Download',               desc: 'Save your smaller optimized images — single or batch download.' },
+                { num: '3', title: 'Download', desc: 'Save your smaller optimized images — single or batch download.' },
               ].map((s, i) => (
                 <div key={i} className="ic-step-card">
                   <div className="ic-step-num">{s.num}</div>
@@ -295,10 +297,10 @@ export default function ImageCompressor() {
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free Image Compressor — ConvertlyHub
+                Free Image Compressor — ConvertLinx
               </h2>
               <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Image Compressor</span> reduces
+                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertLinx Image Compressor</span> reduces
                 image size in seconds while keeping your visuals sharp — no signup, no watermark, no limits.
                 Choose your compression level and download instantly.
               </p>
@@ -340,6 +342,18 @@ export default function ImageCompressor() {
                 ))}
               </div>
             </div>
+
+            {/* <div style={{ maxWidth: "900px", margin: "auto" }}>
+              <iframe
+                src="https://pdflinx.com/embed/compress-pdf"
+                width="100%"
+                height="650"
+                style={{ border: "none", borderRadius: "12px" }}
+                loading="lazy"
+              ></iframe>
+            </div> */}
+
+            
           </div>
         </section>
 
@@ -352,12 +366,12 @@ export default function ImageCompressor() {
             </h2>
             <div className="space-y-3">
               {[
-                { q: 'Is the Image Compressor free?',             a: 'Yes — completely free with unlimited compression and no hidden charges.' },
-                { q: 'Which formats are supported?',              a: 'JPG, PNG, WebP, HEIC, TIFF, SVG, BMP, AVIF and more (based on what your browser supports).' },
-                { q: 'Will compression reduce quality?',          a: 'Slightly — use Low for best quality, Medium for balance, High for maximum size reduction.' },
-                { q: 'How much can I reduce image size?',         a: 'Depends on image type and content — in many cases up to 90% reduction is possible.' },
-                { q: 'Can I compress multiple images at once?',   a: 'Yes — batch upload is supported. Upload multiple files and download them all at once.' },
-                { q: 'Are my images stored anywhere?',            a: 'No — images are processed entirely in your browser. Nothing is uploaded or stored.' },
+                { q: 'Is the Image Compressor free?', a: 'Yes — completely free with unlimited compression and no hidden charges.' },
+                { q: 'Which formats are supported?', a: 'JPG, PNG, WebP, HEIC, TIFF, SVG, BMP, AVIF and more (based on what your browser supports).' },
+                { q: 'Will compression reduce quality?', a: 'Slightly — use Low for best quality, Medium for balance, High for maximum size reduction.' },
+                { q: 'How much can I reduce image size?', a: 'Depends on image type and content — in many cases up to 90% reduction is possible.' },
+                { q: 'Can I compress multiple images at once?', a: 'Yes — batch upload is supported. Upload multiple files and download them all at once.' },
+                { q: 'Are my images stored anywhere?', a: 'No — images are processed entirely in your browser. Nothing is uploaded or stored.' },
               ].map((faq, i) => (
                 <details key={i} className="ic-faq-item">
                   <summary className="flex items-center justify-between gap-4">
@@ -369,7 +383,14 @@ export default function ImageCompressor() {
               ))}
             </div>
           </div>
+
         </section>
+
+    {/* <div>
+      <h2 className='text-center text-2xl md:text-3xl font-extrabold mb-4'>Compress PDF Online</h2>
+      <PDFLinxEmbedWrapper />
+    </div> */}
+
 
         {/* ── BOTTOM CTA ── */}
         <section className="ic-cta-section">
