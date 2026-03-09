@@ -7,22 +7,22 @@ import Script from 'next/script';
 import '@/styles/ImageCompressor.css';
 
 export default function ImageCompressor() {
-  const [originals, setOriginals]           = useState([]);
-  const [compresseds, setCompresseds]       = useState([]);
-  const [loading, setLoading]               = useState(false);
-  const [saved, setSaved]                   = useState(0);
-  const [compressionLevel, setCompression]  = useState(1); // 0:Low 1:Medium 2:High
+  const [originals, setOriginals] = useState([]);
+  const [compresseds, setCompresseds] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(0);
+  const [compressionLevel, setCompression] = useState(1); // 0:Low 1:Medium 2:High
 
   const compressionOptions = {
-    0: { initialQuality: 0.95, maxSizeMB: 2   },
-    1: { initialQuality: 0.8,  maxSizeMB: 1   },
-    2: { initialQuality: 0.6,  maxSizeMB: 0.5 },
+    0: { initialQuality: 0.95, maxSizeMB: 2 },
+    1: { initialQuality: 0.8, maxSizeMB: 1 },
+    2: { initialQuality: 0.6, maxSizeMB: 0.5 },
   };
 
   const levels = [
-    { label: 'Low',    sub: 'Best Quality'  },
-    { label: 'Medium', sub: 'Balanced'      },
-    { label: 'High',   sub: 'Max Savings'   },
+    { label: 'Low', sub: 'Best Quality' },
+    { label: 'Medium', sub: 'Balanced' },
+    { label: 'High', sub: 'Max Savings' },
   ];
 
   const handleFile = async (e) => {
@@ -34,11 +34,11 @@ export default function ImageCompressor() {
     setLoading(true);
 
     const opts = {
-      maxSizeMB:        compressionOptions[compressionLevel].maxSizeMB,
+      maxSizeMB: compressionOptions[compressionLevel].maxSizeMB,
       maxWidthOrHeight: 1920,
-      useWebWorker:     true,
-      fileType:         'image/webp',
-      initialQuality:   compressionOptions[compressionLevel].initialQuality,
+      useWebWorker: true,
+      fileType: 'image/webp',
+      initialQuality: compressionOptions[compressionLevel].initialQuality,
     };
 
     try {
@@ -46,13 +46,13 @@ export default function ImageCompressor() {
         files.map(async (file) => {
           const compressed = await imageCompression(file, opts);
           return {
-            file:           compressed,
-            originalSize:   (file.size / 1024 / 1024).toFixed(2),
+            file: compressed,
+            originalSize: (file.size / 1024 / 1024).toFixed(2),
             compressedSize: (compressed.size / 1024 / 1024).toFixed(2),
-            saved:          Math.round(((file.size - compressed.size) / file.size) * 100),
-            name:           file.name.split('.')[0],
-            url:            URL.createObjectURL(compressed),
-            origUrl:        URL.createObjectURL(file),
+            saved: Math.round(((file.size - compressed.size) / file.size) * 100),
+            name: file.name.split('.')[0],
+            url: URL.createObjectURL(compressed),
+            origUrl: URL.createObjectURL(file),
           };
         })
       );
@@ -76,7 +76,7 @@ export default function ImageCompressor() {
   };
 
   const isSingle = originals.length === 1 && compresseds.length === 1;
-  const isBatch  = originals.length > 1;
+  const isBatch = originals.length > 1;
 
   return (
     <>
@@ -87,15 +87,88 @@ export default function ImageCompressor() {
             "@type": "HowTo",
             name: "How to Compress Image Online for Free",
             description: "Reduce image file size up to 90% while maintaining quality.",
-            url: "https://convertlyhub.com/image-compressor",
+            url: "https://convertlinx.com/image-compressor",
             step: [
-              { "@type": "HowToStep", name: "Upload Image",   text: "Select JPG, PNG, WebP, HEIC, TIFF, SVG or other formats." },
-              { "@type": "HowToStep", name: "Choose Level",   text: "Pick compression level and compress." },
-              { "@type": "HowToStep", name: "Download",       text: "Download smaller optimized images." }
+              { "@type": "HowToStep", name: "Upload Image", text: "Select JPG, PNG, WebP, HEIC, TIFF, SVG or other formats." },
+              { "@type": "HowToStep", name: "Choose Level", text: "Pick compression level and compress." },
+              { "@type": "HowToStep", name: "Download", text: "Download smaller optimized images." }
             ],
             totalTime: "PT30S",
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
           }, null, 2),
+        }}
+      />
+
+      <Script
+        id="breadcrumb-schema-img"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://convertlinx.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Image Compressor",
+                "item": "https://convertlinx.com/image-compressor"
+              }
+            ]
+          })
+        }}
+      />
+
+
+      <Script
+        id="faq-schema-img"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is the Image Compressor free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes — the Convertlinx Image Compressor is completely free with unlimited image compression."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which formats are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "JPG, PNG, WebP, HEIC, TIFF, SVG, BMP and other formats supported by your browser."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How much can image size be reduced?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "In many cases image size can be reduced up to 90 percent depending on the image."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are my images uploaded to a server?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No — images are compressed directly in your browser and are never uploaded or stored."
+                }
+              }
+            ]
+          })
         }}
       />
 
@@ -250,9 +323,9 @@ export default function ImageCompressor() {
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
-                { icon: <Zap className="w-6 h-6" />,       color: '#059669', bg: 'rgba(5,150,105,0.08)',   title: 'Up to 90% Smaller',      desc: 'Reduce file size dramatically while keeping visuals sharp — ideal for fast websites.' },
-                { icon: <ImageIcon className="w-6 h-6" />, color: '#0284C7', bg: 'rgba(2,132,199,0.08)',   title: 'Multi-Format Support',    desc: 'JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG & more — auto-converts to WebP for best size.' },
-                { icon: <Shield className="w-6 h-6" />,    color: '#6366F1', bg: 'rgba(99,102,241,0.08)',  title: 'Secure & Private',        desc: 'Processed entirely in your browser — nothing uploaded or stored. Batch supported.' },
+                { icon: <Zap className="w-6 h-6" />, color: '#059669', bg: 'rgba(5,150,105,0.08)', title: 'Up to 90% Smaller', desc: 'Reduce file size dramatically while keeping visuals sharp — ideal for fast websites.' },
+                { icon: <ImageIcon className="w-6 h-6" />, color: '#0284C7', bg: 'rgba(2,132,199,0.08)', title: 'Multi-Format Support', desc: 'JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG & more — auto-converts to WebP for best size.' },
+                { icon: <Shield className="w-6 h-6" />, color: '#6366F1', bg: 'rgba(99,102,241,0.08)', title: 'Secure & Private', desc: 'Processed entirely in your browser — nothing uploaded or stored. Batch supported.' },
               ].map((b, i) => (
                 <div key={i} className="ic-benefit-card">
                   <div className="ic-benefit-icon" style={{ background: b.bg, color: b.color }}>
@@ -275,9 +348,9 @@ export default function ImageCompressor() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { num: '1', title: 'Upload Images',         desc: 'Drop or select JPG, PNG, HEIC, TIFF, SVG — or batch upload multiple files.' },
+                { num: '1', title: 'Upload Images', desc: 'Drop or select JPG, PNG, HEIC, TIFF, SVG — or batch upload multiple files.' },
                 { num: '2', title: 'Choose Level & Compress', desc: 'Pick Low, Medium, or High quality and compress to WebP automatically.' },
-                { num: '3', title: 'Download',               desc: 'Save your smaller optimized images — single or batch download.' },
+                { num: '3', title: 'Download', desc: 'Save your smaller optimized images — single or batch download.' },
               ].map((s, i) => (
                 <div key={i} className="ic-step-card">
                   <div className="ic-step-num">{s.num}</div>
@@ -297,11 +370,25 @@ export default function ImageCompressor() {
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
                 Free Image Compressor — ConvertlyHub
               </h2>
-              <p className="leading-7 text-sm">
+
+              {/* <p className="leading-7 text-sm">
                 The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Image Compressor</span> reduces
                 image size in seconds while keeping your visuals sharp — no signup, no watermark, no limits.
                 Choose your compression level and download instantly.
+              </p> */}
+
+              <p className="leading-7 text-sm">
+                The <strong>Convertlinx Image Compressor</strong> lets you
+                <strong>compress images online</strong> and
+                <strong>reduce image file size</strong> instantly.
+
+                You can compress <strong>JPG, PNG, WebP, HEIC and other images</strong>
+                while maintaining visual quality. This
+                <strong>free image compressor</strong> helps you
+                <strong>optimize images for websites</strong>,
+                speed up page loading, and save storage space.
               </p>
+
             </div>
             <div>
               <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Who Should Use This?</h3>
@@ -340,6 +427,31 @@ export default function ImageCompressor() {
                 ))}
               </div>
             </div>
+
+            {/* Related Tools (Tailwind) */}
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+              <p className="text-sm font-semibold text-slate-700 mb-3">
+                You may also find these free tools helpful:
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+
+                <a href="/qr-generator" className="tool-pill">QR Generator</a>
+
+                <a href="/password-gen" className="tool-pill">Password Generator</a>
+
+                <a href="/image-to-text" className="tool-pill">Image to Text</a>
+
+                <a href="/image-converter" className="tool-pill">Image Converter</a>
+
+                <a href="/heic-to-jpg" className="tool-pill">HEIC to JPG</a>
+
+                <a href="/youtube-thumbnail" className="tool-pill">YouTube Thumbnail</a>
+
+                <a href="/unit-converter" className="tool-pill">Unit Converter</a>
+
+              </div>
+            </div>
           </div>
         </section>
 
@@ -352,12 +464,12 @@ export default function ImageCompressor() {
             </h2>
             <div className="space-y-3">
               {[
-                { q: 'Is the Image Compressor free?',             a: 'Yes — completely free with unlimited compression and no hidden charges.' },
-                { q: 'Which formats are supported?',              a: 'JPG, PNG, WebP, HEIC, TIFF, SVG, BMP, AVIF and more (based on what your browser supports).' },
-                { q: 'Will compression reduce quality?',          a: 'Slightly — use Low for best quality, Medium for balance, High for maximum size reduction.' },
-                { q: 'How much can I reduce image size?',         a: 'Depends on image type and content — in many cases up to 90% reduction is possible.' },
-                { q: 'Can I compress multiple images at once?',   a: 'Yes — batch upload is supported. Upload multiple files and download them all at once.' },
-                { q: 'Are my images stored anywhere?',            a: 'No — images are processed entirely in your browser. Nothing is uploaded or stored.' },
+                { q: 'Is the Image Compressor free?', a: 'Yes — completely free with unlimited compression and no hidden charges.' },
+                { q: 'Which formats are supported?', a: 'JPG, PNG, WebP, HEIC, TIFF, SVG, BMP, AVIF and more (based on what your browser supports).' },
+                { q: 'Will compression reduce quality?', a: 'Slightly — use Low for best quality, Medium for balance, High for maximum size reduction.' },
+                { q: 'How much can I reduce image size?', a: 'Depends on image type and content — in many cases up to 90% reduction is possible.' },
+                { q: 'Can I compress multiple images at once?', a: 'Yes — batch upload is supported. Upload multiple files and download them all at once.' },
+                { q: 'Are my images stored anywhere?', a: 'No — images are processed entirely in your browser. Nothing is uploaded or stored.' },
               ].map((faq, i) => (
                 <details key={i} className="ic-faq-item">
                   <summary className="flex items-center justify-between gap-4">

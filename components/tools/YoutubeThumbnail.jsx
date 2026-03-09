@@ -51,7 +51,7 @@ export default function YouTubeThumbnailDownloader() {
             "@type": "HowTo",
             name: "How to Download YouTube Thumbnail in HD",
             description: "Download any YouTube video thumbnail in full HD quality instantly.",
-            url: "https://convertlyhub.com/youtube-thumbnail",
+            url: "https://convertlinx.com/youtube-thumbnail",
             step: [
               { "@type": "HowToStep", name: "Paste URL",      text: "Copy and paste YouTube video URL." },
               { "@type": "HowToStep", name: "Get Thumbnails", text: "Press Get Thumbnails button." },
@@ -61,6 +61,80 @@ export default function YouTubeThumbnailDownloader() {
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
           }, null, 2),
         }}
+      />
+
+
+      <Script
+      id="breadcrumb-schema-yt"
+      type="application/ld+json"
+      strategy="afterInteractive"
+      dangerouslySetInnerHTML={{
+      __html: JSON.stringify({
+      "@context":"https://schema.org",
+      "@type":"BreadcrumbList",
+      "itemListElement":[
+      {
+      "@type":"ListItem",
+      "position":1,
+      "name":"Home",
+      "item":"https://convertlinx.com"
+      },
+      {
+      "@type":"ListItem",
+      "position":2,
+      "name":"YouTube Thumbnail Downloader",
+      "item":"https://convertlinx.com/youtube-thumbnail"
+      }
+      ]
+      })
+      }}
+      />
+
+
+      <Script
+      id="faq-schema-yt"
+      type="application/ld+json"
+      strategy="afterInteractive"
+      dangerouslySetInnerHTML={{
+      __html: JSON.stringify({
+      "@context":"https://schema.org",
+      "@type":"FAQPage",
+      "mainEntity":[
+      {
+      "@type":"Question",
+      "name":"Is the YouTube Thumbnail Downloader free?",
+      "acceptedAnswer":{
+      "@type":"Answer",
+      "text":"Yes — completely free with unlimited downloads and no hidden charges."
+      }
+      },
+      {
+      "@type":"Question",
+      "name":"What thumbnail qualities can I download?",
+      "acceptedAnswer":{
+      "@type":"Answer",
+      "text":"You can download Max (1920×1080), HD (1280×720), Medium, Standard and Default thumbnail sizes."
+      }
+      },
+      {
+      "@type":"Question",
+      "name":"How do I download a thumbnail?",
+      "acceptedAnswer":{
+      "@type":"Answer",
+      "text":"Paste the YouTube video URL, click Get Thumbnails, then download the thumbnail size you want."
+      }
+      },
+      {
+      "@type":"Question",
+      "name":"Can I use this on mobile?",
+      "acceptedAnswer":{
+      "@type":"Answer",
+      "text":"Yes — the tool works on phones, tablets and desktop browsers."
+      }
+      }
+      ]
+      })
+      }}
       />
 
       <main className="yt-page">
@@ -218,10 +292,23 @@ export default function YouTubeThumbnailDownloader() {
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
                 Free YouTube Thumbnail Downloader — ConvertlyHub
               </h2>
+                  <p className="leading-7 text-sm">
+                  The <strong>Convertlinx YouTube Thumbnail Downloader</strong> lets you
+                  <strong>download YouTube thumbnails</strong> instantly in multiple resolutions.
+                  You can extract <strong>HD YouTube thumbnails</strong>, preview images,
+                  and save thumbnails from any video link.
+
+                  This <strong>online YouTube thumbnail downloader</strong> works without
+                  signup or watermark and supports
+                  <strong>max resolution thumbnails (1920×1080)</strong>,
+                  HD, medium and standard sizes.
+                  </p>
+              {/* 
               <p className="leading-7 text-sm">
                 The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub YouTube Thumbnail Downloader</span> lets
                 you extract and download preview images from any YouTube video — no signup, no watermark, no software needed.
               </p>
+               */}
             </div>
 
             <div>
@@ -262,7 +349,52 @@ export default function YouTubeThumbnailDownloader() {
                 ))}
               </div>
             </div>
+{/* Related Tools (Tailwind) */}
+<div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+  <p className="text-sm font-semibold text-slate-700 mb-3">
+    You may also find these free tools helpful:
+  </p>
+
+  <div className="flex flex-wrap gap-2">
+
+    {/* <a href="/qr-generator" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      QR Generator
+    </a> */}
+
+    {/* <a href="/password-gen" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Password Generator
+    </a> */}
+
+    <a href="/image-resizer" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Image Resizer
+    </a>
+
+    {/* <a href="/image-to-text" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Image to Text
+    </a> */}
+
+    <a href="/image-cropper" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Image Cropper
+    </a>
+
+    <a href="/image-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Image Converter
+    </a>
+
+    <a href="/signature-maker" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Signature Maker
+    </a>
+
+    <a href="/unit-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+      Unit Converter
+    </a>
+
+  </div>
+</div>            
+
           </div>
+
+
         </section>
 
         {/* ── FAQ ── */}
