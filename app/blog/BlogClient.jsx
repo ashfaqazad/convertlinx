@@ -80,7 +80,7 @@ export default function BlogClient() {
   return (
     <main className="max-w-6xl mx-auto py-12 px-6">
       <h1 className="text-3xl md:text-4xl font-extrabold text-center mb-6 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight">
-        ConvertlyHub Blog & Guides
+        ConvertLinx Blog & Guides
       </h1>
 
       <p className="text-center text-gray-600 max-w-3xl mx-auto mb-10 text-base leading-relaxed">

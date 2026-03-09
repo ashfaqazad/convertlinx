@@ -38,7 +38,7 @@ export default function Navbar() {
           {/* ── Logo ── */}
           <Link href="/" className="flex items-center py-3">
             <span className="text-xl font-extrabold" style={{ color: "#1a1a2e" }}>
-              Convertly<span style={{ color: "#6366F1" }}>Hub</span>
+              Convert<span style={{ color: "#6366F1" }}>Linx</span>
             </span>
           </Link>
 

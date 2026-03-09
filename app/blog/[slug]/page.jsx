@@ -11,7 +11,7 @@ const blogs = [
 
     <p>QR codes are literally everywhere now — restaurant menus, business cards, posters, even Wi-Fi passwords at cafes. I remember the first time I needed one: I wanted to share my portfolio link at a meetup. Spent way too long searching for a decent free tool that didn't slap a watermark or make it ugly.</p>
 
-    <p>That's why I built the <a href="/qr-generator"><strong>QR Code Generator</strong></a> on ConvertlyHub. Now whenever I need one — for my website, Instagram, Wi-Fi at home, or even a quick "text me" code — I just type it in and download a clean, sharp QR in seconds.</p>
+    <p>That's why I built the <a href="/qr-generator"><strong>QR Code Generator</strong></a> on ConvertLinx. Now whenever I need one — for my website, Instagram, Wi-Fi at home, or even a quick "text me" code — I just type it in and download a clean, sharp QR in seconds.</p>
 
     <h3>Super Simple Steps (Takes less than 20 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -47,7 +47,7 @@ const blogs = [
 
     <p>I used to be terrible with passwords. Same one for everything, or slight variations like "Password123" and "Password123!" — you know the type. Then one day an old account got hacked, and I realized how dumb that was.</p>
 
-    <p>Coming up with truly random, strong passwords is hard. Your brain doesn't want to remember "x7K#pL9$mQw2". That's why I built the <a href="/password-gen"><strong>Password Generator</strong></a> on ConvertlyHub. Now whenever I sign up for something new — email, banking, random app — I just open this, tweak a couple settings, and get a bulletproof password in seconds.</p>
+    <p>Coming up with truly random, strong passwords is hard. Your brain doesn't want to remember "x7K#pL9$mQw2". That's why I built the <a href="/password-gen"><strong>Password Generator</strong></a> on ConvertLinx. Now whenever I sign up for something new — email, banking, random app — I just open this, tweak a couple settings, and get a bulletproof password in seconds.</p>
 
     <h3>Super Easy Steps (Takes less than 10 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -85,7 +85,7 @@ const blogs = [
 
     <p>I still remember the first time I needed to convert meters to feet for a project — opened Google, typed it in, got the answer, but then needed centimeters to inches, kilograms to pounds… and ended up with 10 tabs open. Total mess.</p>
 
-    <p>That's why I built the <a href="/unit-converter"><strong>Unit Converter</strong></a> on ConvertlyHub. Now whenever I need to switch units — length, weight, temperature, volume, area — I just type the number, pick the units, and boom, instant accurate result.</p>
+    <p>That's why I built the <a href="/unit-converter"><strong>Unit Converter</strong></a> on ConvertLinx. Now whenever I need to switch units — length, weight, temperature, volume, area — I just type the number, pick the units, and boom, instant accurate result.</p>
 
     <h3>Super Easy Steps (Takes literally 5 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -121,7 +121,7 @@ const blogs = [
 
     <p>I watch a lot of YouTube — tutorials, reviews, music, random stuff. Sometimes I see a video with an awesome thumbnail and think, "Man, that would make a great wallpaper" or "I need that image for a project." But right-clicking doesn't give you the full-quality version.</p>
 
-    <p>So I built the <a href="/youtube-thumbnail"><strong>YouTube Thumbnail Downloader</strong></a> on ConvertlyHub. Now whenever I want a thumbnail, I paste the video link, pick the quality, and download a crisp HD image in seconds.</p>
+    <p>So I built the <a href="/youtube-thumbnail"><strong>YouTube Thumbnail Downloader</strong></a> on ConvertLinx. Now whenever I want a thumbnail, I paste the video link, pick the quality, and download a crisp HD image in seconds.</p>
 
     <h3>Dead Simple Steps (Takes less than 10 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -158,7 +158,7 @@ const blogs = [
 
     <p>I take a lot of photos — phone pics, screenshots, product shots for side projects. The problem? They're usually huge. 5MB, 10MB each. Upload them to a website and the page loads like molasses. Try emailing a few and your attachment gets rejected.</p>
 
-    <p>That's why I added the <a href="/image-compressor"><strong>Image Compressor</strong></a> on ConvertlyHub. Now whenever I have big images, I drop them here, slide the compression level, and get much smaller files that still look crisp and clear.</p>
+    <p>That's why I added the <a href="/image-compressor"><strong>Image Compressor</strong></a> on ConvertLinx. Now whenever I have big images, I drop them here, slide the compression level, and get much smaller files that still look crisp and clear.</p>
 
     <h3>Really Easy Steps (Takes about 10 seconds per image):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -194,7 +194,7 @@ const blogs = [
 
     <p>I take a lot of photos of things I want to remember — whiteboards from meetings, pages from books, receipts for expenses, handwritten notes from classes. But then I'm stuck: the text is trapped in the image, and typing it all out manually takes forever.</p>
 
-    <p>That's why I built the <a href="/image-to-text"><strong>Image to Text tool</strong></a> on ConvertlyHub. Now whenever I have a photo or screenshot with text, I just drop it in, wait a few seconds, and get clean, editable text I can copy right away.</p>
+    <p>That's why I built the <a href="/image-to-text"><strong>Image to Text tool</strong></a> on ConvertLinx. Now whenever I have a photo or screenshot with text, I just drop it in, wait a few seconds, and get clean, editable text I can copy right away.</p>
 
     <h3>Super Simple Steps (Takes about 10-20 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -232,7 +232,7 @@ const blogs = [
 
     <p>I freelance a bit on the side, and nothing kills the vibe faster than a client sending a contract and saying "just sign and send back." Printing, signing by hand, scanning — total hassle.</p>
 
-    <p>That's why I built the <a href="/signature-maker"><strong>Signature Maker</strong></a> on ConvertlyHub. Now whenever I need to sign something — contracts, NDAs, invoices — I just draw my signature with the mouse or finger, and download a clean transparent PNG in seconds.</p>
+    <p>That's why I built the <a href="/signature-maker"><strong>Signature Maker</strong></a> on ConvertLinx. Now whenever I need to sign something — contracts, NDAs, invoices — I just draw my signature with the mouse or finger, and download a clean transparent PNG in seconds.</p>
 
     <h3>Super Easy Steps (Takes less than 30 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -268,7 +268,7 @@ const blogs = [
 
     <p>I love my iPhone camera, but every time I try to send photos to friends on Android or upload them to a website on my Windows laptop, I hit the same problem: "File format not supported." Apple's HEIC files look great and save space, but half the world can't open them.</p>
 
-    <p>That's why I added the <a href="/heic-to-jpg"><strong>HEIC to JPG converter</strong></a> on ConvertlyHub. Now whenever I have iPhone photos I need to share, I just drop the HEIC files here and get clean, normal JPGs in seconds.</p>
+    <p>That's why I added the <a href="/heic-to-jpg"><strong>HEIC to JPG converter</strong></a> on ConvertLinx. Now whenever I have iPhone photos I need to share, I just drop the HEIC files here and get clean, normal JPGs in seconds.</p>
 
     <h3>Super Simple Steps (Takes less than 20 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -304,7 +304,7 @@ const blogs = [
 
     <p>Sometimes you just have text — notes in Notepad, an essay in a plain editor, a quick letter. But sending it as a .txt file looks messy, and people might not even open it properly.</p>
 
-    <p>That's why I added the <a href="/text-to-pdf"><strong>Text to PDF converter</strong></a> on ConvertlyHub. Now whenever I have plain text I want to share professionally, I just paste it in, hit convert, and get a clean PDF in seconds.</p>
+    <p>That's why I added the <a href="/text-to-pdf"><strong>Text to PDF converter</strong></a> on ConvertLinx. Now whenever I have plain text I want to share professionally, I just paste it in, hit convert, and get a clean PDF in seconds.</p>
 
     <h3>Really Easy Steps (Takes less than 20 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -340,7 +340,7 @@ const blogs = [
 
     <p>Design tools want PNG, websites prefer WebP, email clients work best with JPG, and then there's HEIC from iPhones that nothing opens. Switching between formats used to mean opening Photoshop or downloading some sketchy converter.</p>
 
-    <p>That's why I built the <a href="/image-converter"><strong>Image Converter</strong></a> on ConvertlyHub. Now whenever I need to switch formats — JPG to PNG, WebP to JPEG, HEIC to anything — I just upload, pick the target format, and download in seconds.</p>
+    <p>That's why I built the <a href="/image-converter"><strong>Image Converter</strong></a> on ConvertLinx. Now whenever I need to switch formats — JPG to PNG, WebP to JPEG, HEIC to anything — I just upload, pick the target format, and download in seconds.</p>
 
     <h3>Dead Simple Steps (Takes less than 15 seconds):</h3>
     <ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
@@ -377,10 +377,10 @@ export async function generateMetadata({ params }) {
   if (!blog) return notFound();
 
   return {
-    title: blog.title + " | ConvertlyHub Blog",
+    title: blog.title + " | ConvertLinx Blog",
     description: blog.content.replace(/<[^>]+>/g, "").slice(0, 160),
     keywords: [
-      "ConvertlyHub",
+      "ConvertLinx",
       "free online tools",
       "image converter",
       "QR code generator",
@@ -394,14 +394,14 @@ export async function generateMetadata({ params }) {
       "YouTube thumbnail downloader",
     ],
     alternates: {
-      canonical: `https://convertlyhub.com/blog/${slug}`,
+      canonical: `https://convertlinx.com/blog/${slug}`,
     },
     openGraph: {
       title: blog.title,
       description: blog.content.replace(/<[^>]+>/g, "").slice(0, 160),
-      url: `https://convertlyhub.com/blog/${slug}`,
+      url: `https://convertlinx.com/blog/${slug}`,
       type: "article",
-      siteName: "ConvertlyHub",
+      siteName: "convertlinx",
     },
     twitter: {
       card: "summary_large_image",

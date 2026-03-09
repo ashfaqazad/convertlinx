@@ -14,7 +14,7 @@ const Footer = () => {
           {/* ── Brand & Intro ── */}
           <div>
             <h3 className="text-xl font-extrabold text-white mb-3">
-              Convertly<span style={{ color: '#818CF8' }}>Hub</span>
+              Convert<span style={{ color: '#818CF8' }}>Linx</span>
             </h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               Free online tools for images, PDFs & files — no signup, no ads, no watermarks.
@@ -31,6 +31,8 @@ const Footer = () => {
               <li><Link href="/image-converter"  className="hover:text-indigo-400 transition">Image Converter</Link></li>
               <li><Link href="/heic-to-jpg"      className="hover:text-indigo-400 transition">HEIC to JPG</Link></li>
               <li><Link href="/text-to-pdf"      className="hover:text-indigo-400 transition">Text to PDF</Link></li>
+              <li><Link href="/unit-converter"    className="hover:text-indigo-400 transition">Unit Converter</Link></li>
+
             </ul>
           </div>
 
@@ -40,9 +42,11 @@ const Footer = () => {
             <ul className="space-y-2 text-sm">
               <li><Link href="/qr-generator"      className="hover:text-indigo-400 transition">QR Code Generator</Link></li>
               <li><Link href="/password-gen"      className="hover:text-indigo-400 transition">Password Generator</Link></li>
-              <li><Link href="/unit-converter"    className="hover:text-indigo-400 transition">Unit Converter</Link></li>
               <li><Link href="/youtube-thumbnail" className="hover:text-indigo-400 transition">YouTube Thumbnail</Link></li>
               <li><Link href="/signature-maker"   className="hover:text-indigo-400 transition">Signature Maker</Link></li>
+              <li><Link href="/image-resizer"   className="hover:text-indigo-400 transition">Image Resizer</Link></li>
+              <li><Link href="/image-cropper"   className="hover:text-indigo-400 transition">Image Cropper</Link></li>
+
             </ul>
           </div>
 

@@ -5,6 +5,8 @@ import imageCompression from 'browser-image-compression';
 import { Upload, Download, Zap, Shield, Image as ImageIcon, ChevronDown } from 'lucide-react';
 import Script from 'next/script';
 import '@/styles/ImageCompressor.css';
+// import PDFLinxEmbedWrapper from "@/components/embeds/PDFLinxEmbedWrapper";
+
 
 export default function ImageCompressor() {
   const [originals, setOriginals] = useState([]);
@@ -87,7 +89,11 @@ export default function ImageCompressor() {
             "@type": "HowTo",
             name: "How to Compress Image Online for Free",
             description: "Reduce image file size up to 90% while maintaining quality.",
+<<<<<<< HEAD
             url: "https://convertlinx.com/image-compressor",
+=======
+            url: "https://ConvertLinx.com/image-compressor",
+>>>>>>> 0447af70171588decde7ab2e9b6720f0e85d5255
             step: [
               { "@type": "HowToStep", name: "Upload Image", text: "Select JPG, PNG, WebP, HEIC, TIFF, SVG or other formats." },
               { "@type": "HowToStep", name: "Choose Level", text: "Pick compression level and compress." },
@@ -319,7 +325,7 @@ export default function ImageCompressor() {
         <section className="ic-section-alt py-16 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub?
+              Why Use ConvertLinx?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
@@ -368,11 +374,16 @@ export default function ImageCompressor() {
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free Image Compressor — ConvertlyHub
+                Free Image Compressor — ConvertLinx
               </h2>
+<<<<<<< HEAD
 
               {/* <p className="leading-7 text-sm">
                 The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Image Compressor</span> reduces
+=======
+              <p className="leading-7 text-sm">
+                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertLinx Image Compressor</span> reduces
+>>>>>>> 0447af70171588decde7ab2e9b6720f0e85d5255
                 image size in seconds while keeping your visuals sharp — no signup, no watermark, no limits.
                 Choose your compression level and download instantly.
               </p> */}
@@ -428,6 +439,7 @@ export default function ImageCompressor() {
               </div>
             </div>
 
+<<<<<<< HEAD
             {/* Related Tools (Tailwind) */}
             <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
               <p className="text-sm font-semibold text-slate-700 mb-3">
@@ -452,6 +464,19 @@ export default function ImageCompressor() {
 
               </div>
             </div>
+=======
+            {/* <div style={{ maxWidth: "900px", margin: "auto" }}>
+              <iframe
+                src="https://pdflinx.com/embed/compress-pdf"
+                width="100%"
+                height="650"
+                style={{ border: "none", borderRadius: "12px" }}
+                loading="lazy"
+              ></iframe>
+            </div> */}
+
+            
+>>>>>>> 0447af70171588decde7ab2e9b6720f0e85d5255
           </div>
         </section>
 
@@ -481,7 +506,14 @@ export default function ImageCompressor() {
               ))}
             </div>
           </div>
+
         </section>
+
+    {/* <div>
+      <h2 className='text-center text-2xl md:text-3xl font-extrabold mb-4'>Compress PDF Online</h2>
+      <PDFLinxEmbedWrapper />
+    </div> */}
+
 
         {/* ── BOTTOM CTA ── */}
         <section className="ic-cta-section">
