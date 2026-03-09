@@ -89,11 +89,6 @@ export default function ImageCompressor() {
             "@type": "HowTo",
             name: "How to Compress Image Online for Free",
             description: "Reduce image file size up to 90% while maintaining quality.",
-<<<<<<< HEAD
-            url: "https://convertlinx.com/image-compressor",
-=======
-            url: "https://ConvertLinx.com/image-compressor",
->>>>>>> 0447af70171588decde7ab2e9b6720f0e85d5255
             step: [
               { "@type": "HowToStep", name: "Upload Image", text: "Select JPG, PNG, WebP, HEIC, TIFF, SVG or other formats." },
               { "@type": "HowToStep", name: "Choose Level", text: "Pick compression level and compress." },
@@ -376,17 +371,6 @@ export default function ImageCompressor() {
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
                 Free Image Compressor — ConvertLinx
               </h2>
-<<<<<<< HEAD
-
-              {/* <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Image Compressor</span> reduces
-=======
-              <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertLinx Image Compressor</span> reduces
->>>>>>> 0447af70171588decde7ab2e9b6720f0e85d5255
-                image size in seconds while keeping your visuals sharp — no signup, no watermark, no limits.
-                Choose your compression level and download instantly.
-              </p> */}
 
               <p className="leading-7 text-sm">
                 The <strong>Convertlinx Image Compressor</strong> lets you
@@ -439,44 +423,6 @@ export default function ImageCompressor() {
               </div>
             </div>
 
-<<<<<<< HEAD
-            {/* Related Tools (Tailwind) */}
-            <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
-              <p className="text-sm font-semibold text-slate-700 mb-3">
-                You may also find these free tools helpful:
-              </p>
-
-              <div className="flex flex-wrap gap-2">
-
-                <a href="/qr-generator" className="tool-pill">QR Generator</a>
-
-                <a href="/password-gen" className="tool-pill">Password Generator</a>
-
-                <a href="/image-to-text" className="tool-pill">Image to Text</a>
-
-                <a href="/image-converter" className="tool-pill">Image Converter</a>
-
-                <a href="/heic-to-jpg" className="tool-pill">HEIC to JPG</a>
-
-                <a href="/youtube-thumbnail" className="tool-pill">YouTube Thumbnail</a>
-
-                <a href="/unit-converter" className="tool-pill">Unit Converter</a>
-
-              </div>
-            </div>
-=======
-            {/* <div style={{ maxWidth: "900px", margin: "auto" }}>
-              <iframe
-                src="https://pdflinx.com/embed/compress-pdf"
-                width="100%"
-                height="650"
-                style={{ border: "none", borderRadius: "12px" }}
-                loading="lazy"
-              ></iframe>
-            </div> */}
-
-            
->>>>>>> 0447af70171588decde7ab2e9b6720f0e85d5255
           </div>
         </section>
 
