@@ -46,7 +46,7 @@ export default function HeicToJpg() {
             "@type": "HowTo",
             name: "How to Convert HEIC to JPG Online for Free",
             description: "Convert iPhone HEIC photos to JPG format instantly.",
-            url: "https://convertlyhub.com/heic-to-jpg",
+            url: "https://convertlinx.com/heic-to-jpg",
             step: [
               { "@type": "HowToStep", name: "Upload HEIC", text: "Select one or multiple HEIC files." },
               { "@type": "HowToStep", name: "Convert",     text: "Wait a moment — conversion is instant." },
@@ -163,7 +163,7 @@ export default function HeicToJpg() {
         <section className="hj-section-alt py-16 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub?
+              Why Use ConvertLinx?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
@@ -210,10 +210,10 @@ export default function HeicToJpg() {
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free HEIC to JPG Converter — ConvertlyHub
+                Free HEIC to JPG Converter — ConvertLinx
               </h2>
               <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub HEIC to JPG</span> tool converts
+                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertLinx HEIC to JPG</span> tool converts
                 iPhone photos into universal JPG format instantly — no signup, no watermark, batch supported.
               </p>
             </div>

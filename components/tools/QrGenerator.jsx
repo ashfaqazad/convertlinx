@@ -5,6 +5,8 @@ import QRCode from 'qrcode';
 import { Link, Wifi, MessageCircle, Download, QrCode, ChevronDown } from 'lucide-react';
 import Script from "next/script";
 import '@/styles/QrGenerator.css';
+import PDFLinxEmbedWrapper from "@/components/embeds/PDFLinxEmbedWrapper";
+
 
 export default function QRGenerator() {
   const [text, setText] = useState('');
@@ -415,6 +417,8 @@ export default function QRGenerator() {
           </div>
 
         </section>
+
+<PDFLinxEmbedWrapper tool="compress-pdf" />
 
         {/* ── FAQ ── */}
         <hr className="mid-divider" />
