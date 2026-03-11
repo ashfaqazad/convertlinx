@@ -1,8 +1,8 @@
 import BlogClient from "./BlogClient";
 
 export const metadata = {
-  metadataBase: new URL("https://pdflinx.com"),
-  alternates: { canonical: "https://pdflinx.com/blog" },
+  metadataBase: new URL("https://convertlinx.com"),
+  alternates: { canonical: "https://convertlinx.com/blog" },
 };
 
 export default function BlogPage() {

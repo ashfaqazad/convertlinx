@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { seoData } from "@/lib/seoData";
 
-const SITE_URL = "https://pdflinx.com";
+const SITE_URL = "https://convertlinx.com";
 
 // 🔹 Lazy import map (BASE tools only)
 const componentMap = {

@@ -1,9 +1,9 @@
 import AboutClient from "./AboutClient";
 
 export const metadata = {
-  metadataBase: new URL("https://pdflinx.com"),
+  metadataBase: new URL("https://convertlinx.com"),
   alternates: {
-    canonical: "https://pdflinx.com/about",
+    canonical: "https://convertlinx.com/about",
   },
 };
 
