@@ -137,7 +137,7 @@ export default function RootLayout({ children }) {
         <main className="flex-grow">{children}</main>
         <Footer />
 
-        {/* ================= Google Analytics (GA4) ================= */}
+        {/* ================= Google Analytics (GA4) =================
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-3PSZFQJYJ8"
@@ -149,7 +149,7 @@ export default function RootLayout({ children }) {
             gtag('js', new Date());
             gtag('config', 'G-3PSZFQJYJ8');
           `}
-        </Script>
+        </Script> */}
 
         {/* ================= Schema (JSON-LD) ================= */}
         <Script
