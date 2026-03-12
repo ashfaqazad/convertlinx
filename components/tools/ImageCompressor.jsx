@@ -363,6 +363,7 @@ export default function ImageCompressor() {
           </div>
         </section>
 
+
         {/* ── SEO CONTENT ── */}
         <hr className="ic-divider" />
         <section className="ic-section-alt py-16 px-6">
@@ -423,8 +424,74 @@ export default function ImageCompressor() {
               </div>
             </div>
 
+          {/* Related Tools (Tailwind) */}
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+            <p className="text-sm font-semibold text-slate-700 mb-3">
+              You may also find these free tools helpful:
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+
+              <a
+                href="/qr-generator"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                QR Generator
+              </a>
+
+              <a
+                href="/password-gen"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Password Generator
+              </a>
+
+              <a
+                href="/image-to-text"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Image to Text
+              </a>
+
+              <a
+                href="/image-converter"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Image Converter
+              </a>
+
+              <a
+                href="/heic-to-jpg"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                HEIC to JPG
+              </a>
+
+              <a
+                href="/youtube-thumbnail"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                YouTube Thumbnail
+              </a>
+
+              <a
+                href="/unit-converter"
+                className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
+              >
+                Unit Converter
+              </a>
+
+            </div>
           </div>
+
+          </div>
+
+
+
         </section>
+
+
+
 
         {/* ── FAQ ── */}
         <hr className="ic-divider" />
@@ -455,7 +522,7 @@ export default function ImageCompressor() {
 
         </section>
 
-    {/* <div>
+        {/* <div>
       <h2 className='text-center text-2xl md:text-3xl font-extrabold mb-4'>Compress PDF Online</h2>
       <PDFLinxEmbedWrapper />
     </div> */}

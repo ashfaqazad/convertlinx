@@ -7,8 +7,8 @@ import Script from 'next/script';
 import '@/styles/ImageToText.css';
 
 export default function ImageToText() {
-  const [image, setImage]   = useState(null);
-  const [text, setText]     = useState('');
+  const [image, setImage] = useState(null);
+  const [text, setText] = useState('');
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -55,15 +55,87 @@ export default function ImageToText() {
             "@type": "HowTo",
             name: "How to Extract Text from Image Online for Free",
             description: "Use OCR to convert images to editable text instantly.",
-            url: "https://convertlyhub.com/image-to-text",
+            url: "https://convertlinx.com/image-to-text",
             step: [
               { "@type": "HowToStep", name: "Upload Image", text: "Drop or select image containing text." },
-              { "@type": "HowToStep", name: "Wait",         text: "OCR processes automatically in seconds." },
-              { "@type": "HowToStep", name: "Copy Text",    text: "Copy extracted text with one click." }
+              { "@type": "HowToStep", name: "Wait", text: "OCR processes automatically in seconds." },
+              { "@type": "HowToStep", name: "Copy Text", text: "Copy extracted text with one click." }
             ],
             totalTime: "PT30S",
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
           }, null, 2),
+        }}
+      />
+
+      <Script
+        id="breadcrumb-schema-img-text"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+              {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://convertlinx.com"
+              },
+              {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Image to Text OCR",
+                "item": "https://convertlinx.com/image-to-text"
+              }
+            ]
+          })
+        }}
+      />
+
+      <Script
+        id="faq-schema-img-text"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Is Image to Text OCR free?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes — the Convertlinx Image to Text OCR tool is completely free with unlimited usage."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which image formats are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "JPG, PNG, WebP and other common image formats supported by your browser."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "How accurate is the OCR?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "OCR is very accurate for clear printed text, but blurry images or messy handwriting may reduce accuracy."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are my images uploaded?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No — the OCR process runs directly in your browser and your images are never uploaded."
+                }
+              }
+            ]
+          })
         }}
       />
 
@@ -203,13 +275,13 @@ export default function ImageToText() {
         <section className="it-section-alt py-16 px-6">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub OCR?
+              Why Use ConvertLinx OCR?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
-                { icon: <FileText className="w-6 h-6" />, color: '#0891B2', bg: 'rgba(6,182,212,0.08)',  title: 'High Accuracy',    desc: 'Extracts text from photos, scans, screenshots — even handwriting (if clear).' },
-                { icon: <Zap className="w-6 h-6" />,      color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', title: 'Fast Processing',  desc: 'Results in seconds — OCR runs directly in your browser, no server delay.' },
-                { icon: <Shield className="w-6 h-6" />,   color: '#10B981', bg: 'rgba(16,185,129,0.08)', title: '100% Private',     desc: 'Nothing leaves your device — no upload, no storage, fully secure.' },
+                { icon: <FileText className="w-6 h-6" />, color: '#0891B2', bg: 'rgba(6,182,212,0.08)', title: 'High Accuracy', desc: 'Extracts text from photos, scans, screenshots — even handwriting (if clear).' },
+                { icon: <Zap className="w-6 h-6" />, color: '#F59E0B', bg: 'rgba(245,158,11,0.08)', title: 'Fast Processing', desc: 'Results in seconds — OCR runs directly in your browser, no server delay.' },
+                { icon: <Shield className="w-6 h-6" />, color: '#10B981', bg: 'rgba(16,185,129,0.08)', title: '100% Private', desc: 'Nothing leaves your device — no upload, no storage, fully secure.' },
               ].map((b, i) => (
                 <div key={i} className="it-benefit-card">
                   <div className="it-benefit-icon" style={{ background: b.bg, color: b.color }}>{b.icon}</div>
@@ -230,9 +302,9 @@ export default function ImageToText() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { num: '1', title: 'Upload Image',        desc: 'Drop or click to select photo, screenshot, or scanned document.' },
-                { num: '2', title: 'Wait a Few Seconds',  desc: 'OCR runs automatically in your browser — no server needed.' },
-                { num: '3', title: 'Copy Text',           desc: 'Review the result and copy extracted text with one click.' },
+                { num: '1', title: 'Upload Image', desc: 'Drop or click to select photo, screenshot, or scanned document.' },
+                { num: '2', title: 'Wait a Few Seconds', desc: 'OCR runs automatically in your browser — no server needed.' },
+                { num: '3', title: 'Copy Text', desc: 'Review the result and copy extracted text with one click.' },
               ].map((s, i) => (
                 <div key={i} className="it-step-card">
                   <div className="it-step-num">{s.num}</div>
@@ -250,11 +322,20 @@ export default function ImageToText() {
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free Image to Text OCR — ConvertlyHub
+                Free Image to Text OCR — ConvertLinx
               </h2>
-              <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Image to Text</span> tool uses
+              {/* <p className="leading-7 text-sm">
+                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertLinx Image to Text</span> tool uses
                 OCR to extract editable text from photos, scans, and screenshots — instantly, free, nothing uploaded.
+              </p> */}
+              <p className="leading-7 text-sm">
+                The <strong>Convertlinx Image to Text OCR</strong> tool lets you {" "}
+                <strong>extract text from images online</strong> instantly.
+
+                You can convert <strong>photos, screenshots, and scanned documents to text</strong>
+                using powerful browser-based OCR technology. This
+                <strong>free image to text converter</strong> works without signup
+                and keeps your data completely private.
               </p>
             </div>
             <div>
@@ -294,6 +375,41 @@ export default function ImageToText() {
                 ))}
               </div>
             </div>
+
+            {/* Related Tools (Tailwind) */}
+            <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
+              <p className="text-sm font-semibold text-slate-700 mb-3">
+                You may also find these free tools helpful:
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+
+                <a href="/image-compressor" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Image Compressor
+                </a>
+
+                <a href="/image-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Image Converter
+                </a>
+
+                <a href="/heic-to-jpg" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  HEIC to JPG
+                </a>
+
+                <a href="/qr-generator" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  QR Generator
+                </a>
+
+                <a href="/password-gen" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Password Generator
+                </a>
+
+                <a href="/unit-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Unit Converter
+                </a>
+
+              </div>
+            </div>
           </div>
         </section>
 
@@ -306,12 +422,12 @@ export default function ImageToText() {
             </h2>
             <div className="space-y-3">
               {[
-                { q: 'Is Image to Text OCR free?',               a: 'Yes — completely free with unlimited usage and no hidden charges.' },
-                { q: 'Which image formats are supported?',       a: 'JPG, PNG, WebP and other common formats supported by your browser.' },
-                { q: 'How accurate is the OCR?',                 a: 'Very accurate for clear printed text. Blurry images or messy handwriting may reduce accuracy.' },
-                { q: 'Can it read handwritten text?',            a: 'It may work for clean handwriting, but printed/clear text gives the best results.' },
-                { q: 'Do you store my images or text?',          a: 'No — everything runs in your browser. Nothing is uploaded or stored.' },
-                { q: 'Can I use this on mobile?',                a: 'Yes — works perfectly on phones, tablets, and desktops.' },
+                { q: 'Is Image to Text OCR free?', a: 'Yes — completely free with unlimited usage and no hidden charges.' },
+                { q: 'Which image formats are supported?', a: 'JPG, PNG, WebP and other common formats supported by your browser.' },
+                { q: 'How accurate is the OCR?', a: 'Very accurate for clear printed text. Blurry images or messy handwriting may reduce accuracy.' },
+                { q: 'Can it read handwritten text?', a: 'It may work for clean handwriting, but printed/clear text gives the best results.' },
+                { q: 'Do you store my images or text?', a: 'No — everything runs in your browser. Nothing is uploaded or stored.' },
+                { q: 'Can I use this on mobile?', a: 'Yes — works perfectly on phones, tablets, and desktops.' },
               ].map((faq, i) => (
                 <details key={i} className="it-faq-item">
                   <summary className="flex items-center justify-between gap-4">
