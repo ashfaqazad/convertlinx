@@ -2,7 +2,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Script from "next/script";
-// import HistatsTracker from "@/components/HistatsTracker";
+import HistatsTracker from "@/components/HistatsTracker";
 
 export const viewport = {
   width: "device-width",
@@ -247,18 +247,17 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        {/* <HistatsTracker />
+        <HistatsTracker />
 
         <noscript style={{ display: "none" }}>
           <img
-            src="//sstatic1.histats.com/0.gif?4996996&101"
+            src="//sstatic1.histats.com/0.gif?5014637&101"
             alt="Website visitor tracking pixel"
             width="0"
             height="0"
             aria-hidden="true"
           />
-        </noscript> */}
-
+        </noscript>
       </body>
     </html>
   );
