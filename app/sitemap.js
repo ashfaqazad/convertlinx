@@ -1,3 +1,4 @@
+
 // app/sitemap.js
 
 export default function sitemap() {
@@ -5,7 +6,7 @@ export default function sitemap() {
 
   const staticRoutes = [
     { url: "/", changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
-    { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2025-06-01") },
+    { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2026-03-18") },
     { url: "/about", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
     { url: "/contact", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
@@ -13,18 +14,18 @@ export default function sitemap() {
   ];
 
   const toolRoutes = [
-    { url: "/tools/qr-generator", lastModified: new Date("2025-01-01") },
-    { url: "/tools/password-gen", lastModified: new Date("2025-01-01") },
-    { url: "/tools/unit-converter", lastModified: new Date("2025-01-01") },
-    { url: "/tools/youtube-thumbnail", lastModified: new Date("2025-01-01") },
-    { url: "/tools/image-compressor", lastModified: new Date("2025-01-01") },
-    { url: "/tools/image-to-text", lastModified: new Date("2025-01-01") },
-    { url: "/tools/signature-maker", lastModified: new Date("2025-01-01") },
-    { url: "/tools/heic-to-jpg", lastModified: new Date("2025-01-01") },
-    { url: "/tools/text-to-pdf", lastModified: new Date("2025-01-01") },
-    { url: "/tools/image-converter", lastModified: new Date("2025-01-01") },
-    { url: "/tools/image-resizer", lastModified: new Date("2025-02-01") },
-    { url: "/tools/image-cropper", lastModified: new Date("2025-03-01") },
+    { url: "/qr-generator", lastModified: new Date("2026-03-18") },
+    { url: "/password-gen", lastModified: new Date("2026-03-18") },
+    { url: "/unit-converter", lastModified: new Date("2026-03-18") },
+    { url: "/youtube-thumbnail", lastModified: new Date("2026-03-18") },
+    { url: "/image-compressor", lastModified: new Date("2026-03-18") },
+    { url: "/image-to-text", lastModified: new Date("2026-03-18") },
+    { url: "/signature-maker", lastModified: new Date("2026-03-18") },
+    { url: "/heic-to-jpg", lastModified: new Date("2026-03-18") },
+    { url: "/text-to-pdf", lastModified: new Date("2026-03-18") },
+    { url: "/image-converter", lastModified: new Date("2026-03-18") },
+    { url: "/image-resizer", lastModified: new Date("2026-03-18") },
+    { url: "/image-cropper", lastModified: new Date("2026-03-18") },
   ].map(({ url, lastModified }) => ({
     url,
     changeFrequency: "monthly",
@@ -33,18 +34,18 @@ export default function sitemap() {
   }));
 
   const blogRoutes = [
-    { url: "/blog/qr-generator", lastModified: new Date("2025-01-01") },
-    { url: "/blog/password-gen", lastModified: new Date("2025-01-01") },
-    { url: "/blog/unit-converter", lastModified: new Date("2025-01-01") },
-    { url: "/blog/youtube-thumbnail", lastModified: new Date("2025-01-01") },
-    { url: "/blog/image-compressor", lastModified: new Date("2025-01-01") },
-    { url: "/blog/image-to-text", lastModified: new Date("2025-01-01") },
-    { url: "/blog/signature-maker", lastModified: new Date("2025-01-01") },
-    { url: "/blog/heic-to-jpg", lastModified: new Date("2025-01-01") },
-    { url: "/blog/text-to-pdf", lastModified: new Date("2025-01-01") },
-    { url: "/blog/image-converter", lastModified: new Date("2025-01-01") },
-    { url: "/blog/image-resizer", lastModified: new Date("2025-02-01") },
-    { url: "/blog/image-cropper", lastModified: new Date("2025-03-01") },
+    { url: "/blog/qr-generator", lastModified: new Date("2026-03-18") },
+    { url: "/blog/password-gen", lastModified: new Date("2026-03-18") },
+    { url: "/blog/unit-converter", lastModified: new Date("2026-03-18") },
+    { url: "/blog/youtube-thumbnail", lastModified: new Date("2026-03-18") },
+    { url: "/blog/image-compressor", lastModified: new Date("2026-03-18") },
+    { url: "/blog/image-to-text", lastModified: new Date("2026-03-18") },
+    { url: "/blog/signature-maker", lastModified: new Date("2026-03-18") },
+    { url: "/blog/heic-to-jpg", lastModified: new Date("2026-03-18") },
+    { url: "/blog/text-to-pdf", lastModified: new Date("2026-03-18") },
+    { url: "/blog/image-converter", lastModified: new Date("2026-03-18") },
+    { url: "/blog/image-resizer", lastModified: new Date("2026-03-18") },
+    { url: "/blog/image-cropper", lastModified: new Date("2026-03-18") },
   ].map(({ url, lastModified }) => ({
     url,
     changeFrequency: "weekly",
@@ -61,6 +62,103 @@ export default function sitemap() {
     priority,
   }));
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // app/sitemap.js
+
+// export default function sitemap() {
+//   const baseUrl = "https://convertlinx.com";
+
+//   const staticRoutes = [
+//     { url: "/", changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
+//     { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2025-06-01") },
+//     { url: "/about", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
+//     { url: "/contact", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
+//     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
+//     { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
+//   ];
+
+//   const toolRoutes = [
+//     { url: "/tools/qr-generator", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/password-gen", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/unit-converter", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/youtube-thumbnail", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/image-compressor", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/image-to-text", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/signature-maker", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/heic-to-jpg", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/text-to-pdf", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/image-converter", lastModified: new Date("2025-01-01") },
+//     { url: "/tools/image-resizer", lastModified: new Date("2025-02-01") },
+//     { url: "/tools/image-cropper", lastModified: new Date("2025-03-01") },
+//   ].map(({ url, lastModified }) => ({
+//     url,
+//     changeFrequency: "monthly",
+//     priority: 0.8,
+//     lastModified,
+//   }));
+
+//   const blogRoutes = [
+//     { url: "/blog/qr-generator", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/password-gen", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/unit-converter", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/youtube-thumbnail", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/image-compressor", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/image-to-text", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/signature-maker", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/heic-to-jpg", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/text-to-pdf", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/image-converter", lastModified: new Date("2025-01-01") },
+//     { url: "/blog/image-resizer", lastModified: new Date("2025-02-01") },
+//     { url: "/blog/image-cropper", lastModified: new Date("2025-03-01") },
+//   ].map(({ url, lastModified }) => ({
+//     url,
+//     changeFrequency: "weekly",
+//     priority: 0.7,
+//     lastModified,
+//   }));
+
+//   const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
+
+//   return allRoutes.map(({ url, changeFrequency, priority, lastModified }) => ({
+//     url: `${baseUrl}${url}`,
+//     lastModified,
+//     changeFrequency,
+//     priority,
+//   }));
+// }
 
 
 
