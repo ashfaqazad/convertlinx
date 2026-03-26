@@ -245,7 +245,7 @@ export default function TextToPDF() {
                 <details key={i} className="tp-faq-item">
                   <summary className="flex items-center justify-between gap-4">
                     <span className="font-semibold text-sm" style={{ color: '#374151' }}>{faq.q}</span>
-                    <ChevronDown className="w-4 h-4 flex-shrink-0" style={{ color: '#2563EB' }} />
+                    <ChevronDown className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
                   </summary>
                   <p className="mt-3 text-sm leading-relaxed" style={{ color: '#6B7280' }}>{faq.a}</p>
                 </details>

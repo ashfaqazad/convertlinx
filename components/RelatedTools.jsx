@@ -74,7 +74,7 @@ export default RelatedTools;
 //               href={tool.url}
 //               className="flex items-start p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all group"
 //             >
-//               <span className="text-2xl mr-4 flex-shrink-0">
+//               <span className="text-2xl mr-4 shrink-0">
 //                 {tool.emoji}
 //               </span>
 
@@ -138,7 +138,7 @@ export default RelatedTools;
 // //               href={tool.url}
 // //               className="flex items-start p-4 rounded-lg border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all group"
 // //             >
-// //               <span className="text-2xl mr-4 flex-shrink-0">{tool.emoji}</span>
+// //               <span className="text-2xl mr-4 shrink-0">{tool.emoji}</span>
 // //               <div>
 // //                 <h4 className="font-semibold text-gray-900 group-hover:text-blue-600 mb-1">
 // //                   {tool.title}
