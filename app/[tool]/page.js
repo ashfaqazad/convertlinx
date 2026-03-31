@@ -23,6 +23,8 @@ const componentMap = {
   "json-formatter": () => import("@/components/tools/JsonFormatter"),
   "lorem-ipsum": () => import("@/components/tools/LoremIpsum"),
   "color-picker": () => import("@/components/tools/ColorPicker"),
+  // "add-watermark": () => import("@/components/tools/AddWatermark"),
+
 
   // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
 

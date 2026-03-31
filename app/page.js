@@ -21,29 +21,71 @@ export default function HomeContent() {
   }, []);
 
   const tools = [
-    { title: "QR Code Generator",   desc: "Make QR codes for links, WiFi passwords, menus – ready in seconds.",             link: "/qr-generator",    icon: <QrCode className="w-7 h-7" />,    accent: "#6366F1", tag: "Popular"   },
-    { title: "Password Generator",  desc: "Create strong, random passwords that actually keep your accounts safe.",          link: "/password-gen",    icon: <Lock className="w-7 h-7" />,      accent: "#7C3AED", tag: "Security"  },
-    { title: "Unit Converter",      desc: "Quick conversions for length, weight, temperature – over 50 units supported.",    link: "/unit-converter",  icon: <Ruler className="w-7 h-7" />,     accent: "#059669", tag: "Utility"   },
-    { title: "YouTube Thumbnail",   desc: "Grab full HD thumbnails from any YouTube video in one click.",                    link: "/youtube-thumbnail",icon: <Youtube className="w-7 h-7" />,  accent: "#DC2626", tag: "Media"     },
-    { title: "Image Compressor",    desc: "Reduce image size by up to 80% while keeping them looking sharp.",               link: "/image-compressor", icon: <ImageIcon className="w-7 h-7" />, accent: "#0284C7", tag: "Images"    },
-    { title: "Image to Text (OCR)", desc: "Extract text from photos, scans, or screenshots – surprisingly accurate.",       link: "/image-to-text",   icon: <ImageIcon className="w-7 h-7" />, accent: "#9333EA", tag: "OCR"       },
-    { title: "Signature Maker",     desc: "Draw or type your signature and download it for documents.",                     link: "/signature-maker", icon: <PenTool className="w-7 h-7" />,   accent: "#0F766E", tag: "Documents" },
-    { title: "HEIC to JPG",         desc: "Convert iPhone photos to regular JPGs that open everywhere.",                    link: "/heic-to-jpg",     icon: <FileImage className="w-7 h-7" />, accent: "#EA580C", tag: "Convert"   },
-    { title: "Text to PDF",         desc: "Turn plain text into a nicely formatted PDF with custom styling.",               link: "/text-to-pdf",     icon: <FileText className="w-7 h-7" />,  accent: "#7C3AED", tag: "Convert"   },
-    { title: "Image Converter",     desc: "Switch between JPG, PNG, WebP, GIF – transparency stays intact.",               link: "/image-converter", icon: <RefreshCw className="w-7 h-7" />, accent: "#DB2777", tag: "Images"    },
+    { title: "QR Code Generator", desc: "Make QR codes for links, WiFi passwords, menus – ready in seconds.", link: "/qr-generator", icon: <QrCode className="w-7 h-7" />, accent: "#6366F1", tag: "Popular" },
+    { title: "Password Generator", desc: "Create strong, random passwords that actually keep your accounts safe.", link: "/password-gen", icon: <Lock className="w-7 h-7" />, accent: "#7C3AED", tag: "Security" },
+    { title: "Unit Converter", desc: "Quick conversions for length, weight, temperature – over 50 units supported.", link: "/unit-converter", icon: <Ruler className="w-7 h-7" />, accent: "#059669", tag: "Utility" },
+    { title: "YouTube Thumbnail", desc: "Grab full HD thumbnails from any YouTube video in one click.", link: "/youtube-thumbnail", icon: <Youtube className="w-7 h-7" />, accent: "#DC2626", tag: "Media" },
+    { title: "Image Compressor", desc: "Reduce image size by up to 80% while keeping them looking sharp.", link: "/image-compressor", icon: <ImageIcon className="w-7 h-7" />, accent: "#0284C7", tag: "Images" },
+    { title: "Image to Text (OCR)", desc: "Extract text from photos, scans, or screenshots – surprisingly accurate.", link: "/image-to-text", icon: <ImageIcon className="w-7 h-7" />, accent: "#9333EA", tag: "OCR" },
+    { title: "Signature Maker", desc: "Draw or type your signature and download it for documents.", link: "/signature-maker", icon: <PenTool className="w-7 h-7" />, accent: "#0F766E", tag: "Documents" },
+    { title: "HEIC to JPG", desc: "Convert iPhone photos to regular JPGs that open everywhere.", link: "/heic-to-jpg", icon: <FileImage className="w-7 h-7" />, accent: "#EA580C", tag: "Convert" },
+    { title: "Text to PDF", desc: "Turn plain text into a nicely formatted PDF with custom styling.", link: "/text-to-pdf", icon: <FileText className="w-7 h-7" />, accent: "#7C3AED", tag: "Convert" },
+    { title: "Image Converter", desc: "Switch between JPG, PNG, WebP, GIF – transparency stays intact.", link: "/image-converter", icon: <RefreshCw className="w-7 h-7" />, accent: "#DB2777", tag: "Images" },
+    { title: "Image Resizer", desc: "Resize images to any dimension without losing quality in seconds.", link: "/image-resizer", icon: <ImageIcon className="w-7 h-7" />, accent: "#0EA5E9", tag: "Images" },
+
+    { title: "Image Cropper", desc: "Crop images to exact size or ratio with precision and ease.", link: "/image-cropper", icon: <ImageIcon className="w-7 h-7" />, accent: "#F59E0B", tag: "Images" },
+    // 🔥 NEW TOOLS (ADD BELOW)
+
+    { title: "Word Counter", desc: "Count words, characters, sentences, and paragraphs instantly in your text.", link: "/word-counter", icon: <FileText className="w-7 h-7" />, accent: "#2563EB", tag: "Text" },
+
+    { title: "Case Converter", desc: "Convert text to uppercase, lowercase, title case, or sentence case easily.", link: "/case-converter", icon: <RefreshCw className="w-7 h-7" />, accent: "#7C3AED", tag: "Text" },
+
+    { title: "Lorem Ipsum Generator", desc: "Generate dummy placeholder text for design, layouts, or content testing.", link: "/lorem-ipsum", icon: <PenTool className="w-7 h-7" />, accent: "#059669", tag: "Text" },
+
+    { title: "JSON Formatter", desc: "Format, beautify, and validate JSON data for better readability.", link: "/json-formatter", icon: <FileText className="w-7 h-7" />, accent: "#DC2626", tag: "Developer" },
+
+    { title: "Base64 Tool", desc: "Encode and decode Base64 strings quickly for development and data handling.", link: "/base64-tool", icon: <Lock className="w-7 h-7" />, accent: "#EA580C", tag: "Developer" },
+
+    { title: "Color Picker", desc: "Pick colors, get HEX/RGB values, and build your perfect color palette.", link: "/color-picker", icon: <ImageIcon className="w-7 h-7" />, accent: "#DB2777", tag: "Design" },
+
+  ];
+
+
+  const externalTools = [
+    {
+      title: "JPG to PDF",
+      desc: "Convert images into PDF files quickly and easily.",
+      link: "https://pdflinx.com/jpg-to-pdf",
+      icon: <FileImage className="w-7 h-7" />,
+      accent: "#EF4444",
+    },
+    {
+      title: "PDF to JPG",
+      desc: "Extract images from PDF files in high quality.",
+      link: "https://pdflinx.com/pdf-to-jpg",
+      icon: <FileImage className="w-7 h-7" />,
+      accent: "#F97316",
+    },
+    {
+      title: "Compress PDF",
+      desc: "Reduce PDF file size without losing quality.",
+      link: "https://pdflinx.com/compress-pdf",
+      icon: <FileText className="w-7 h-7" />,
+      accent: "#EC4899",
+    },
   ];
 
   const stats = [
-    { value: "10+", label: "Free Tools"    },
-    { value: "0",   label: "Ads"           },
-    { value: "100%",label: "Browser-based" },
-    { value: "∞",   label: "Free Forever"  },
+    { value: "10+", label: "Free Tools" },
+    { value: "0", label: "Ads" },
+    { value: "100%", label: "Browser-based" },
+    { value: "∞", label: "Free Forever" },
   ];
 
   const features = [
-    { icon: <Zap className="w-6 h-6" />,    title: "Blazing Fast",  desc: "Everything runs in your browser. No waiting for server uploads or processing.", color: "#F59E0B" },
-    { icon: <Shield className="w-6 h-6" />, title: "100% Private",  desc: "Your files never leave your device. No uploads to shady servers, ever.",         color: "#10B981" },
-    { icon: <Star className="w-6 h-6" />,   title: "Actually Free", desc: "No hidden plans, no free trial, no credit card. Just tools that work.",          color: "#6366F1" },
+    { icon: <Zap className="w-6 h-6" />, title: "Blazing Fast", desc: "Everything runs in your browser. No waiting for server uploads or processing.", color: "#F59E0B" },
+    { icon: <Shield className="w-6 h-6" />, title: "100% Private", desc: "Your files never leave your device. No uploads to shady servers, ever.", color: "#10B981" },
+    { icon: <Star className="w-6 h-6" />, title: "Actually Free", desc: "No hidden plans, no free trial, no credit card. Just tools that work.", color: "#6366F1" },
   ];
 
   return (
@@ -98,6 +140,8 @@ export default function HomeContent() {
           </div>
         </div>
       </section>
+
+
 
       {/* ── TOOLS GRID ── */}
       <hr className="home-divider" />
@@ -156,6 +200,68 @@ export default function HomeContent() {
           </div>
         </div>
       </section>
+
+      {/* ── EXTERNAL PDF TOOLS ── */}
+      {/* <hr className="home-divider" />
+      <section className="home-section-alt py-20 px-6">
+        <div className="max-w-6xl mx-auto">
+
+          <div className="text-center mb-14">
+            <h2 className="home-tools-title">PDF Tools</h2>
+            <p style={{ color: '#6B7280', fontSize: '1.1rem' }}>
+              Powered by PDFLinx — opens in a new tab
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {externalTools.map((tool, i) => (
+              <a
+                key={i}
+                href={tool.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="home-tool-card"
+              > */}
+                {/* Glow */}
+                {/* <div
+                  className="home-tool-card-glow"
+                  style={{ background: tool.accent }}
+                /> */}
+
+                {/* Top */}
+                {/* <div className="flex items-start justify-between mb-4">
+                  <div
+                    className="home-tool-icon-wrap"
+                    style={{ background: `${tool.accent}12`, color: tool.accent }}
+                  >
+                    {tool.icon}
+                  </div> */}
+
+                  {/* External badge */}
+                  {/* <span
+                    className="home-tag-badge"
+                    style={{ background: `${tool.accent}10`, color: tool.accent }}
+                  >
+                    External ↗
+                  </span>
+                </div>
+
+                <h3 className="home-tool-title">{tool.title}</h3>
+                <p className="home-tool-desc">{tool.desc}</p>
+
+                <div className="home-tool-link" style={{ color: tool.accent }}>
+                  Open Tool <span>↗</span>
+                </div>
+
+                <div
+                  className="home-tool-bottom-line"
+                  style={{ background: tool.accent }}
+                />
+              </a>
+            ))}
+          </div>
+        </div>
+      </section> */}
 
       {/* ── WHY ConvertLinx ── */}
       <hr className="home-divider" />
@@ -613,7 +719,7 @@ export default function HomeContent() {
 // //           background: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(99,102,241,0.35) 0%, transparent 70%);
 // //         }
 // //         .grid-bg {
-// //           background-image: 
+// //           background-image:
 // //             linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
 // //             linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
 // //           background-size: 40px 40px;
