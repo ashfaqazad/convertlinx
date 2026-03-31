@@ -17,7 +17,12 @@ const componentMap = {
   "image-converter": () => import("@/components/tools/ImageConverter"),
   "image-resizer": () => import("@/components/tools/ImageResizer"),
   "image-cropper": () => import("@/components/tools/ImageCropper"),
-
+  "word-counter": () => import("@/components/tools/WordCounter"),
+  "case-converter": () => import("@/components/tools/CaseConverter"),
+  "base64-tool": () => import("@/components/tools/Base64Tool"),
+  "json-formatter": () => import("@/components/tools/JsonFormatter"),
+  "lorem-ipsum": () => import("@/components/tools/LoremIpsum"),
+  "color-picker": () => import("@/components/tools/ColorPicker"),
 
   // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
 

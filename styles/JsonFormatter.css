@@ -1,0 +1,465 @@
+/* ============================================
+   JSON Formatter — Light Theme CSS
+   styles/JsonFormatter.css
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+* { box-sizing: border-box; }
+
+/* ── BASE ── */
+.jf-page {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #F0FFF4;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── HERO ── */
+.jf-hero {
+  background: linear-gradient(135deg, #ECFDF5 0%, #F0FFF4 45%, #F0FDF4 100%);
+  position: relative;
+  overflow: hidden;
+  padding: 64px 24px 52px;
+  text-align: center;
+}
+.jf-blob-1 {
+  position: absolute;
+  width: 480px; height: 480px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(16,185,129,0.1) 0%, transparent 70%);
+  top: -160px; right: -80px; pointer-events: none;
+}
+.jf-blob-2 {
+  position: absolute;
+  width: 320px; height: 320px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 70%);
+  bottom: -80px; left: -60px; pointer-events: none;
+}
+
+/* ── HERO TEXT ── */
+.jf-hero-title {
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: 800;
+  line-height: 1.15;
+  color: #1a1a2e;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+.jf-hero-sub {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #6B7280;
+  max-width: 42rem;
+  margin: 0 auto;
+}
+
+/* ── BREADCRUMB ── */
+.jf-breadcrumb-link {
+  color: #6EE7B7;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+.jf-breadcrumb-link:hover { color: #059669; }
+.jf-breadcrumb-sep     { color: #6EE7B7; }
+.jf-breadcrumb-current { color: #059669; font-weight: 600; }
+
+/* ── BADGE ── */
+.jf-badge {
+  background: rgba(16,185,129,0.08);
+  border: 1px solid rgba(16,185,129,0.22);
+  color: #059669;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 999px;
+  margin-bottom: 20px;
+}
+
+/* ── GRAD TEXT ── */
+.jf-grad-text {
+  background: linear-gradient(135deg, #059669, #34D399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── SECTION TYPOGRAPHY ── */
+.jf-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+.jf-section-subtitle {
+  color: #1a1a2e;
+}
+.jf-body-text  { color: #6B7280; }
+.jf-card-title { color: #1a1a2e; }
+.jf-card-desc  { color: #6B7280; }
+.jf-arrow      { color: #059669; }
+
+/* ── STATS GRID ── */
+.jf-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.jf-stat-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(16,185,129,0.1);
+  border-radius: 16px;
+  padding: 18px 14px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.04);
+  transition: all 0.3s ease;
+}
+.jf-stat-card:hover {
+  border-color: rgba(16,185,129,0.25);
+  box-shadow: 0 8px 24px rgba(16,185,129,0.08);
+  transform: translateY(-2px);
+}
+.jf-stat-num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #059669;
+  display: block;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+.jf-stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #9CA3AF;
+}
+
+/* ── TOOL CARD ── */
+.jf-tool-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(16,185,129,0.12);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 4px 6px -1px rgba(16,185,129,0.06),
+              0 20px 60px -10px rgba(16,185,129,0.08);
+}
+
+/* ── TOOLBAR ── */
+.jf-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.jf-indent-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.jf-indent-label {
+  font-size: 12px;
+  color: #6B7280;
+  font-weight: 600;
+}
+.jf-indent-select {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: #F8FAF9;
+  border: 1.5px solid #D1FAE5;
+  color: #059669;
+  padding: 8px 12px;
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.jf-indent-select:focus { border-color: #059669; }
+
+/* ── BUTTONS ── */
+.jf-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.jf-btn-primary {
+  background: linear-gradient(135deg, #059669 0%, #34D399 100%);
+  color: #ffffff;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(16,185,129,0.3);
+}
+.jf-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(16,185,129,0.4);
+}
+.jf-btn-ghost {
+  background: #F1F5F9;
+  border: 1.5px solid #E2E8F0;
+  color: #64748B;
+}
+.jf-btn-ghost:hover {
+  border-color: #A7F3D0;
+  color: #059669;
+}
+
+/* ── EDITOR PANELS ── */
+.jf-editor {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .jf-editor { grid-template-columns: 1fr; }
+}
+
+.jf-panel {
+  background: #F8FAF9;
+  border: 1.5px solid rgba(16,185,129,0.12);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.jf-panel-head {
+  padding: 11px 16px;
+  border-bottom: 1px solid #D1FAE5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  background: #ECFDF5;
+}
+.jf-panel-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #059669;
+}
+.jf-panel-meta {
+  font-size: 11px;
+  color: #6B7280;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── TEXTAREA ── */
+.jf-textarea {
+  width: 100%;
+  flex: 1;
+  min-height: 320px;
+  background: transparent;
+  border: none;
+  padding: 16px;
+  color: #1a1a2e;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  resize: vertical;
+  outline: none;
+}
+.jf-textarea::placeholder { color: #CBD5E1; }
+
+/* ── OUTPUT PANEL ── */
+.jf-output {
+  flex: 1;
+  min-height: 320px;
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.7;
+  overflow: auto;
+  white-space: pre;
+  word-break: break-all;
+}
+.jf-output.success { color: #1a1a2e; }
+.jf-output.error   { color: #DC2626; }
+.jf-output.empty   { color: #CBD5E1; }
+
+/* ── SYNTAX COLORS (light-friendly) ── */
+.jf-key    { color: #059669; }
+.jf-string { color: #0369A1; }
+.jf-num    { color: #B45309; }
+.jf-bool   { color: #7C3AED; }
+.jf-null   { color: #DC2626; }
+
+/* ── ERROR BADGE ── */
+.jf-error-badge {
+  margin-top: 14px;
+  background: #FEF2F2;
+  border: 1.5px solid #FECACA;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  color: #DC2626;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.jf-error-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── TRUST STRIP ── */
+.jf-trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 24px;
+}
+.jf-trust-item {
+  font-size: 12px;
+  color: #9CA3AF;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.jf-trust-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: #6EE7B7;
+}
+
+/* ── SECTION BACKGROUNDS ── */
+.jf-section-alt  { background: #ffffff; }
+.jf-section-main { background: #F0FFF4; }
+
+/* ── DIVIDER ── */
+.jf-divider {
+  border: none;
+  border-top: 1px solid rgba(16,185,129,0.08);
+}
+
+/* ── BENEFIT CARDS ── */
+.jf-benefit-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(16,185,129,0.08);
+  border-radius: 18px;
+  padding: 28px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.04);
+}
+.jf-benefit-card:hover {
+  border-color: rgba(16,185,129,0.2);
+  box-shadow: 0 8px 24px rgba(16,185,129,0.08);
+  transform: translateY(-3px);
+}
+.jf-benefit-icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* ── STEP CARDS ── */
+.jf-step-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(16,185,129,0.08);
+  border-radius: 18px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(16,185,129,0.04);
+}
+.jf-step-num {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #059669, #34D399);
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+/* ── SEO CONTENT BOX ── */
+.jf-seo-box {
+  background: #ffffff;
+  border: 1.5px solid rgba(16,185,129,0.08);
+  border-radius: 18px;
+  padding: 24px;
+}
+.jf-feature-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #059669, #34D399);
+  flex-shrink: 0;
+}
+
+/* ── FAQ ── */
+.jf-faq-item {
+  background: #ffffff;
+  border: 1.5px solid rgba(16,185,129,0.08);
+  border-radius: 14px;
+  padding: 20px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.jf-faq-item:hover {
+  border-color: rgba(16,185,129,0.2);
+  box-shadow: 0 4px 16px rgba(16,185,129,0.07);
+}
+.jf-faq-item summary { list-style: none; cursor: pointer; }
+.jf-faq-item summary::-webkit-details-marker { display: none; }
+.jf-faq-question { color: #374151; }
+.jf-faq-answer   { color: #6B7280; }
+.jf-faq-icon     { color: #059669; }
+
+/* ── RELATED LINKS ── */
+.jf-related-link {
+  color: #059669 !important;
+  border-color: #A7F3D0 !important;
+  background: #ffffff !important;
+  transition: all 0.2s;
+}
+.jf-related-link:hover {
+  background: #ECFDF5 !important;
+  border-color: #6EE7B7 !important;
+}
+
+/* ── CTA ── */
+.jf-cta-section {
+  background: linear-gradient(135deg, #059669 0%, #34D399 50%, #0D9488 100%);
+  padding: 80px 24px;
+  text-align: center;
+}
+.jf-cta-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.35);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 14px 36px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+.jf-cta-btn:hover {
+  background: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes jf-fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.jf-fade-up { animation: jf-fadeUp 0.5s ease forwards; }
