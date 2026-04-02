@@ -137,6 +137,21 @@ export default function RootLayout({ children }) {
         <main className="flex-grow">{children}</main>
         <Footer />
 
+        {/* ================= Google Analytics GA4 - convertlinx.com ================= */}
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-03HBVKEYBK"
+        />
+        <Script id="ga-config" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-03HBVKEYBK');
+          `}
+        </Script>
+
+        
         {/* ================= Schema (JSON-LD) ================= */}
         <Script
           id="org-schema"
