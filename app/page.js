@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import {
   QrCode, Lock, Ruler, Youtube,
   Image as ImageIcon, PenTool, FileImage,
-  FileText, RefreshCw, ArrowUp, Zap, Shield, Star,
+  FileText, RefreshCw, ArrowUp, Zap, Shield, Star, Volume2, LinkIcon
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
@@ -47,6 +47,18 @@ export default function HomeContent() {
     { title: "Base64 Tool", desc: "Encode and decode Base64 strings quickly for development and data handling.", link: "/base64-tool", icon: <Lock className="w-7 h-7" />, accent: "#EA580C", tag: "Developer" },
 
     { title: "Color Picker", desc: "Pick colors, get HEX/RGB values, and build your perfect color palette.", link: "/color-picker", icon: <ImageIcon className="w-7 h-7" />, accent: "#DB2777", tag: "Design" },
+
+    // 🔥 NEW IMAGE + SEO TOOLS
+
+    { title: "Add Watermark", desc: "Add text or logo watermark to your images to protect them from reuse.", link: "/add-watermark", icon: <ImageIcon className="w-7 h-7" />, accent: "#6366F1", tag: "Images" },
+
+    { title: "Meta Tag Generator", desc: "Generate SEO meta tags including title, description, and Open Graph data easily.", link: "/metatag-generator", icon: <FileText className="w-7 h-7" />, accent: "#7C3AED", tag: "SEO" },
+
+    { title: "Rotate & Flip Image", desc: "Rotate or flip images horizontally and vertically in seconds online.", link: "/rotate-flip-image", icon: <RefreshCw className="w-7 h-7" />, accent: "#059669", tag: "Images" },
+
+    { title: "Text to Speech", desc: "Convert written text into natural sounding speech with multiple voice options.", link: "/text-to-speech", icon: <Volume2 className="w-7 h-7" />, accent: "#DC2626", tag: "AI" },
+
+    { title: "Text to Slug", desc: "Convert text into clean, SEO-friendly URL slugs instantly for your website.", link: "/text-to-slug", icon: <LinkIcon className="w-7 h-7" />, accent: "#EA580C", tag: "SEO" },
 
   ];
 
@@ -201,67 +213,6 @@ export default function HomeContent() {
         </div>
       </section>
 
-      {/* ── EXTERNAL PDF TOOLS ── */}
-      {/* <hr className="home-divider" />
-      <section className="home-section-alt py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-
-          <div className="text-center mb-14">
-            <h2 className="home-tools-title">PDF Tools</h2>
-            <p style={{ color: '#6B7280', fontSize: '1.1rem' }}>
-              Powered by PDFLinx — opens in a new tab
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {externalTools.map((tool, i) => (
-              <a
-                key={i}
-                href={tool.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="home-tool-card"
-              > */}
-                {/* Glow */}
-                {/* <div
-                  className="home-tool-card-glow"
-                  style={{ background: tool.accent }}
-                /> */}
-
-                {/* Top */}
-                {/* <div className="flex items-start justify-between mb-4">
-                  <div
-                    className="home-tool-icon-wrap"
-                    style={{ background: `${tool.accent}12`, color: tool.accent }}
-                  >
-                    {tool.icon}
-                  </div> */}
-
-                  {/* External badge */}
-                  {/* <span
-                    className="home-tag-badge"
-                    style={{ background: `${tool.accent}10`, color: tool.accent }}
-                  >
-                    External ↗
-                  </span>
-                </div>
-
-                <h3 className="home-tool-title">{tool.title}</h3>
-                <p className="home-tool-desc">{tool.desc}</p>
-
-                <div className="home-tool-link" style={{ color: tool.accent }}>
-                  Open Tool <span>↗</span>
-                </div>
-
-                <div
-                  className="home-tool-bottom-line"
-                  style={{ background: tool.accent }}
-                />
-              </a>
-            ))}
-          </div>
-        </div>
-      </section> */}
 
       {/* ── WHY ConvertLinx ── */}
       <hr className="home-divider" />

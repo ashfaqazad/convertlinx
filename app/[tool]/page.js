@@ -23,8 +23,12 @@ const componentMap = {
   "json-formatter": () => import("@/components/tools/JsonFormatter"),
   "lorem-ipsum": () => import("@/components/tools/LoremIpsum"),
   "color-picker": () => import("@/components/tools/ColorPicker"),
-  // "add-watermark": () => import("@/components/tools/AddWatermark"),
 
+  "add-watermark": () => import("@/components/tools/AddWatermark"),
+  "rotate-flip-image": () => import("@/components/tools/RotateFlipImage"),
+  "metatag-generator": () => import("@/components/tools/MetaTagGenerator"),
+  "text-to-speech": () => import("@/components/tools/TextToSpeech"),
+  "text-to-slug": () => import("@/components/tools/TextToSlug"),
 
   // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
 
