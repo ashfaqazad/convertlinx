@@ -29,9 +29,8 @@ const componentMap = {
   "metatag-generator": () => import("@/components/tools/MetaTagGenerator"),
   "text-to-speech": () => import("@/components/tools/TextToSpeech"),
   "text-to-slug": () => import("@/components/tools/TextToSlug"),
-  "whats-app-link-generator": () => import("@/components/tools/WhatsAppLinkGenerator"),
+  "whatsapp-link-generator": () => import("@/components/tools/WhatsAppLinkGenerator"),
   "favicon-generator": () => import("@/components/tools/FaviconGenerator"),
-  // "ai-resume-builder": () => import("@/components/tools/AiResumeBuilder"),
   "regex-tester": () => import("@/components/tools/RegexTester"),
   "og-preview-checker": () => import("@/components/tools/OgPreviewChecker"),
 

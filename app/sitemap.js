@@ -35,6 +35,9 @@ export default function sitemap() {
     // Developer Tools
     "/json-formatter",
     "/base64-tool",
+    "/regex-tester",
+    "/favicon-generator",
+    "/og-preview-checker",
     "/metatag-generator",
 
     // Design Tools
@@ -43,10 +46,12 @@ export default function sitemap() {
     // Utilities
     "/qr-generator",
     "/password-gen",
+    "/whatsapp-link-generator",
     "/unit-converter",
     "/youtube-thumbnail",
     "/signature-maker",
     "/text-to-pdf",
+
   ].map((url) => ({
     url,
     changeFrequency: "monthly",
