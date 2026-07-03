@@ -31,17 +31,9 @@ const componentMap = {
   "text-to-slug": () => import("@/components/tools/TextToSlug"),
   "whats-app-link-generator": () => import("@/components/tools/WhatsAppLinkGenerator"),
   "favicon-generator": () => import("@/components/tools/FaviconGenerator"),
-  "ai-resume-builder": () => import("@/components/tools/AiResumeBuilder"),
+  // "ai-resume-builder": () => import("@/components/tools/AiResumeBuilder"),
   "regex-tester": () => import("@/components/tools/RegexTester"),
   "og-preview-checker": () => import("@/components/tools/OgPreviewChecker"),
-
-
-  
-
-
-  
-
-
 
   // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
 };
