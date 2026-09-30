@@ -90,7 +90,7 @@ export default function SignatureMaker() {
             "@type": "HowTo",
             name: "How to Create Digital Signature Online for Free",
             description: "Make professional signatures by drawing with mouse or finger.",
-            url: "https://convertlyhub.com/signature-maker",
+            url: "https://convertlinx.com/signature-maker",
             step: [
               { "@type": "HowToStep", name: "Draw",      text: "Draw your signature with mouse or finger." },
               { "@type": "HowToStep", name: "Customize", text: "Change pen color and stroke size." },

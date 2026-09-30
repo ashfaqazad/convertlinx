@@ -262,7 +262,7 @@ export default function RootLayout({ children }) {
           }}
         />
 
-        <HistatsTracker />
+        {/* <HistatsTracker />
 
         <noscript style={{ display: "none" }}>
           <img
@@ -272,7 +272,9 @@ export default function RootLayout({ children }) {
             height="0"
             aria-hidden="true"
           />
-        </noscript>
+        </noscript> */}
+
+
       </body>
     </html>
   );
