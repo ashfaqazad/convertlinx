@@ -10,6 +10,7 @@ export const viewport = {
   themeColor: "#0072FF",
 };
 
+
 export const metadata = {
   metadataBase: new URL("https://convertlinx.com"),
 
@@ -19,7 +20,7 @@ export const metadata = {
   },
 
   description:
-    "ConvertLinx is a free online toolkit with powerful utilities — QR code generator, password generator, unit converter, YouTube thumbnail downloader, image compressor, image to text (OCR), signature maker, HEIC to JPG, text to PDF, image converter, image resizer, and image cropper. All tools are fast, private, and free.",
+    "ConvertLinx is a free online toolkit with powerful utilities — QR code generator, password generator, unit converter, YouTube thumbnail downloader, image compressor, image to text (OCR), signature converter to convert paper signature to digital, HEIC to JPG, text to PDF, image converter, image resizer, and image cropper. All tools are fast, private, and free.",
 
   keywords: [
     "ConvertLinx",
@@ -44,6 +45,11 @@ export const metadata = {
     "extract text from image",
     "signature maker",
     "online signature creator",
+    "signature converter",
+    "convert signature on paper to digital",
+    "convert signature to digital",
+    "convert to signature",
+    "convert image to digital signature online free",
     "heic to jpg",
     "convert heic to jpeg",
     "text to pdf",
@@ -57,6 +63,56 @@ export const metadata = {
     "free image tools",
     "online utility tools",
   ],
+
+
+// export const metadata = {
+//   metadataBase: new URL("https://convertlinx.com"),
+
+//   title: {
+//     default: "ConvertLinx - Free Online Converter & Utility Tools",
+//     template: "%s | ConvertLinx",
+//   },
+
+//   description:
+//     "ConvertLinx is a free online toolkit with powerful utilities — QR code generator, password generator, unit converter, YouTube thumbnail downloader, image compressor, image to text (OCR), signature maker, HEIC to JPG, text to PDF, image converter, image resizer, and image cropper. All tools are fast, private, and free.",
+
+//   keywords: [
+//     "ConvertLinx",
+//     "convertlinx",
+//     "convertlinx.com",
+//     "free online tools",
+//     "online converter tools",
+//     "qr code generator",
+//     "free qr code maker",
+//     "password generator",
+//     "strong password generator",
+//     "unit converter",
+//     "length converter",
+//     "weight converter",
+//     "temperature converter",
+//     "youtube thumbnail downloader",
+//     "download youtube thumbnail",
+//     "image compressor",
+//     "compress image online",
+//     "image to text",
+//     "ocr online",
+//     "extract text from image",
+//     "signature maker",
+//     "online signature creator",
+//     "heic to jpg",
+//     "convert heic to jpeg",
+//     "text to pdf",
+//     "convert text to pdf online",
+//     "image converter",
+//     "convert image format",
+//     "image resizer",
+//     "resize image online",
+//     "image cropper",
+//     "crop image online",
+//     "free image tools",
+//     "online utility tools",
+//   ],
+  
 
   authors: [{ name: "ConvertLinx", url: "https://convertlinx.com" }],
   creator: "ConvertLinx",

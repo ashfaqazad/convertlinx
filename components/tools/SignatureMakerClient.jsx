@@ -26,22 +26,22 @@ const strokeSizes = [
 /* ── FAQ data: `a` = what users see (can contain links), `aText` = plain text for schema ── */
 const faqs = [
   {
-    q: 'Is this digital signature maker completely free to use?',
-    a: 'Yes. The signature maker is 100% free with no signup, watermarks, or usage limits. Create and download as many signatures as you need.',
+    q: 'Is this online signature converter completely free to use?',
+    a: 'Yes. Our signature converter is 100% free with no signup, watermarks, or usage limits. You can convert image to digital signature online free as many times as you need.',
     aText:
-      'Yes. The signature maker is 100% free with no signup, watermarks, or usage limits. Create and download as many signatures as you need.',
+      'Yes. Our signature converter is 100% free with no signup, watermarks, or usage limits. You can convert image to digital signature online free as many times as you need.',
   },
   {
-    q: 'How do I convert my handwritten signature to digital?',
-    a: 'Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click "Upload signature photo", then move the background slider until the paper disappears. Pick your pen color if you like and download the transparent PNG.',
+    q: 'How do I convert my handwritten signature on paper to digital?',
+    a: 'Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click "Upload signature photo", then move the background slider to convert signature on paper to digital until the paper disappears. Pick your pen color if you like and download the transparent PNG.',
     aText:
-      'Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click Upload signature photo, then move the background slider until the paper disappears. Pick your pen color if you like and download the transparent PNG.',
+      'Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click Upload signature photo, then move the background slider to convert signature on paper to digital until the paper disappears. Pick your pen color if you like and download the transparent PNG.',
   },
   {
     q: 'How do I add my electronic signature to PDF files or documents?',
     a: (
       <span>
-        After downloading your transparent PNG signature, insert it into your PDF or Word document using any editor's
+        After you convert signature to digital and download your transparent PNG signature, insert it into your PDF or Word document using any editor's
         "insert image" option. If your document starts as plain text, convert it first with our{' '}
         <NextLink href="/text-to-pdf" className={linkClass}>Text to PDF</NextLink>{' '}
         tool. To trim or resize the signature image, use the{' '}
@@ -51,19 +51,19 @@ const faqs = [
       </span>
     ),
     aText:
-      "After downloading your transparent PNG signature, insert it into your PDF or Word document using any editor's insert image option. If your document starts as plain text, convert it first with the Text to PDF tool. To trim or resize the signature image, use the Image Cropper or Image Resizer.",
+      "After you convert signature to digital and download your transparent PNG signature, insert it into your PDF or Word document using any editor's insert image option. If your document starts as plain text, convert it first with the Text to PDF tool. To trim or resize the signature image, use the Image Cropper or Image Resizer.",
   },
   {
-    q: 'Can I draw a handwritten signature on mobile phones and tablets?',
-    a: 'Yes. Draw with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets.',
+    q: 'Can I draw or convert to signature on mobile phones and tablets?',
+    a: 'Yes. You can convert to signature by drawing with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets.',
     aText:
-      'Yes. Draw with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets.',
+      'Yes. You can convert to signature by drawing with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets.',
   },
   {
     q: 'Does it download signatures with a transparent background?',
-    a: 'Yes. The signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.',
+    a: 'Yes. When you convert image to digital signature online free, the signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.',
     aText:
-      'Yes. The signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.',
+      'Yes. When you convert image to digital signature online free, the signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.',
   },
   {
     q: 'My signature photo is from an iPhone (HEIC). Can I upload it?',
@@ -71,18 +71,18 @@ const faqs = [
       <span>
         Browsers often cannot open HEIC photos. Convert the photo first with our{' '}
         <NextLink href="/heic-to-jpg" className={linkClass}>HEIC to JPG</NextLink>{' '}
-        converter, then upload the JPG here. If the photo is sideways or upside down, fix it with{' '}
+        converter, then upload the JPG here to convert signature to digital. If the photo is sideways or upside down, fix it with{' '}
         <NextLink href="/rotate-flip-image" className={linkClass}>Rotate &amp; Flip Image</NextLink>.
       </span>
     ),
     aText:
-      'Browsers often cannot open HEIC photos. Convert the photo first with the HEIC to JPG converter, then upload the JPG here. If the photo is sideways or upside down, fix it with Rotate and Flip Image.',
+      'Browsers often cannot open HEIC photos. Convert the photo first with the HEIC to JPG converter, then upload the JPG here to convert signature to digital. If the photo is sideways or upside down, fix it with Rotate and Flip Image.',
   },
   {
     q: 'Are my signatures or photos stored on your server?',
-    a: 'No. Your signature and any photo you upload are processed only in your web browser. Nothing is uploaded, saved, or logged on a server.',
+    a: 'No. Your signature and any photo you upload to our signature converter are processed only in your web browser. Nothing is uploaded, saved, or logged on a server.',
     aText:
-      'No. Your signature and any photo you upload are processed only in your web browser. Nothing is uploaded, saved, or logged on a server.',
+      'No. Your signature and any photo you upload to our signature converter are processed only in your web browser. Nothing is uploaded, saved, or logged on a server.',
   },
   {
     q: 'Can I reduce the size or change the format of my signature image?',
@@ -100,11 +100,12 @@ const faqs = [
   },
   {
     q: 'Is an image of my signature legally valid?',
-    a: 'Many forms and agreements accept an image of your handwritten signature, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.',
+    a: 'Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.',
     aText:
-      'Many forms and agreements accept an image of your handwritten signature, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.',
+      'Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.',
   },
 ];
+
 
 const relatedTools = [
   { name: 'Text to PDF',       href: '/text-to-pdf' },
