@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ConvertLinx – Free Online Converter & Utility Tools
 
-## Getting Started
+[ConvertLinx](https://convertlinx.com) is a free online toolkit. Convert images, generate files, and use handy text and developer utilities in your browser with no signup and no watermark.
 
-First, run the development server:
+🌐 **Website:** [https://convertlinx.com](https://convertlinx.com)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Image Tools
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- [Image Compressor](https://convertlinx.com/image-compressor)
+- [Image Converter](https://convertlinx.com/image-converter)
+- [Image Resizer](https://convertlinx.com/image-resizer)
+- [Image Cropper](https://convertlinx.com/image-cropper)
+- [Rotate & Flip Image](https://convertlinx.com/rotate-flip-image)
+- [HEIC to JPG](https://convertlinx.com/heic-to-jpg)
+- [Image to Text (OCR)](https://convertlinx.com/image-to-text)
+- [Add Watermark](https://convertlinx.com/add-watermark)
+- [Signature Maker](https://convertlinx.com/signature-maker)
+- [Favicon Generator](https://convertlinx.com/favicon-generator)
+- [YouTube Thumbnail Downloader](https://convertlinx.com/youtube-thumbnail)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Text & Document Tools
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- [Text to PDF](https://convertlinx.com/text-to-pdf)
+- [Text to Speech](https://convertlinx.com/text-to-speech)
+- [Word Counter](https://convertlinx.com/word-counter)
+- [Case Converter](https://convertlinx.com/case-converter)
+- [Text to Slug](https://convertlinx.com/text-to-slug)
+- [Lorem Ipsum Generator](https://convertlinx.com/lorem-ipsum)
 
-## Learn More
+## Developer & Design Tools
 
-To learn more about Next.js, take a look at the following resources:
+- [JSON Formatter](https://convertlinx.com/json-formatter)
+- [Base64 Encoder / Decoder](https://convertlinx.com/base64-tool)
+- [Regex Tester](https://convertlinx.com/regex-tester)
+- [Color Picker](https://convertlinx.com/color-picker)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## SEO & Web Tools
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Meta Tag Generator](https://convertlinx.com/metatag-generator)
+- [Open Graph Preview Checker](https://convertlinx.com/og-preview-checker)
+- [WhatsApp Link Generator](https://convertlinx.com/whatsapp-link-generator)
 
-## Deploy on Vercel
+## Generators & Converters
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [QR Code Generator](https://convertlinx.com/qr-generator)
+- [Password Generator](https://convertlinx.com/password-gen)
+- [Unit Converter](https://convertlinx.com/unit-converter)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+👉 See all tools at [convertlinx.com](https://convertlinx.com)
+
+## Features
+
+- ✅ 100% free, no account needed
+- ✅ No watermark on output files
+- ✅ Fast, works on mobile and desktop
+- ✅ Runs in your browser, your files stay on your device
+
+## Tech Stack
+
+Next.js, Tailwind CSS, Framer Motion
+
+## Author
+
+Built by [Ashfaque Ahmed](https://ashfaqdev.cloud)
