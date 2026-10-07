@@ -1,47 +1,62 @@
+
+
+
+
+
+
+
 import { notFound } from "next/navigation";
 import { seoData } from "@/lib/seoData";
+import { generateSchemas } from "@/lib/generateSchemas";
+import ToolLoader from "@/components/ToolLoader";
 
 const SITE_URL = "https://convertlinx.com";
 
-// 🔹 Lazy import map (BASE tools only)
-const componentMap = {
-  "qr-generator": () => import("@/components/tools/QrGenerator"),
-  "password-gen": () => import("@/components/tools/PasswordGen"),
-  "unit-converter": () => import("@/components/tools/UnitConverter"),
-  "youtube-thumbnail": () => import("@/components/tools/YoutubeThumbnail"),
-  "image-compressor": () => import("@/components/tools/ImageCompressor"),
-  "image-to-text": () => import("@/components/tools/ImageToText"),
-  "signature-maker": () => import("@/components/tools/SignatureMaker"),
-  "heic-to-jpg": () => import("@/components/tools/HeicToJpg"),
-  "text-to-pdf": () => import("@/components/tools/TextToPdf"),
-  "image-converter": () => import("@/components/tools/ImageConverter"),
-  "image-resizer": () => import("@/components/tools/ImageResizer"),
-  "image-cropper": () => import("@/components/tools/ImageCropper"),
-  "word-counter": () => import("@/components/tools/WordCounter"),
-  "case-converter": () => import("@/components/tools/CaseConverter"),
-  "base64-tool": () => import("@/components/tools/Base64Tool"),
-  "json-formatter": () => import("@/components/tools/JsonFormatter"),
-  "lorem-ipsum": () => import("@/components/tools/LoremIpsum"),
-  "color-picker": () => import("@/components/tools/ColorPicker"),
-
-  "add-watermark": () => import("@/components/tools/AddWatermark"),
-  "rotate-flip-image": () => import("@/components/tools/RotateFlipImage"),
-  "metatag-generator": () => import("@/components/tools/MetaTagGenerator"),
-  "text-to-speech": () => import("@/components/tools/TextToSpeech"),
-  "text-to-slug": () => import("@/components/tools/TextToSlug"),
-  "whatsapp-link-generator": () => import("@/components/tools/WhatsAppLinkGenerator"),
-  "favicon-generator": () => import("@/components/tools/FaviconGenerator"),
-  "regex-tester": () => import("@/components/tools/RegexTester"),
-  "og-preview-checker": () => import("@/components/tools/OgPreviewChecker"),
-
-  // "pdf-to-excel": () => import("@/components/tools/PdfToExcel"),
-};
+// 🔹 Valid BASE tools (ToolLoader ke toolMap ki keys ke saath bilkul same rakhna)
+// ToolLoader 'use client' hai, is liye server page se toolMap check nahi ho sakta.
+// Is Set se galat slug par khali page ki jagah 404 aayega.
+const BASE_TOOLS = new Set([
+  "qr-generator",
+  "password-gen",
+  "unit-converter",
+  "youtube-thumbnail",
+  "image-compressor",
+  "image-to-text",
+  "signature-maker",
+  "heic-to-jpg",
+  "text-to-pdf",
+  "image-converter",
+  "image-resizer",
+  "image-cropper",
+  "word-counter",
+  "case-converter",
+  "base64-tool",
+  "json-formatter",
+  "lorem-ipsum",
+  "color-picker",
+  "add-watermark",
+  "rotate-flip-image",
+  "metatag-generator",
+  "text-to-speech",
+  "text-to-slug",
+  "whatsapp-link-generator",
+  "favicon-generator",
+  "regex-tester",
+  "og-preview-checker",
+]);
 
 // 🔹 Resolve base tool (for variants)
 function resolveBaseTool(slug) {
   const meta = seoData[slug];
   if (!meta) return null;
   return meta.baseTool || slug;
+}
+
+// 🔹 Pre-generate static pages for every known tool slug
+export async function generateStaticParams() {
+  return Object.keys(seoData).map((slug) => ({
+    tool: slug,
+  }));
 }
 
 // ✅ Keep your no-trailing-slash URLs ("/merge-pdf" style)
@@ -58,9 +73,9 @@ function absoluteUrl(pathOrUrl) {
   return SITE_URL + normalizePath(pathOrUrl);
 }
 
-// 🔹 Metadata (SEO) ✅ FIXED
+// 🔹 Metadata (SEO)
 export async function generateMetadata({ params }) {
-  const { tool } = params;
+  const { tool } = await params; // Next 14 aur 15+ dono mein chalta hai
   const pageData = seoData[tool];
   if (!pageData) notFound();
 
@@ -79,11 +94,8 @@ export async function generateMetadata({ params }) {
 
     title: pageData.title,
     description: pageData.description,
-
-    // ✅ Next.js likes array (don’t join)
     keywords: pageData.keywords,
 
-    // ✅ Canonical must be absolute
     alternates: {
       canonical: canonicalAbs,
     },
@@ -105,30 +117,33 @@ export async function generateMetadata({ params }) {
 
 // 🔹 Dynamic Page Loader (BASE + VARIANTS)
 export default async function ToolPage({ params }) {
-  const { tool } = params;
+  const { tool } = await params; // Next 14 aur 15+ dono mein chalta hai
 
   const pageData = seoData[tool];
   if (!pageData) notFound();
 
   const baseTool = resolveBaseTool(tool);
-  if (!baseTool || !componentMap[baseTool]) notFound();
+  if (!baseTool || !BASE_TOOLS.has(baseTool)) notFound();
 
-  const Component = (await componentMap[baseTool]()).default;
+  // ✅ Server-side JSON-LD (raw HTML mein aayega)
+  const schemas = generateSchemas(pageData);
 
-  // ✅ seo prop pass (variants + base dono ke liye)
-  return <Component seo={pageData} />;
+  return (
+    <>
+      {schemas.map((schema, i) => (
+        <script
+          key={i}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(schema).replace(/</g, "\\u003c"),
+          }}
+        />
+      ))}
+      {/* ✅ ToolLoader client pe sahi tool ka chunk load karega */}
+      <ToolLoader tool={baseTool} seo={pageData} />
+    </>
+  );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 
 
