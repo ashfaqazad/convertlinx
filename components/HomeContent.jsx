@@ -10,6 +10,34 @@ import {
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
+
+const JsonLd = ({ data }) => (
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+  />
+);
+
+const faqSchemaData = [
+  { q: "Is ConvertLinx completely free to use?", a: "Yes! All web utilities, converters, text processing, and developer tools on ConvertLinx are 100% free with no signups, daily limits, or hidden fees." },
+  { q: "Are my uploaded files and text safe?", a: "Absolutely. ConvertLinx processes everything client-side inside your browser. Your files, images, and text never reach external servers, ensuring 100% privacy and security." },
+  { q: "What text and content optimization tools are available?", a: "You can analyze text with our Word Counter, convert text casing with Case Converter, generate dummy text using Lorem Ipsum, create clean URLs with Text to Slug, and build SEO tags using the Meta Tag Generator." },
+  { q: "Which developer and web utility tools can I use?", a: "We offer essential developer tools like the JSON Formatter, Base64 Tool, Regex Tester, Favicon Generator, OG Preview Checker, and WhatsApp Link Generator." },
+  { q: "How do I edit or convert images on ConvertLinx?", a: "You can compress images via Image Compressor, resize with Image Resizer, crop using Image Cropper, convert formats with Image Converter, handle iPhone photos with HEIC to JPG, extract text using Image to Text (OCR), adjust orientation using Rotate & Flip Image, or protect photos with Add Watermark." },
+  { q: "Does ConvertLinx offer handy everyday utility tools?", a: "Yes, easily build codes using our QR Code Generator, generate secure passwords via Password Generator, convert units using Unit Converter, pick color codes with Color Picker, download media covers with YouTube Thumbnail, sign documents with Signature Maker, convert notes with Text to PDF, and create audio using Text to Speech." },
+  { q: "Looking for advanced PDF tools and document management?", a: "For dedicated PDF workflows such as merging, splitting, compressing, or converting document files, check out our sister tool site PDFLinx." },
+];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqSchemaData.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+
 export default function HomeContent() {
   const router = useRouter();
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -60,30 +88,34 @@ export default function HomeContent() {
     { icon: <Star className="w-6 h-6" />, title: "Actually Free", desc: "No hidden plans, no free trial, no credit card. Just tools that work.", color: "#6366F1" },
   ];
 
-  const faqs = [
-    {
-      q: "Is ConvertLinx completely free to use?",
-      a: "Yes! All web utilities, converters, and text processing tools on ConvertLinx are 100% free with no signups, daily limits, or hidden fees."
-    },
-    {
-      q: "Are my uploaded files and text safe?",
-      a: "Absolutely. ConvertLinx processes everything client-side inside your browser. Your files, images, and text never reach external servers, ensuring 100% privacy."
-    },
-    {
-      q: "How do I compress images or convert formats on ConvertLinx?",
-      a: <>You can easily compress images using our <Link href="/image-compressor" className="text-indigo-600 hover:underline font-medium">Image Compressor</Link> or convert file formats with our <Link href="/image-converter" className="text-indigo-600 hover:underline font-medium">Image Converter</Link> and <Link href="/heic-to-jpg" className="text-indigo-600 hover:underline font-medium">HEIC to JPG</Link> tool in just one click.</>
-    },
-    {
-      q: "Can I convert text, format JSON, or generate URL slugs?",
-      a: <>Yes! Use our <Link href="/word-counter" className="text-indigo-600 hover:underline font-medium">Word Counter</Link>, <Link href="/case-converter" className="text-indigo-600 hover:underline font-medium">Case Converter</Link>, <Link href="/json-formatter" className="text-indigo-600 hover:underline font-medium">JSON Formatter</Link>, and <Link href="/text-to-slug" className="text-indigo-600 hover:underline font-medium">Text to Slug</Link> tools to streamline your daily editing tasks.</>
-    },
-    {
-      q: "Looking for advanced PDF tools and document management?",
-      a: <>For dedicated PDF workflows such as merging, splitting, or converting document files, check out our sister tool site <a href="https://pdflinx.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline font-medium">PDFLinx</a>.</>
-    }
-  ];
+  // const faqs = [
+  //   {
+  //     q: "Is ConvertLinx completely free to use?",
+  //     a: "Yes! All web utilities, converters, and text processing tools on ConvertLinx are 100% free with no signups, daily limits, or hidden fees."
+  //   },
+  //   {
+  //     q: "Are my uploaded files and text safe?",
+  //     a: "Absolutely. ConvertLinx processes everything client-side inside your browser. Your files, images, and text never reach external servers, ensuring 100% privacy."
+  //   },
+  //   {
+  //     q: "How do I compress images or convert formats on ConvertLinx?",
+  //     a: <>You can easily compress images using our <Link href="/image-compressor" className="text-indigo-600 hover:underline font-medium">Image Compressor</Link> or convert file formats with our <Link href="/image-converter" className="text-indigo-600 hover:underline font-medium">Image Converter</Link> and <Link href="/heic-to-jpg" className="text-indigo-600 hover:underline font-medium">HEIC to JPG</Link> tool in just one click.</>
+  //   },
+  //   {
+  //     q: "Can I convert text, format JSON, or generate URL slugs?",
+  //     a: <>Yes! Use our <Link href="/word-counter" className="text-indigo-600 hover:underline font-medium">Word Counter</Link>, <Link href="/case-converter" className="text-indigo-600 hover:underline font-medium">Case Converter</Link>, <Link href="/json-formatter" className="text-indigo-600 hover:underline font-medium">JSON Formatter</Link>, and <Link href="/text-to-slug" className="text-indigo-600 hover:underline font-medium">Text to Slug</Link> tools to streamline your daily editing tasks.</>
+  //   },
+  //   {
+  //     q: "Looking for advanced PDF tools and document management?",
+  //     a: <>For dedicated PDF workflows such as merging, splitting, or converting document files, check out our sister tool site <a href="https://pdflinx.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline font-medium">PDFLinx</a>.</>
+  //   }
+  // ];
 
   return (
+
+    <>
+    <JsonLd data={faqSchema} />
+
     <main className="home-page">
 
       {/* ── HERO ── */}
@@ -96,7 +128,7 @@ export default function HomeContent() {
           {/* Badge */}
           <div className="home-hero-badge">
             <span className="home-hero-badge-dot" />
-            20+ Free Tools · No Signup · No Ads
+            27+ Free Tools · No Signup · No Ads
           </div>
 
           {/* Heading */}
@@ -357,6 +389,8 @@ export default function HomeContent() {
         </button>
       )}
     </main>
+
+    </>
   );
 }
 

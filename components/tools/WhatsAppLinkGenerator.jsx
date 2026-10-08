@@ -75,22 +75,6 @@ export default function WhatsAppLinkGenerator() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-wa-link"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'WhatsApp Link Generator', item: 'https://convertlinx.com/whatsapp-link-generator' },
-            ],
-          }),
-        }}
-      />
 
       <main className="wa-page">
 

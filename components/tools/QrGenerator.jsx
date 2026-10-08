@@ -156,32 +156,6 @@ export default function QRGenerator() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script id="breadcrumb-schema-qr" type="application/ld+json" strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org', '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home',              item: 'https://convertlinx.com/'                 },
-              { '@type': 'ListItem', position: 2, name: 'QR Code Generator', item: 'https://convertlinx.com/qr-generator'     },
-            ],
-          }),
-        }}
-      />
-
-      {/* ── SCHEMA: FAQPage ── */}
-      {/* <Script id="faq-schema-qr" type="application/ld+json" strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org', '@type': 'FAQPage',
-            mainEntity: faqs.map(faq => ({
-              '@type': 'Question',
-              name: faq.q,
-              acceptedAnswer: { '@type': 'Answer', text: typeof faq.a === 'string' ? faq.a : 'Yes, enter a WhatsApp link or use our WhatsApp Link Generator tool.' },
-            })),
-          }),
-        }}
-      /> */}
 
       {/* ── SCHEMA: FAQPage ── */}
       <Script id="faq-schema-qr" type="application/ld+json" strategy="afterInteractive"

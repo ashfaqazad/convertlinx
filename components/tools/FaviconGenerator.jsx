@@ -144,22 +144,7 @@ export default function FaviconGenerator() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-favicon"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Favicon Generator', item: 'https://convertlinx.com/favicon-generator' },
-            ],
-          }),
-        }}
-      />
+      
 
       <main className="fg-page">
 

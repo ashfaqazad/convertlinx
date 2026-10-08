@@ -108,23 +108,6 @@ export default function Base64Tool() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-b64"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home',                    item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Base64 Encoder Decoder',  item: 'https://convertlinx.com/base64' },
-            ],
-          }),
-        }}
-      />
-
       <main className="b64-page">
 
         {/* ── HERO ── */}

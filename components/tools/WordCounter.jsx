@@ -82,23 +82,6 @@ export default function WordCounter() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-wc"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Word Counter', item: 'https://convertlinx.com/word-counter' },
-            ],
-          }),
-        }}
-      />
-
       <main className="wc-page">
 
         {/* ── HERO ── */}

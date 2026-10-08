@@ -112,22 +112,6 @@ export default function RotateFlipImage() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-rfi"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home',                  item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Rotate & Flip Image',   item: 'https://convertlinx.com/rotate-flip-image' },
-            ],
-          }),
-        }}
-      />
 
       {/* Hidden canvas for export */}
       <canvas ref={canvasRef} style={{ display: 'none' }} />

@@ -120,23 +120,6 @@ export default function JsonFormatter() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-jf"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home',           item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'JSON Formatter', item: 'https://convertlinx.com/json-formatter' },
-            ],
-          }),
-        }}
-      />
-
       <main className="jf-page">
 
         {/* ── HERO ── */}

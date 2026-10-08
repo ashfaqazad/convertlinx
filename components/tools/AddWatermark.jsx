@@ -197,22 +197,6 @@ export default function AddWatermark() {
         }}
       />
 
-      {/* ── SCHEMA: BreadcrumbList ── */}
-      <Script
-        id="breadcrumb-schema-aw"
-        type="application/ld+json"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Home',               item: 'https://convertlinx.com/' },
-              { '@type': 'ListItem', position: 2, name: 'Add Watermark',      item: 'https://convertlinx.com/add-watermark' },
-            ],
-          }),
-        }}
-      />
 
       <main className="aw-page">
 

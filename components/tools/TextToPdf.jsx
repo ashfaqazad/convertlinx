@@ -1,50 +1,140 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
-import { Download, FileText, Type, CheckCircle, ChevronDown } from 'lucide-react';
-import Script from 'next/script';
-import '@/styles/TextToPdf.css';
+import { useState } from "react";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import {
+  Download,
+  FileText,
+  Type,
+  CheckCircle,
+  ChevronDown,
+} from "lucide-react";
+// import Script from 'next/script';
+import "@/styles/TextToPdf.css";
+
+const SITE = "https://convertlinx.com";
+const PAGE_URL = `${SITE}/text-to-pdf`;
+
+const JsonLd = ({ data }) => (
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{
+      __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+    }}
+  />
+);
+
+const faqs = [
+  {
+    q: "Is Text to PDF free?",
+    a: "Yes — completely free with unlimited conversions and downloads.",
+  },
+  {
+    q: "Can I format text before converting?",
+    a: "Yes — edit or paste your content before clicking convert.",
+  },
+  {
+    q: "Does it support long text?",
+    a: "Yes — it automatically handles multiple pages for any length of content.",
+  },
+  {
+    q: "Is my text stored anywhere?",
+    a: "No — your text is used only to generate the PDF. Nothing is stored.",
+  },
+  {
+    q: "Can I use this on mobile?",
+    a: "Yes — works perfectly on phones, tablets, and desktops.",
+  },
+  {
+    q: "Will my PDF look professional?",
+    a: "Yes — the tool formats text with clean layout, proper margins, and readable spacing.",
+  },
+];
+
+const howToSchema = {
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  name: "How to Convert Text to PDF Online for Free",
+  description:
+    "Create a PDF from plain text instantly in your browser, free and with no signup.",
+  url: PAGE_URL,
+  totalTime: "PT20S",
+  estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
+  step: [
+    {
+      "@type": "HowToStep",
+      name: "Paste It In",
+      text: "Type or paste your resume, notes, letter, or any text into the box.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Review Your Text",
+      text: "Your text is formatted with proper spacing and margins automatically.",
+    },
+    {
+      "@type": "HowToStep",
+      name: "Grab Your PDF",
+      text: "Click Download as PDF and your file is saved instantly.",
+    },
+  ],
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
 
 export default function TextToPDF() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
 
   const generatePDF = () => {
     if (!text.trim()) {
-      alert('Please enter some text first!');
+      alert("Please enter some text first!");
       return;
     }
 
-    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-    doc.setFont('helvetica', 'normal');
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
     doc.setTextColor(40, 40, 40);
 
-    const margin   = 20;
+    const margin = 20;
     const maxWidth = doc.internal.pageSize.getWidth() - 2 * margin;
-    const lines    = doc.splitTextToSize(text, maxWidth);
+    const lines = doc.splitTextToSize(text, maxWidth);
 
     let y = 20;
-    lines.forEach(line => {
-      if (y > 270) { doc.addPage(); y = 20; }
+    lines.forEach((line) => {
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
       doc.text(line, margin, y);
       y += 7;
     });
 
-    doc.save('my-text-document.pdf');
+    doc.save("my-text-document.pdf");
   };
 
   return (
     <>
-      <Script id="howto-schema-text-pdf" type="application/ld+json" strategy="afterInteractive"
+      {/* <Script id="howto-schema-text-pdf" type="application/ld+json" strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "HowTo",
             name: "How to Convert Text to PDF Online for Free",
             description: "Create PDF from plain text instantly.",
-            url: "https://convertlyhub.com/text-to-pdf",
+            url: "https://convertlinx.com/text-to-pdf",
             step: [
               { "@type": "HowToStep", name: "Paste Text",    text: "Type or paste your text." },
               { "@type": "HowToStep", name: "Click Convert", text: "Click Download as PDF button." },
@@ -54,27 +144,36 @@ export default function TextToPDF() {
             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
           }, null, 2),
         }}
-      />
+      /> */}
+      <JsonLd data={howToSchema} />
+      <JsonLd data={faqSchema} />
 
       <main className="tp-page">
-
         {/* ── HERO ── */}
         <section className="tp-hero">
           <div className="tp-blob-1" />
           <div className="tp-blob-2" />
           <div className="relative z-10 max-w-3xl mx-auto">
             <div className="flex items-center justify-center gap-2 text-sm mb-5">
-              <a href="/" className="tp-breadcrumb-link">Home</a>
-              <span style={{ color: '#C4B5FD' }}>/</span>
-              <span style={{ color: '#2563EB' }}>Text to PDF</span>
+              <a href="/" className="tp-breadcrumb-link">
+                Home
+              </a>
+              <span style={{ color: "#C4B5FD" }}>/</span>
+              <span style={{ color: "#2563EB" }}>Text to PDF</span>
             </div>
             <span className="tp-badge">Free Tool</span>
-            <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 mt-2" style={{ color: '#1a1a2e' }}>
-              Text to{' '}
-              <span className="tp-grad-text">PDF Converter</span>
+            <h1
+              className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 mt-2"
+              style={{ color: "#1a1a2e" }}
+            >
+              Text to <span className="tp-grad-text">PDF Converter</span>
             </h1>
-            <p className="text-base md:text-lg max-w-xl mx-auto leading-relaxed" style={{ color: '#6B7280' }}>
-              Turn your notes, letters, or any text into a clean, professional PDF — instantly, free, no watermark.
+            <p
+              className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
+              style={{ color: "#6B7280" }}
+            >
+              Turn your notes, letters, or any text into a clean, professional
+              PDF — instantly, free, no watermark.
             </p>
           </div>
         </section>
@@ -83,9 +182,17 @@ export default function TextToPDF() {
         <section className="tp-section-main py-10 px-6">
           <div className="max-w-2xl mx-auto tp-fade-up">
             <div className="tp-tool-card">
-
               {/* Label */}
-              <label className="flex items-center gap-2 mb-3" style={{ color: '#2563EB', fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
+              <label
+                className="flex items-center gap-2 mb-3"
+                style={{
+                  color: "#2563EB",
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  letterSpacing: "0.09em",
+                  textTransform: "uppercase",
+                }}
+              >
                 <Type className="w-4 h-4" />
                 Your Text
               </label>
@@ -116,7 +223,13 @@ export default function TextToPDF() {
 
               {/* Trust row */}
               <div className="flex flex-wrap justify-center gap-5 mt-7">
-                {['No account needed', 'Unlimited conversions', 'No watermark', 'Browser-only', '100% free'].map((t, i) => (
+                {[
+                  "No account needed",
+                  "Unlimited conversions",
+                  "No watermark",
+                  "Browser-only",
+                  "100% free",
+                ].map((t, i) => (
                   <span key={i} className="tp-trust-item">
                     <span className="tp-trust-dot" />
                     {t}
@@ -131,19 +244,55 @@ export default function TextToPDF() {
         <hr className="tp-divider" />
         <section className="tp-section-alt py-16 px-6">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
-              Why Use ConvertlyHub?
+            <h2
+              className="text-2xl font-bold text-center mb-10"
+              style={{ color: "#1a1a2e" }}
+            >
+              Why Use ConvertLinx?
             </h2>
             <div className="grid md:grid-cols-3 gap-5">
               {[
-                { icon: <FileText className="w-6 h-6" />, color: '#2563EB', bg: 'rgba(37,99,235,0.08)',  title: 'Looks Pro Every Time', desc: 'Clean layout, proper margins — perfect for resumes, letters, or any document you want to impress with.' },
-                { icon: <Type className="w-6 h-6" />,     color: '#4F46E5', bg: 'rgba(79,70,229,0.08)',  title: 'Any Text Welcome',     desc: 'Short note or long story — handles multiple pages automatically, no sweat.' },
-                { icon: <CheckCircle className="w-6 h-6" />, color: '#10B981', bg: 'rgba(16,185,129,0.08)', title: 'Quick & Private',    desc: 'Runs entirely in your browser — nothing leaves your device, free forever.' },
+                {
+                  icon: <FileText className="w-6 h-6" />,
+                  color: "#2563EB",
+                  bg: "rgba(37,99,235,0.08)",
+                  title: "Looks Pro Every Time",
+                  desc: "Clean layout, proper margins — perfect for resumes, letters, or any document you want to impress with.",
+                },
+                {
+                  icon: <Type className="w-6 h-6" />,
+                  color: "#4F46E5",
+                  bg: "rgba(79,70,229,0.08)",
+                  title: "Any Text Welcome",
+                  desc: "Short note or long story — handles multiple pages automatically, no sweat.",
+                },
+                {
+                  icon: <CheckCircle className="w-6 h-6" />,
+                  color: "#10B981",
+                  bg: "rgba(16,185,129,0.08)",
+                  title: "Quick & Private",
+                  desc: "Runs entirely in your browser — nothing leaves your device, free forever.",
+                },
               ].map((b, i) => (
                 <div key={i} className="tp-benefit-card">
-                  <div className="tp-benefit-icon" style={{ background: b.bg, color: b.color }}>{b.icon}</div>
-                  <h3 className="font-bold text-base mb-2" style={{ color: '#1a1a2e' }}>{b.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>{b.desc}</p>
+                  <div
+                    className="tp-benefit-icon"
+                    style={{ background: b.bg, color: b.color }}
+                  >
+                    {b.icon}
+                  </div>
+                  <h3
+                    className="font-bold text-base mb-2"
+                    style={{ color: "#1a1a2e" }}
+                  >
+                    {b.title}
+                  </h3>
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "#6B7280" }}
+                  >
+                    {b.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -154,19 +303,44 @@ export default function TextToPDF() {
         <hr className="tp-divider" />
         <section className="tp-section-main py-16 px-6">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-12" style={{ color: '#1a1a2e' }}>
+            <h2
+              className="text-2xl font-bold text-center mb-12"
+              style={{ color: "#1a1a2e" }}
+            >
               3 Simple Steps
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { num: '1', title: 'Paste It In',      desc: 'Dump whatever text you have — resume, notes, letter, code snippets, anything.' },
-                { num: '2', title: 'We Do the Magic',  desc: 'Text gets neatly formatted with proper spacing and flow — looks sharp instantly.' },
-                { num: '3', title: 'Grab Your PDF',    desc: 'Click download — ready to print, email, or archive.' },
+                {
+                  num: "1",
+                  title: "Paste It In",
+                  desc: "Dump whatever text you have — resume, notes, letter, code snippets, anything.",
+                },
+                {
+                  num: "2",
+                  title: "We Do the Magic",
+                  desc: "Text gets neatly formatted with proper spacing and flow — looks sharp instantly.",
+                },
+                {
+                  num: "3",
+                  title: "Grab Your PDF",
+                  desc: "Click download — ready to print, email, or archive.",
+                },
               ].map((s, i) => (
                 <div key={i} className="tp-step-card">
                   <div className="tp-step-num">{s.num}</div>
-                  <h3 className="font-bold text-base mb-2" style={{ color: '#1a1a2e' }}>{s.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>{s.desc}</p>
+                  <h3
+                    className="font-bold text-base mb-2"
+                    style={{ color: "#1a1a2e" }}
+                  >
+                    {s.title}
+                  </h3>
+                  <p
+                    className="text-sm leading-relaxed"
+                    style={{ color: "#6B7280" }}
+                  >
+                    {s.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -176,45 +350,70 @@ export default function TextToPDF() {
         {/* ── SEO CONTENT ── */}
         <hr className="tp-divider" />
         <section className="tp-section-alt py-16 px-6">
-          <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
+          <div
+            className="max-w-3xl mx-auto space-y-8"
+            style={{ color: "#6B7280" }}
+          >
             <div>
-              <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-                Free Text to PDF Converter — ConvertlyHub
+              <h2
+                className="text-2xl font-bold mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Free Text to PDF Converter — ConvertLinx
               </h2>
               <p className="leading-7 text-sm">
-                The <span style={{ color: '#1a1a2e', fontWeight: 600 }}>ConvertlyHub Text to PDF</span> tool
-                converts plain text into clean, professional PDFs instantly — no signup, no watermark, no limits.
+                The{" "}
+                <span style={{ color: "#1a1a2e", fontWeight: 600 }}>
+                  Convertlinx Text to PDF
+                </span>{" "}
+                tool converts plain text into clean, professional PDFs instantly
+                — no signup, no watermark, no limits.
               </p>
             </div>
             <div>
-              <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Who Should Use This?</h3>
+              <h3
+                className="font-bold text-lg mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Who Should Use This?
+              </h3>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  'Students — assignments, notes & essays',
-                  'Job seekers — resumes & cover letters',
-                  'Office professionals — reports & letters',
-                  'Writers & bloggers — export content as PDF',
-                  'Anyone — quick text to printable document',
+                  "Students — assignments, notes & essays",
+                  "Job seekers — resumes & cover letters",
+                  "Office professionals — reports & letters",
+                  "Writers & bloggers — export content as PDF",
+                  "Anyone — quick text to printable document",
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm">
-                    <span className="font-bold mt-0.5" style={{ color: '#2563EB' }}>→</span>
+                    <span
+                      className="font-bold mt-0.5"
+                      style={{ color: "#2563EB" }}
+                    >
+                      →
+                    </span>
                     <span>{item}</span>
                   </div>
                 ))}
               </div>
             </div>
             <div className="tp-seo-box">
-              <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Features</h3>
+              <h3
+                className="font-bold text-lg mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Features
+              </h3>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  'Free, unlimited conversions',
-                  'Clean professional PDF formatting',
-                  'Handles short & long text',
-                  'Auto multi-page support',
-                  'Instant download',
-                  'Works on mobile & desktop',
-                  'No signup, no watermark',
-                  'Nothing stored — full privacy',
+                  "Free, unlimited conversions",
+                  "Clean professional PDF formatting",
+                  "Handles short & long text",
+                  "Auto multi-page support",
+                  "Instant download",
+                  "Works on mobile & desktop",
+                  "No signup, no watermark",
+                  "Nothing stored — full privacy",
                 ].map((f, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-sm">
                     <span className="tp-feature-dot" />
@@ -230,24 +429,34 @@ export default function TextToPDF() {
         <hr className="tp-divider" />
         <section className="tp-section-main py-16 px-6">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
+            <h2
+              className="text-2xl font-bold text-center mb-10"
+              style={{ color: "#1a1a2e" }}
+            >
               Frequently Asked Questions
             </h2>
+
             <div className="space-y-3">
-              {[
-                { q: 'Is Text to PDF free?',                    a: 'Yes — completely free with unlimited conversions and downloads.' },
-                { q: 'Can I format text before converting?',    a: 'Yes — edit or paste your content before clicking convert.' },
-                { q: 'Does it support long text?',              a: 'Yes — it automatically handles multiple pages for any length of content.' },
-                { q: 'Is my text stored anywhere?',             a: 'No — your text is used only to generate the PDF. Nothing is stored.' },
-                { q: 'Can I use this on mobile?',               a: 'Yes — works perfectly on phones, tablets, and desktops.' },
-                { q: 'Will my PDF look professional?',          a: 'Yes — the tool formats text with clean layout, proper margins, and readable spacing.' },
-              ].map((faq, i) => (
+              {faqs.map((faq, i) => (
                 <details key={i} className="tp-faq-item">
                   <summary className="flex items-center justify-between gap-4">
-                    <span className="font-semibold text-sm" style={{ color: '#374151' }}>{faq.q}</span>
-                    <ChevronDown className="w-4 h-4 shrink-0" style={{ color: '#2563EB' }} />
+                    <span
+                      className="font-semibold text-sm"
+                      style={{ color: "#374151" }}
+                    >
+                      {faq.q}
+                    </span>
+                    <ChevronDown
+                      className="w-4 h-4 shrink-0"
+                      style={{ color: "#2563EB" }}
+                    />
                   </summary>
-                  <p className="mt-3 text-sm leading-relaxed" style={{ color: '#6B7280' }}>{faq.a}</p>
+                  <p
+                    className="mt-3 text-sm leading-relaxed"
+                    style={{ color: "#6B7280" }}
+                  >
+                    {faq.a}
+                  </p>
                 </details>
               ))}
             </div>
@@ -260,11 +469,14 @@ export default function TextToPDF() {
             <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-white">
               Ready to create your PDF?
             </h2>
-            <p className="mb-8 text-base" style={{ color: 'rgba(255,255,255,0.7)' }}>
+            <p
+              className="mb-8 text-base"
+              style={{ color: "rgba(255,255,255,0.7)" }}
+            >
               Takes 5 seconds. No signup. No ads.
             </p>
             <button
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="tp-cta-btn"
             >
               <FileText className="w-5 h-5" />
@@ -272,435 +484,7 @@ export default function TextToPDF() {
             </button>
           </div>
         </section>
-
       </main>
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// 'use client';
-
-// import { useState } from 'react';
-// import jsPDF from 'jspdf';
-// import 'jspdf-autotable';
-// import { Download, FileText, Type, CheckCircle } from 'lucide-react';
-// import Script from 'next/script';
-// import RelatedToolsSection from "@/components/RelatedTools";
-
-
-// export default function TextToPDF() {
-//   const [text, setText] = useState('');
-
-//   const generatePDF = () => {
-//     if (!text.trim()) {
-//       alert('Please enter some text first!');
-//       return;
-//     }
-
-//     const doc = new jsPDF({
-//       orientation: 'portrait',
-//       unit: 'mm',
-//       format: 'a4'
-//     });
-
-//     doc.setFont('helvetica', 'normal');
-//     doc.setFontSize(12);
-//     doc.setTextColor(40, 40, 40);
-
-//     const pageWidth = doc.internal.pageSize.getWidth();
-//     const margin = 20;
-//     const maxWidth = pageWidth - 2 * margin;
-
-//     const lines = doc.splitTextToSize(text, maxWidth);
-
-//     let y = 20;
-//     const lineHeight = 7;
-
-//     lines.forEach(line => {
-//       if (y > 270) {
-//         doc.addPage();
-//         y = 20;
-//       }
-//       doc.text(line, margin, y);
-//       y += lineHeight;
-//     });
-
-//     doc.save('my-text-document.pdf');
-//   };
-
-//   return (
-//     <>
-//       {/* ==================== PAGE-SPECIFIC SEO SCHEMAS ==================== */}
-//       <Script
-//         id="howto-schema-text-pdf"
-//         type="application/ld+json"
-//         strategy="afterInteractive"
-//         dangerouslySetInnerHTML={{
-//           __html: JSON.stringify({
-//             "@context": "https://schema.org",
-//             "@type": "HowTo",
-//             name: "How to Convert Text to PDF Online for Free",
-//             description: "Create PDF from plain text with custom formatting instantly.",
-//             url: "https://pdflinx.com/text-to-pdf",
-//             step: [
-//               { "@type": "HowToStep", name: "Paste Text", text: "Type or paste your text." },
-//               { "@type": "HowToStep", name: "Customize", text: "Choose font, size, alignment." },
-//               { "@type": "HowToStep", name: "Download PDF", text: "Click convert and download PDF." }
-//             ],
-//             totalTime: "PT30S",
-//             estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
-//             image: "https://pdflinx.com/og-image.png"
-//           }, null, 2),
-//         }}
-//       />
-
-//       <Script
-//         id="breadcrumb-schema-text-pdf"
-//         type="application/ld+json"
-//         strategy="afterInteractive"
-//         dangerouslySetInnerHTML={{
-//           __html: JSON.stringify({
-//             "@context": "https://schema.org",
-//             "@type": "BreadcrumbList",
-//             itemListElement: [
-//               { "@type": "ListItem", position: 1, name: "Home", item: "https://pdflinx.com" },
-//               { "@type": "ListItem", position: 2, name: "Text to PDF", item: "https://pdflinx.com/text-to-pdf" }
-//             ]
-//           }, null, 2),
-//         }}
-//       />
-
-//       {/* ==================== MAIN TOOL SECTION ==================== */}
-//       <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-8 px-4">
-//         <div className="max-w-4xl mx-auto">
-//           {/* Header */}
-//           <div className="text-center mb-8">
-//             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-//               Text to PDF Converter <br /> Online (Free)
-//             </h1>
-//             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-//               Turn your notes, letters, or any random text into a clean, professional PDF in seconds. No fuss, no watermarks – just pure magic!
-//             </p>
-//           </div>
-
-//           {/* Tool Card */}
-//           <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
-//             <div className="mb-6">
-//               <label className="flex items-center gap-2 text-lg font-semibold text-gray-700 mb-3">
-//                 <Type className="w-6 h-6 text-blue-600" />
-//                 Drop Your Text Here
-//               </label>
-//               <textarea
-//                 value={text}
-//                 onChange={(e) => setText(e.target.value)}
-//                 placeholder="Go ahead – paste your resume, story, notes, shopping list, or whatever's on your mind..."
-//                 className="w-full h-80 p-6 text-base leading-relaxed border-2 border-gray-300 rounded-xl focus:border-blue-600 outline-none resize-y bg-gray-50 transition-shadow hover:shadow-inner"
-//                 spellCheck="true"
-//               />
-//               <p className="text-right text-gray-500 mt-2 text-sm">
-//                 {text.length} characters
-//               </p>
-//             </div>
-
-//             <div className="text-center">
-//               <button
-//                 onClick={generatePDF}
-//                 disabled={!text.trim()}
-//                 className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-semibold text-lg px-10 py-4 rounded-xl hover:from-blue-700 hover:to-indigo-800 disabled:opacity-60 disabled:cursor-not-allowed transition shadow-md flex items-center justify-center gap-2 mx-auto"
-//               >
-//                 <Download className="w-5 h-5" />
-//                 Download as PDF
-//               </button>
-//             </div>
-//           </div>
-
-//           <p className="text-center mt-6 text-gray-600 text-base">
-//             No account needed • Convert as much as you like • Looks sharp every time • Totally free
-//           </p>
-//         </div>
-//       </main>
-
-//       {/* ==================== SEO CONTENT SECTION ==================== */}
-//       <section className="mt-16 max-w-4xl mx-auto px-6 pb-16">
-//         {/* Main Heading */}
-//         <div className="text-center mb-12">
-//           <h2 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-//             Text to PDF Converter Online Free - Turn Words into PDFs in a Snap
-//           </h2>
-//           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-//             Got some text that needs to look legit? Whether it's a quick letter, study notes, or that novel you've been writing on your phone – just paste it here and boom, you've got a polished PDF ready to print or share. All free, right in your browser, courtesy of PDF Linx!
-//           </p>
-//         </div>
-
-//         {/* Benefits Grid */}
-//         <div className="grid md:grid-cols-3 gap-8 mb-16">
-//           <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl shadow-lg border border-blue-100 text-center hover:shadow-xl transition">
-//             <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-//               <FileText className="w-8 h-8 text-white" />
-//             </div>
-//             <h3 className="text-xl font-semibold text-gray-800 mb-3">Looks Pro Every Time</h3>
-//             <p className="text-gray-600 text-sm">
-//               Clean layout, nice margins – perfect for resumes, letters, or anything you want to impress with.
-//             </p>
-//           </div>
-
-//           <div className="bg-gradient-to-br from-indigo-50 to-white p-8 rounded-2xl shadow-lg border border-indigo-100 text-center hover:shadow-xl transition">
-//             <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
-//               <Type className="w-8 h-8 text-white" />
-//             </div>
-//             <h3 className="text-xl font-semibold text-gray-800 mb-3">Any Text Welcome</h3>
-//             <p className="text-gray-600 text-sm">
-//               Short note? Long story? Even code snippets – handles pages automatically, no sweat.
-//             </p>
-//           </div>
-
-//           <div className="bg-gradient-to-br from-green-50 to-white p-8 rounded-2xl shadow-lg border border-green-100 text-center hover:shadow-xl transition">
-//             <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-//               <CheckCircle className="w-8 h-8 text-white" />
-//             </div>
-//             <h3 className="text-xl font-semibold text-gray-800 mb-3">Quick & Private</h3>
-//             <p className="text-gray-600 text-sm">
-//               Happens right in your browser – nothing leaves your device, and it's all on the house.
-//             </p>
-//           </div>
-//         </div>
-
-//         {/* How To Steps */}
-//         <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 border border-gray-100">
-//           <h3 className="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-800">
-//             Turn Text into PDF in 3 Super Easy Steps
-//           </h3>
-//           <div className="grid md:grid-cols-3 gap-8">
-//             <div className="text-center">
-//               <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-white shadow-lg">
-//                 1
-//               </div>
-//               <h4 className="text-lg font-semibold mb-2">Paste It In</h4>
-//               <p className="text-gray-600 text-sm">Dump whatever text you've got – the more the merrier.</p>
-//             </div>
-
-//             <div className="text-center">
-//               <div className="w-16 h-16 bg-gradient-to-r from-indigo-600 to-indigo-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-white shadow-lg">
-//                 2
-//               </div>
-//               <h4 className="text-lg font-semibold mb-2">We Do the Magic</h4>
-//               <p className="text-gray-600 text-sm">It gets neatly arranged with proper spacing and flow – looks sharp instantly.</p>
-//             </div>
-
-//             <div className="text-center">
-//               <div className="w-16 h-16 bg-gradient-to-r from-green-600 to-green-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold text-white shadow-lg">
-//                 3
-//               </div>
-//               <h4 className="text-lg font-semibold mb-2">Grab Your PDF</h4>
-//               <p className="text-gray-600 text-sm">Hit download – ready to print, email, or stash away.</p>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Final CTA */}
-//         <p className="text-center mt-12 text-base text-gray-600 italic max-w-3xl mx-auto">
-//           People turn to PDF Linx every day to quickly whip up clean PDFs from text – it's fast, simple, and always free.
-//         </p>
-//       </section>
-
-
-//       <section className="max-w-4xl mx-auto px-4 py-14 text-slate-700">
-//   {/* Heading */}
-//   <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6">
-//     Text to PDF Converter Online (Free) – Convert Notes, Letters & Content into PDF by PDFLinx
-//   </h2>
-
-//   {/* Intro */}
-//   <p className="text-base leading-7 mb-6">
-//     Need to turn plain text into a clean, shareable PDF? Whether it’s notes, a resume, a letter, or copied content,
-//     manually formatting documents can be frustrating. That’s why we built the{" "}
-//     <span className="font-medium text-slate-900">PDFLinx Text to PDF Converter</span>.
-//     Simply paste your text, click convert, and instantly download a polished PDF file.
-//     No signup, no watermark, and works smoothly on mobile and desktop.
-//   </p>
-
-//   {/* What is */}
-//   <h3 className="text-xl font-semibold text-slate-900 mb-3">
-//     What Is a Text to PDF Converter?
-//   </h3>
-//   <p className="leading-7 mb-6">
-//     A text to PDF converter transforms plain written content into a structured PDF document.
-//     Instead of sharing raw text files or screenshots, you can convert your text into professional-looking PDFs that are
-//     easier to print, share, and store securely across devices.
-//   </p>
-
-//   {/* Why use */}
-//   <h3 className="text-xl font-semibold text-slate-900 mb-3">
-//     Why Convert Text to PDF?
-//   </h3>
-//   <ul className="space-y-2 mb-6 list-disc pl-6">
-//     <li>Create clean and professional documents instantly</li>
-//     <li>Share text content easily without formatting issues</li>
-//     <li>Preserve document structure across devices and platforms</li>
-//     <li>Perfect for resumes, assignments, letters, and reports</li>
-//     <li>Easy printing and secure document storage</li>
-//   </ul>
-
-//   {/* Steps */}
-//   <h3 className="text-xl font-semibold text-slate-900 mb-3">
-//     How to Convert Text to PDF Online
-//   </h3>
-//   <ol className="space-y-2 mb-6 list-decimal pl-6">
-//     <li>Paste or type your text into the editor</li>
-//     <li>Click the “Download as PDF” button</li>
-//     <li>The tool formats your text automatically</li>
-//     <li>Download your ready-to-use PDF instantly</li>
-//     <li>Use it for printing, sharing, or archiving</li>
-//   </ol>
-
-//   <p className="mb-6">
-//     Unlimited conversions, instant downloads — completely free and simple to use.
-//   </p>
-
-//   {/* Features box */}
-//   <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 mb-6">
-//     <h3 className="text-xl font-semibold text-slate-900 mb-4">
-//       Features of PDFLinx Text to PDF Converter
-//     </h3>
-//     <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 list-disc pl-5">
-//       <li>Free online text to PDF converter</li>
-//       <li>Convert notes, letters, resumes, and content into PDF</li>
-//       <li>Clean and professional PDF formatting</li>
-//       <li>Instant PDF generation</li>
-//       <li>Works on mobile, tablet, and desktop</li>
-//       <li>No signup, no watermark, no installation</li>
-//       <li>Handles short and long text content</li>
-//       <li>Fast and user-friendly interface</li>
-//     </ul>
-//   </div>
-
-//   {/* Audience */}
-//   <h3 className="text-xl font-semibold text-slate-900 mb-3">
-//     Who Should Use This Tool?
-//   </h3>
-//   <ul className="space-y-2 mb-6 list-disc pl-6">
-//     <li><strong>Students:</strong> Convert assignments, notes, and essays into PDFs</li>
-//     <li><strong>Job seekers:</strong> Turn resumes and cover letters into professional PDF format</li>
-//     <li><strong>Office professionals:</strong> Create reports, letters, and official documents</li>
-//     <li><strong>Writers & Bloggers:</strong> Export written content as shareable PDFs</li>
-//     <li><strong>Anyone:</strong> Who wants to convert plain text into a printable document</li>
-//   </ul>
-
-//   {/* Privacy */}
-//   <h3 className="text-xl font-semibold text-slate-900 mb-3">
-//     Is PDFLinx Text to PDF Converter Safe?
-//   </h3>
-//   <p className="leading-7 mb-6">
-//     Yes. You don’t need to create an account or upload sensitive files. Your text is used only to generate the PDF output.
-//     The tool is designed to be fast, secure, and privacy-friendly.
-//   </p>
-
-//   {/* Closing */}
-//   <h3 className="text-xl font-semibold text-slate-900 mb-3">
-//     Convert Text to PDF Anytime, Anywhere
-//   </h3>
-//   <p className="leading-7">
-//     PDFLinx Text to PDF Converter works smoothly on Windows, macOS, Linux, Android, and iOS.
-//     Whether you’re using a phone, tablet, or computer, you can convert text into PDF instantly using your browser.
-//   </p>
-// </section>
-
-// <section className="py-16 bg-gray-50">
-//   <div className="max-w-4xl mx-auto px-4">
-//     <h2 className="text-3xl font-bold text-center mb-10 text-slate-900">
-//       Frequently Asked Questions
-//     </h2>
-
-//     <div className="space-y-4">
-//       <details className="bg-white rounded-lg shadow-sm p-5">
-//         <summary className="font-semibold cursor-pointer">
-//           Is the Text to PDF converter free?
-//         </summary>
-//         <p className="mt-2 text-gray-600">
-//           Yes — it’s completely free with unlimited conversions and downloads.
-//         </p>
-//       </details>
-
-//       <details className="bg-white rounded-lg shadow-sm p-5">
-//         <summary className="font-semibold cursor-pointer">
-//           Can I format text before converting?
-//         </summary>
-//         <p className="mt-2 text-gray-600">
-//           Yes — you can edit or paste formatted content before converting it into PDF.
-//         </p>
-//       </details>
-
-//       <details className="bg-white rounded-lg shadow-sm p-5">
-//         <summary className="font-semibold cursor-pointer">
-//           Does the tool support long text content?
-//         </summary>
-//         <p className="mt-2 text-gray-600">
-//           Yes — it supports both short and long text documents automatically.
-//         </p>
-//       </details>
-
-//       <details className="bg-white rounded-lg shadow-sm p-5">
-//         <summary className="font-semibold cursor-pointer">
-//           Are my texts stored anywhere?
-//         </summary>
-//         <p className="mt-2 text-gray-600">
-//           No — your text is only used to generate the PDF file. Nothing is stored.
-//         </p>
-//       </details>
-
-//       <details className="bg-white rounded-lg shadow-sm p-5">
-//         <summary className="font-semibold cursor-pointer">
-//           Can I use this tool on mobile?
-//         </summary>
-//         <p className="mt-2 text-gray-600">
-//           Yes — it works perfectly on mobile phones, tablets, and desktops.
-//         </p>
-//       </details>
-
-//       <details className="bg-white rounded-lg shadow-sm p-5">
-//         <summary className="font-semibold cursor-pointer">
-//           Will my PDF look professional?
-//         </summary>
-//         <p className="mt-2 text-gray-600">
-//           Yes — the tool automatically formats text to create clean, readable, and printable PDFs.
-//         </p>
-//       </details>
-//     </div>
-//   </div>
-// </section>
-
-    
-//     <RelatedToolsSection currentPage="text-to-pdf" />
-
-//     </>
-//   );
-// }
-
-
-
