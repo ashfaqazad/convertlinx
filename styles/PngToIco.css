@@ -1,0 +1,515 @@
+/* ============================================================
+   PNG to ICO Converter — ConvertLinx
+   Unique prefix: pti-   |   Light pastel theme (mint + lavender)
+   Brand: #0F766E primary, #14B8A6 accent
+   ============================================================ */
+
+.pti-page {
+  background: #ffffff;
+  color: #1a1a2e;
+  overflow-x: hidden;
+}
+
+/* ── HERO ── */
+.pti-hero {
+  position: relative;
+  padding: 56px 24px 64px;
+  text-align: center;
+  background: linear-gradient(135deg, #ecfdf5 0%, #f5f3ff 60%, #f5f3ff 100%);
+  overflow: hidden;
+}
+.pti-blob-1,
+.pti-blob-2 {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.pti-blob-1 {
+  top: -90px;
+  left: -70px;
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.16), transparent 70%);
+}
+.pti-blob-2 {
+  bottom: -110px;
+  right: -70px;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(129, 140, 248, 0.16), transparent 70%);
+}
+.pti-breadcrumb-link {
+  color: #14b8a6;
+  text-decoration: none;
+}
+.pti-breadcrumb-link:hover {
+  text-decoration: underline;
+}
+.pti-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f766e;
+  background: #ccfbf1;
+  border: 1px solid #99f6e4;
+  border-radius: 999px;
+}
+.pti-grad-text {
+  background: linear-gradient(90deg, #0f766e, #14b8a6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── SECTIONS ── */
+.pti-section-main {
+  background: #ffffff;
+}
+.pti-section-alt {
+  background: #f5f3ff;
+}
+.pti-section-tool {
+  background: #f3f1ff;
+}
+.pti-divider {
+  border: 0;
+  height: 1px;
+  margin: 0;
+  background: #ede9fe;
+}
+
+/* ── INLINE CONTEXTUAL LINKS ── */
+.pti-inline-link {
+  color: #0f766e;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: #99f6e4;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease;
+}
+.pti-inline-link:hover {
+  color: #14b8a6;
+  text-decoration-color: #14b8a6;
+}
+
+/* ── TOOL CARD ── */
+.pti-tool-card {
+  background: #ffffff;
+  border: 1px solid #e9e5ff;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.08);
+}
+.pti-fade-up {
+  animation: pti-fade-up 0.5s ease both;
+}
+@keyframes pti-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Upload area */
+.pti-upload-area {
+  text-align: center;
+  padding: 44px 20px;
+  background: #ecfdf5;
+  border: 2px dashed #6ee7b7;
+  border-radius: 16px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.pti-upload-area:hover,
+.pti-upload-area.is-dragover {
+  background: #d1fae5;
+  border-color: #14b8a6;
+}
+.pti-upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 14px;
+  color: #0f766e;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(15, 118, 110, 0.12);
+}
+
+/* Transparency checkerboard */
+.pti-checker {
+  background-color: #ffffff;
+  background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+    linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+    linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+  background-size: 12px 12px;
+  background-position: 0 0, 0 6px, 6px -6px, -6px 0;
+}
+
+/* Source preview row */
+.pti-source {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  background: #fafaff;
+  border: 1px solid #e9e5ff;
+  border-radius: 14px;
+}
+.pti-source-img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 10px;
+  border: 1px solid #e9e5ff;
+  flex-shrink: 0;
+}
+.pti-source-info {
+  flex: 1;
+  min-width: 0;
+}
+.pti-source-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a2e;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pti-source-dim {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 2px;
+}
+
+/* Options */
+.pti-options {
+  display: grid;
+  gap: 18px;
+  margin-top: 20px;
+}
+.pti-opt-title {
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0f766e;
+}
+.pti-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.pti-chip {
+  padding: 6px 13px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  background: #ffffff;
+  border: 1px solid #ddd6fe;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.pti-chip:hover {
+  border-color: #5eead4;
+  background: #f0fdfa;
+}
+.pti-chip.is-active {
+  color: #0f766e;
+  background: #ccfbf1;
+  border-color: #5eead4;
+}
+.pti-seg {
+  display: inline-flex;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #ddd6fe;
+  border-radius: 12px;
+}
+.pti-seg button {
+  padding: 8px 15px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.pti-seg button.is-active {
+  color: #0f766e;
+  background: #ccfbf1;
+}
+
+/* Notes (info only — no red/orange) */
+.pti-note {
+  margin-top: 16px;
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #4338ca;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 12px;
+}
+
+/* Buttons */
+.pti-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.pti-btn-primary {
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  box-shadow: 0 6px 16px rgba(20, 184, 166, 0.25);
+}
+.pti-btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(20, 184, 166, 0.32);
+}
+.pti-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.pti-btn-secondary {
+  color: #0f766e;
+  background: #ffffff;
+  border-color: #a7f3d0;
+}
+.pti-btn-secondary:hover {
+  background: #ecfdf5;
+}
+
+/* Spinner */
+.pti-spinner {
+  width: 36px;
+  height: 36px;
+  margin: 0 auto;
+  border: 3px solid #ccfbf1;
+  border-top-color: #14b8a6;
+  border-radius: 50%;
+  animation: pti-spin 0.8s linear infinite;
+}
+@keyframes pti-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Results */
+.pti-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 12px;
+}
+.pti-result-card {
+  padding: 12px 8px;
+  text-align: center;
+  background: #fafaff;
+  border: 1px solid #e9e5ff;
+  border-radius: 14px;
+}
+.pti-result-card img {
+  display: block;
+  margin: 0 auto 8px;
+  border-radius: 6px;
+}
+.pti-result-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+.pti-ico-meta {
+  font-size: 13px;
+  text-align: center;
+  color: #6b7280;
+}
+
+/* Snippet */
+.pti-snippet-box {
+  padding: 16px;
+  background: #f5f3ff;
+  border: 1px solid #e9e5ff;
+  border-radius: 14px;
+}
+.pti-code-block {
+  padding: 12px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #134e4a;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #ffffff;
+  border: 1px solid #e9e5ff;
+  border-radius: 10px;
+}
+.pti-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0f766e;
+  background: #ffffff;
+  border: 1px solid #a7f3d0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.pti-copy-btn:hover {
+  background: #ecfdf5;
+}
+
+/* Trust row */
+.pti-trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+.pti-trust-dot {
+  width: 5px;
+  height: 5px;
+  background: #14b8a6;
+  border-radius: 50%;
+}
+
+/* ── STEPS ── */
+.pti-step-card {
+  padding: 26px 22px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #e9e5ff;
+  border-radius: 16px;
+}
+.pti-step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 14px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  border-radius: 12px;
+}
+
+/* ── BENEFITS ── */
+.pti-benefit-card {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e9e5ff;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.05);
+}
+.pti-benefit-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+}
+
+/* ── SEO CONTENT ── */
+.pti-seo-box {
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid #e9e5ff;
+  border-radius: 16px;
+}
+.pti-feature-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  background: #14b8a6;
+  border-radius: 50%;
+}
+
+/* ── FAQ ── */
+.pti-faq-item {
+  padding: 16px 20px;
+  background: #fafaff;
+  border: 1px solid #e9e5ff;
+  border-radius: 14px;
+}
+.pti-faq-item summary {
+  list-style: none;
+  cursor: pointer;
+}
+.pti-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.pti-faq-item summary svg {
+  transition: transform 0.2s ease;
+}
+.pti-faq-item[open] summary svg {
+  transform: rotate(180deg);
+}
+
+/* ── CTA (light) ── */
+.pti-cta-section {
+  padding: 72px 24px;
+  text-align: center;
+  background: linear-gradient(135deg, #ecfdf5 0%, #eef2ff 100%);
+  border-top: 1px solid #e9e5ff;
+}
+.pti-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 28px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  border: 0;
+  border-radius: 14px;
+  box-shadow: 0 8px 22px rgba(20, 184, 166, 0.28);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.pti-cta-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .pti-hero {
+    padding: 40px 18px 48px;
+  }
+  .pti-tool-card {
+    padding: 20px;
+  }
+  .pti-source {
+    flex-wrap: wrap;
+  }
+  .pti-upload-area {
+    padding: 34px 14px;
+  }
+}

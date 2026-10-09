@@ -31,6 +31,8 @@ const toolMap = {
   'favicon-generator':       dynamic(() => import('@/components/tools/FaviconGenerator')),
   'regex-tester':            dynamic(() => import('@/components/tools/RegexTester')),
   'og-preview-checker':      dynamic(() => import('@/components/tools/OgPreviewChecker')),
+  'png-to-ico':              dynamic(() => import('@/components/tools/PngToIco')),
+
 
 }
 

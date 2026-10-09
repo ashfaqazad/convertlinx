@@ -93,6 +93,7 @@ const imageTools = [
   { href: "/image-resizer",      icon: Maximize2, color: "#8B5CF6", label: "Image Resizer"       },
   { href: "/image-cropper",      icon: Crop,      color: "#D946EF", label: "Image Cropper"       },
   { href: "/image-converter",    icon: ImageIcon, color: "#3B82F6", label: "Image Converter"     },
+  { href: "/png-to-ico",         icon: FileImage, color: "#F59E0B", label: "PNG to ICO"          },
   { href: "/heic-to-jpg",        icon: FileImage, color: "#F97316", label: "HEIC to JPG"         },
   { href: "/image-to-text",      icon: ImageIcon, color: "#6366F1", label: "Image to Text"       },
   { href: "/rotate-flip-image",  icon: RotateCw,  color: "#0D9488", label: "Rotate & Flip Image" },

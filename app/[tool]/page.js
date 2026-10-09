@@ -1,10 +1,3 @@
-
-
-
-
-
-
-
 import { notFound } from "next/navigation";
 import { seoData } from "@/lib/seoData";
 import { generateSchemas } from "@/lib/generateSchemas";
@@ -43,6 +36,7 @@ const BASE_TOOLS = new Set([
   "favicon-generator",
   "regex-tester",
   "og-preview-checker",
+  "png-to-ico",
 ]);
 
 // 🔹 Resolve base tool (for variants)
