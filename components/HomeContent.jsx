@@ -76,7 +76,7 @@ export default function HomeContent() {
   ];
 
   const stats = [
-    { value: "20+", label: "Free Tools" },
+    { value: "27+", label: "Free Tools" },
     { value: "0", label: "Ads" },
     { value: "100%", label: "Browser-based" },
     { value: "∞", label: "Free Forever" },
