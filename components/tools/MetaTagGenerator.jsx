@@ -652,7 +652,7 @@ export default function MetaTagGenerator() {
                 { name: 'JSON Formatter',   href: '/json-formatter'  },
                 { name: 'Case Converter',   href: '/case-converter'  },
                 { name: 'Lorem Ipsum',      href: '/lorem-ipsum'     },
-                { name: 'Base64 Encoder',   href: '/base64'          },
+                { name: 'Base64 Encoder',   href: '/base64-tool'          },
               ].map((tool, i) => (
                 <Link
                   key={i}

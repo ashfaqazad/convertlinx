@@ -452,7 +452,6 @@ export default function RotateFlipImage() {
               {[
                 { name: 'Image to Text (OCR)', href: '/image-to-text'  },
                 { name: 'Image Compressor',    href: '/image-compressor'},
-                { name: 'Image to PDF',        href: '/image-to-pdf'   },
                 { name: 'Lorem Ipsum',         href: '/lorem-ipsum'    },
                 { name: 'Color Picker',        href: '/color-picker'   },
               ].map((tool, i) => (

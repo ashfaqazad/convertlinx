@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import Script from "next/script";
 import "@/styles/YouTubeThumb.css";
+import Link from "next/link";
+
+
 
 export default function YouTubeThumbnailDownloader() {
   const [url, setUrl] = useState("");
@@ -407,6 +410,115 @@ export default function YouTubeThumbnailDownloader() {
                 <strong>download YouTube thumbnails</strong> instantly in
                 multiple resolutions. You can extract{" "}
                 <strong>HD YouTube thumbnails</strong>, preview images, and save
+                thumbnails from any video link. Once downloaded, you can easily
+                optimize or resize them using our{" "}
+                <Link
+                  href="/image-resizer"
+                  className="text-amber-600 underline font-semibold"
+                >
+                  Image Resizer
+                </Link>{" "}
+                or{" "}
+                <Link
+                  href="/image-cropper"
+                  className="text-amber-600 underline font-semibold"
+                >
+                  Image Cropper
+                </Link>{" "}
+                tools. This <strong>online YouTube thumbnail downloader</strong>{" "}
+                works without signup or watermark and supports
+                <strong>max resolution thumbnails (1920×1080)</strong>, HD,
+                medium and standard sizes.
+              </p>
+            </div>
+
+            <div>
+              <h3
+                className="font-bold text-lg mb-3"
+                style={{ color: "#1a1a2e" }}
+              >
+                Who Should Use This?
+              </h3>
+              <p className="text-xs mb-3 text-slate-500">
+                Creators and marketers often compress banner assets using our{" "}
+                <Link
+                  href="/image-compressor"
+                  className="text-amber-600 underline font-semibold"
+                >
+                  Image Compressor
+                </Link>{" "}
+                before publishing.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  "YouTube Creators — backup & redesigns",
+                  "Designers — inspiration & mockups",
+                  "Marketers — campaign previews",
+                  "Bloggers — video embed images",
+                  "Anyone — quick thumbnail saves",
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm">
+                    <span
+                      className="font-bold mt-0.5"
+                      style={{ color: "#DC2626" }}
+                    >
+                      →
+                    </span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="yt-seo-box">
+              <h3
+                className="font-bold text-lg mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Features
+              </h3>
+              <p className="text-xs mb-3 text-slate-500">
+                Need to change format? Try our{" "}
+                <Link
+                  href="/image-converter"
+                  className="text-amber-600 underline font-semibold"
+                >
+                  Image Converter
+                </Link>{" "}
+                tool.
+              </p>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  "Free with unlimited downloads",
+                  "Max, HD, Medium, Standard sizes",
+                  "Instant thumbnail preview",
+                  "Download or copy direct URL",
+                  "Works on mobile & desktop",
+                  "No signup, no watermark",
+                  "Fast & lightweight",
+                  "Nothing stored — full privacy",
+                ].map((f, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-sm">
+                    <span className="yt-feature-dot" />
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* <div>
+              <h2
+                className="text-2xl font-bold mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Free YouTube Thumbnail Downloader — ConvertLinx
+              </h2>
+              <p className="leading-7 text-sm">
+                The <strong>Convertlinx YouTube Thumbnail Downloader</strong>{" "}
+                lets you
+                <strong>download YouTube thumbnails</strong> instantly in
+                multiple resolutions. You can extract{" "}
+                <strong>HD YouTube thumbnails</strong>, preview images, and save
                 thumbnails from any video link. This{" "}
                 <strong>online YouTube thumbnail downloader</strong> works
                 without signup or watermark and supports
@@ -467,7 +579,8 @@ export default function YouTubeThumbnailDownloader() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
+
             {/* Related Tools (Tailwind) */}
             <div className="mt-6 rounded-2xl border border-slate-200 bg-white/70 p-5">
               <p className="text-sm font-semibold text-slate-700 mb-3">
@@ -475,25 +588,12 @@ export default function YouTubeThumbnailDownloader() {
               </p>
 
               <div className="flex flex-wrap gap-2">
-                {/* <a href="/qr-generator" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
-      QR Generator
-    </a> */}
-
-                {/* <a href="/password-gen" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
-      Password Generator
-    </a> */}
-
                 <a
                   href="/image-resizer"
                   className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
                 >
                   Image Resizer
                 </a>
-
-                {/* <a href="/image-to-text" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
-      Image to Text
-    </a> */}
-
                 <a
                   href="/image-cropper"
                   className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition"
@@ -541,26 +641,72 @@ export default function YouTubeThumbnailDownloader() {
                 {
                   q: "Is the YouTube Thumbnail Downloader free?",
                   a: "Yes — completely free with unlimited downloads and no hidden charges.",
+                  aText:
+                    "Yes — completely free with unlimited downloads and no hidden charges.",
                 },
                 {
                   q: "What thumbnail qualities can I download?",
-                  a: "Max (1920×1080), HD (1280×720), Medium (640×480), Standard (480×360), and Default — depending on what the video provides.",
+                  a: (
+                    <span>
+                      Max (1920×1080), HD (1280×720), Medium (640×480), Standard
+                      (480×360), and Default — depending on what the video
+                      provides. Once downloaded, you can resize or crop them
+                      using our{" "}
+                      <Link
+                        href="/image-resizer"
+                        className="text-amber-600 underline font-semibold"
+                      >
+                        Image Resizer
+                      </Link>{" "}
+                      or{" "}
+                      <Link
+                        href="/image-cropper"
+                        className="text-amber-600 underline font-semibold"
+                      >
+                        Image Cropper
+                      </Link>{" "}
+                      tools.
+                    </span>
+                  ),
+                  aText:
+                    "Max (1920×1080), HD (1280×720), Medium (640×480), Standard (480×360), and Default — depending on what the video provides. Once downloaded, you can resize or crop them using our Image Resizer or Image Cropper tools.",
                 },
                 {
                   q: "How do I download a thumbnail?",
                   a: "Paste the YouTube video URL, click Get Thumbnails, then download your preferred quality.",
+                  aText:
+                    "Paste the YouTube video URL, click Get Thumbnails, then download your preferred quality.",
                 },
                 {
                   q: "Can I use this on mobile?",
                   a: "Yes — works perfectly on phones, tablets, and desktops.",
+                  aText:
+                    "Yes — works perfectly on phones, tablets, and desktops.",
                 },
                 {
-                  q: "Do you store the URLs?",
-                  a: "No — the URL is only used to fetch thumbnail links. Nothing is stored.",
+                  q: "Do you store the URLs or images?",
+                  a: (
+                    <span>
+                      No — the URL is only used to fetch thumbnail links.
+                      Nothing is stored. If you need to compress downloaded
+                      banners for web use, try our{" "}
+                      <Link
+                        href="/image-compressor"
+                        className="text-amber-600 underline font-semibold"
+                      >
+                        Image Compressor
+                      </Link>
+                      .
+                    </span>
+                  ),
+                  aText:
+                    "No — the URL is only used to fetch thumbnail links. Nothing is stored. If you need to compress downloaded banners for web use, try our Image Compressor.",
                 },
                 {
                   q: "Why is Max/HD not available for some videos?",
                   a: "Some videos do not have a max-resolution thumbnail uploaded by the creator, so only lower sizes are available.",
+                  aText:
+                    "Some videos do not have a max-resolution thumbnail uploaded by the creator, so only lower sizes are available.",
                 },
               ].map((faq, i) => (
                 <details key={i} className="yt-faq-item">
