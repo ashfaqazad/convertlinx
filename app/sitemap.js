@@ -94,6 +94,9 @@ export default function sitemap() {
     "/blog/download-youtube-thumbnail-hd-free",
     "/blog/create-digital-signature-online-free",
     "/blog/convert-text-to-pdf-online-free",
+    "/blog/best-free-pdf-tools-online",
+
+    
   ].map((url) => ({
     url,
     changeFrequency: "weekly",
