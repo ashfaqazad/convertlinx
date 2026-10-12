@@ -799,10 +799,10 @@ export default function SignatureMaker() {
               </p>
               <p className="leading-7 text-sm mt-3">
                 If your signature is already on a page, take a screenshot or
-                export that page as an image, then upload it here to convert
-                the picture of your signature to digital. The tool accepts JPG
-                and PNG files, and you can change the pen color after the
-                signature is extracted.
+                export that page as an image, then upload it here to convert the
+                picture of your signature to digital. The tool accepts JPG and
+                PNG files, and you can change the pen color after the signature
+                is extracted.
               </p>
             </div>
 
@@ -837,19 +837,18 @@ export default function SignatureMaker() {
                 E Signature Maker and E Signature Converter
               </h3>
               <p className="leading-7 text-sm">
-                Use this free tool as an e signature maker to create a
-                signature online free, or as an e signature converter and e
-                sign converter to turn a photo or scan into a reusable image.
-                You can also use it to convert a digital signature image to a
-                new pen color or to remove its white background: upload the
-                image, move the slider, and download the result. It works as a
-                signature capture online and capture signature online tool on
-                phones and tablets, a virtual signature online option, and a
-                free online digital signature creator. There is no account and
-                no login, so it is an online signature free no sign up tool
-                that takes about 40 seconds. Looking for a signature tool
-                online or a signature maker free online? Open this page, sign,
-                and download.
+                Use this free tool as an e signature maker to create a signature
+                online free, or as an e signature converter and e sign converter
+                to turn a photo or scan into a reusable image. You can also use
+                it to convert a digital signature image to a new pen color or to
+                remove its white background: upload the image, move the slider,
+                and download the result. It works as a signature capture online
+                and capture signature online tool on phones and tablets, a
+                virtual signature online option, and a free online digital
+                signature creator. There is no account and no login, so it is an
+                online signature free no sign up tool that takes about 40
+                seconds. Looking for a signature tool online or a signature
+                maker free online? Open this page, sign, and download.
               </p>
             </div>
 
@@ -896,6 +895,28 @@ export default function SignatureMaker() {
                   Add Watermark
                 </NextLink>
                 .
+              </p>
+            </div>
+
+            <div className="sm-seo-box rounded-2xl p-6">
+              <h3
+                className="font-bold text-lg mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Turn Your Signature or Logo into a Favicon
+              </h3>
+              <p className="leading-7 text-sm">
+                Want to use your signature, initials or a personal logo as your
+                website icon? Save it as a PNG here, then convert it with the{" "}
+                <a
+                  href="https://freeconverto.com/png-to-ico/"
+                  target="_blank"
+                  rel="noopener"
+                  className={linkClass}
+                >
+                  PNG to ICO Converter by FreeConverto
+                </a>{" "}
+                to create a favicon file for your site, free and online.
               </p>
             </div>
 
@@ -1060,47 +1081,6 @@ export default function SignatureMaker() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 
@@ -2065,50 +2045,6 @@ export default function SignatureMaker() {
 //     </>
 //   );
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 
