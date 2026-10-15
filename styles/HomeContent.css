@@ -229,9 +229,11 @@
 
 /* ── TOOL CARD ── */
 /* ✅ bulletproof: even if some inline bg is set, card stays white */
+
 .home-tool-card {
   background: #ffffff !important;
   color: #1a1a2e;
+  text-decoration: none; /* 👈 NEW: link ka underline khatam */
 
   border: 1.5px solid rgba(99,102,241,0.10);
   border-radius: 18px;
@@ -250,10 +252,33 @@
   box-shadow: 0 2px 8px rgba(99,102,241,0.04);
 }
 
+/* .home-tool-card {
+  background: #ffffff !important;
+  color: #1a1a2e;
+
+  border: 1.5px solid rgba(99,102,241,0.10);
+  border-radius: 18px;
+  padding: 20px;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(99,102,241,0.04);
+} */
+
 .home-tool-card:hover {
   border-color: rgba(99,102,241,0.18);
   box-shadow: 0 10px 28px rgba(99,102,241,0.10);
   transform: translateY(-3px);
+  text-decoration: none;
+
 }
 
 /* glow behind content */
