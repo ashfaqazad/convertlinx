@@ -37,6 +37,8 @@ const BASE_TOOLS = new Set([
   "regex-tester",
   "og-preview-checker",
   "png-to-ico",
+  "png-to-jpg",
+  "jfif-to-jpg",
 ]);
 
 // 🔹 Resolve base tool (for variants)

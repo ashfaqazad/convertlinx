@@ -6,7 +6,6 @@ import { Copy, Shield, Zap, CheckCircle, ChevronDown, RefreshCw } from 'lucide-r
 import Script from 'next/script';
 import Link from 'next/link';
 import '@/styles/PasswordGenerator.css';
-import PDFLinxEmbedWrapper from "@/components/embeds/PDFLinxEmbedWrapper";
 
 /* ── Password strength helper ── */
 function getStrength(pwd) {
@@ -391,11 +390,6 @@ export default function PasswordGenerator() {
           </div>
         </section>
 
-        {/* ── PDF EMBED ── */}
-        <div className="text-center">
-          <h2>Free PDF Tool</h2>
-          <PDFLinxEmbedWrapper tool="word-to-pdf" />
-        </div>
 
         {/* ── FAQ ── */}
         <hr className="mid-divider" />

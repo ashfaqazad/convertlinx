@@ -95,6 +95,8 @@ const imageTools = [
   { href: "/image-converter",    icon: ImageIcon, color: "#3B82F6", label: "Image Converter"     },
   { href: "/png-to-ico",         icon: FileImage, color: "#F59E0B", label: "PNG to ICO"          },
   { href: "/heic-to-jpg",        icon: FileImage, color: "#F97316", label: "HEIC to JPG"         },
+  { href: "/png-to-jpg",         icon: FileImage, color: "#EC4899", label: "PNG to JPG"          },
+  { href: "/jfif-to-jpg",        icon: FileImage, color: "#14B8A6", label: "JFIF to JPG"         },
   { href: "/image-to-text",      icon: ImageIcon, color: "#6366F1", label: "Image to Text"       },
   { href: "/rotate-flip-image",  icon: RotateCw,  color: "#0D9488", label: "Rotate & Flip Image" },
   { href: "/add-watermark",      icon: Shield,    color: "#059669", label: "Add Watermark"       },

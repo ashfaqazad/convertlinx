@@ -5,12 +5,12 @@ export default function sitemap() {
 
   // ── Static Pages ──
   const staticRoutes = [
-    { url: "/",               changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
-    { url: "/blog",           changeFrequency: "weekly",  priority: 0.9, lastModified: new Date("2026-06-30") },
-    { url: "/about",          changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
-    { url: "/contact",        changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
-    { url: "/privacy-policy", changeFrequency: "yearly",  priority: 0.3, lastModified: new Date("2025-01-01") },
-    { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
+    { url: "/",                 changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
+    { url: "/blog",             changeFrequency: "weekly",  priority: 0.9, lastModified: new Date("2026-06-30") },
+    { url: "/about",            changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
+    { url: "/contact",          changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
+    { url: "/privacy-policy",   changeFrequency: "yearly",  priority: 0.3, lastModified: new Date("2025-01-01") },
+    { url: "/terms-of-service", changeFrequency: "yearly",  priority: 0.3, lastModified: new Date("2025-01-01") },
   ];
 
   // ── Tool Pages ──
@@ -52,7 +52,6 @@ export default function sitemap() {
     "/youtube-thumbnail",
     "/signature-maker",
     "/text-to-pdf",
-
   ].map((url) => ({
     url,
     changeFrequency: "monthly",
@@ -60,7 +59,18 @@ export default function sitemap() {
     lastModified: new Date("2026-04-02"),
   }));
 
-  // ── Blog Pages (ALL 23 ARTICLES ✅) ──
+  // ── New Image Tool Pages (added Oct 2026) ──
+  const newToolRoutes = [
+    "/png-to-jpg",
+    "/jfif-to-jpg",
+  ].map((url) => ({
+    url,
+    changeFrequency: "monthly",
+    priority: 0.8,
+    lastModified: new Date("2026-10-15"),
+  }));
+
+  // ── Blog Pages (24 articles) ──
   const blogRoutes = [
     // Image Tools
     "/blog/compress-images-without-losing-quality",
@@ -95,8 +105,6 @@ export default function sitemap() {
     "/blog/create-digital-signature-online-free",
     "/blog/convert-text-to-pdf-online-free",
     "/blog/best-free-pdf-tools-online",
-
-    
   ].map((url) => ({
     url,
     changeFrequency: "weekly",
@@ -104,7 +112,7 @@ export default function sitemap() {
     lastModified: new Date("2026-06-30"),
   }));
 
-  const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
+  const allRoutes = [...staticRoutes, ...toolRoutes, ...newToolRoutes, ...blogRoutes];
 
   return allRoutes.map(({ url, changeFrequency, priority, lastModified }) => ({
     url: `${baseUrl}${url}`,
@@ -113,6 +121,17 @@ export default function sitemap() {
     priority,
   }));
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -163,6 +182,7 @@ export default function sitemap() {
 //     "/image-resizer",
 //     "/image-cropper",
 //     "/image-converter",
+//     "/png-to-ico",
 //     "/image-to-text",
 //     "/heic-to-jpg",
 //     "/add-watermark",
@@ -178,6 +198,9 @@ export default function sitemap() {
 //     // Developer Tools
 //     "/json-formatter",
 //     "/base64-tool",
+//     "/regex-tester",
+//     "/favicon-generator",
+//     "/og-preview-checker",
 //     "/metatag-generator",
 
 //     // Design Tools
@@ -186,10 +209,12 @@ export default function sitemap() {
 //     // Utilities
 //     "/qr-generator",
 //     "/password-gen",
+//     "/whatsapp-link-generator",
 //     "/unit-converter",
 //     "/youtube-thumbnail",
 //     "/signature-maker",
 //     "/text-to-pdf",
+
 //   ].map((url) => ({
 //     url,
 //     changeFrequency: "monthly",
@@ -200,37 +225,40 @@ export default function sitemap() {
 //   // ── Blog Pages (ALL 23 ARTICLES ✅) ──
 //   const blogRoutes = [
 //     // Image Tools
-//     "/blog/image-compressor",
-//     "/blog/image-resizer",
-//     "/blog/image-cropper",
-//     "/blog/image-converter",
-//     "/blog/image-to-text",
-//     "/blog/heic-to-jpg",
-//     "/blog/add-watermark",
-//     "/blog/rotate-flip-image",
+//     "/blog/compress-images-without-losing-quality",
+//     "/blog/resize-image-online-free-tool",
+//     "/blog/crop-image-online-free-tool",
+//     "/blog/convert-image-format-online-free",
+//     "/blog/extract-text-from-image-ocr-free",
+//     "/blog/convert-heic-to-jpg-free-online",
+//     "/blog/add-watermark-to-image-online-free",
+//     "/blog/rotate-flip-image-online-free",
 
 //     // Writing / Text Tools
-//     "/blog/word-counter",
-//     "/blog/case-converter",
-//     "/blog/lorem-ipsum",
-//     "/blog/text-to-speech",
-//     "/blog/text-to-slug",
+//     "/blog/free-online-word-counter-tool",
+//     "/blog/text-case-converter-uppercase-lowercase",
+//     "/blog/lorem-ipsum-generator-free-placeholder-text",
+//     "/blog/free-text-to-speech-converter-online",
+//     "/blog/text-to-url-slug-converter-free",
 
 //     // Developer Tools
-//     "/blog/json-formatter",
-//     "/blog/base64-tool",
-//     "/blog/metatag-generator",
+//     "/blog/json-formatter-validator-online-free",
+//     "/blog/base64-encode-decode-online-free",
+//     "/blog/free-meta-tag-generator-seo-tool",
 
 //     // Design Tools
-//     "/blog/color-picker",
+//     "/blog/online-color-picker-hex-rgb-hsl",
 
 //     // Utilities
-//     "/blog/qr-generator",
-//     "/blog/password-gen",
-//     "/blog/unit-converter",
-//     "/blog/youtube-thumbnail",
-//     "/blog/signature-maker",
-//     "/blog/text-to-pdf",
+//     "/blog/how-to-generate-qr-code-online-free",
+//     "/blog/how-to-create-strong-password-online",
+//     "/blog/free-online-unit-converter-guide",
+//     "/blog/download-youtube-thumbnail-hd-free",
+//     "/blog/create-digital-signature-online-free",
+//     "/blog/convert-text-to-pdf-online-free",
+//     "/blog/best-free-pdf-tools-online",
+
+    
 //   ].map((url) => ({
 //     url,
 //     changeFrequency: "weekly",
@@ -275,17 +303,6 @@ export default function sitemap() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 // // // app/sitemap.js
 
 // // export default function sitemap() {
@@ -294,7 +311,7 @@ export default function sitemap() {
 // //   // ── Static Pages ──
 // //   const staticRoutes = [
 // //     { url: "/",               changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
-// //     { url: "/blog",           changeFrequency: "weekly",  priority: 0.9, lastModified: new Date("2026-03-18") },
+// //     { url: "/blog",           changeFrequency: "weekly",  priority: 0.9, lastModified: new Date("2026-06-30") },
 // //     { url: "/about",          changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
 // //     { url: "/contact",        changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
 // //     { url: "/privacy-policy", changeFrequency: "yearly",  priority: 0.3, lastModified: new Date("2025-01-01") },
@@ -342,23 +359,45 @@ export default function sitemap() {
 // //     lastModified: new Date("2026-04-02"),
 // //   }));
 
-// //   // ── Blog Pages (ONLY EXISTING BLOGS ✅) ──
+// //   // ── Blog Pages (ALL 23 ARTICLES ✅) ──
 // //   const blogRoutes = [
+// //     // Image Tools
+// //     "/blog/image-compressor",
+// //     "/blog/image-resizer",
+// //     "/blog/image-cropper",
+// //     "/blog/image-converter",
+// //     "/blog/image-to-text",
+// //     "/blog/heic-to-jpg",
+// //     "/blog/add-watermark",
+// //     "/blog/rotate-flip-image",
+
+// //     // Writing / Text Tools
+// //     "/blog/word-counter",
+// //     "/blog/case-converter",
+// //     "/blog/lorem-ipsum",
+// //     "/blog/text-to-speech",
+// //     "/blog/text-to-slug",
+
+// //     // Developer Tools
+// //     "/blog/json-formatter",
+// //     "/blog/base64-tool",
+// //     "/blog/metatag-generator",
+
+// //     // Design Tools
+// //     "/blog/color-picker",
+
+// //     // Utilities
 // //     "/blog/qr-generator",
 // //     "/blog/password-gen",
 // //     "/blog/unit-converter",
 // //     "/blog/youtube-thumbnail",
-// //     "/blog/image-compressor",
-// //     "/blog/image-to-text",
 // //     "/blog/signature-maker",
-// //     "/blog/heic-to-jpg",
 // //     "/blog/text-to-pdf",
-// //     "/blog/image-converter",
 // //   ].map((url) => ({
 // //     url,
 // //     changeFrequency: "weekly",
 // //     priority: 0.7,
-// //     lastModified: new Date("2026-04-02"),
+// //     lastModified: new Date("2026-06-30"),
 // //   }));
 
 // //   const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
@@ -405,11 +444,16 @@ export default function sitemap() {
 
 
 
+
+
+
+
 // // // // app/sitemap.js
 
 // // // export default function sitemap() {
 // // //   const baseUrl = "https://convertlinx.com";
 
+// // //   // ── Static Pages ──
 // // //   const staticRoutes = [
 // // //     { url: "/",               changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
 // // //     { url: "/blog",           changeFrequency: "weekly",  priority: 0.9, lastModified: new Date("2026-03-18") },
@@ -419,74 +463,64 @@ export default function sitemap() {
 // // //     { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
 // // //   ];
 
+// // //   // ── Tool Pages ──
 // // //   const toolRoutes = [
-// // //     // ── Image Tools ──
-// // //     { url: "/image-compressor",  lastModified: new Date("2026-03-18") },
-// // //     { url: "/image-resizer",     lastModified: new Date("2026-03-18") },
-// // //     { url: "/image-cropper",     lastModified: new Date("2026-03-18") },
-// // //     { url: "/image-converter",   lastModified: new Date("2026-03-18") },
-// // //     { url: "/image-to-text",     lastModified: new Date("2026-03-18") },
-// // //     { url: "/heic-to-jpg",       lastModified: new Date("2026-03-18") },
+// // //     // Image Tools
+// // //     "/image-compressor",
+// // //     "/image-resizer",
+// // //     "/image-cropper",
+// // //     "/image-converter",
+// // //     "/image-to-text",
+// // //     "/heic-to-jpg",
+// // //     "/add-watermark",
+// // //     "/rotate-flip-image",
 
-// // //     // ── Writing Tools ──
-// // //     { url: "/word-counter",      lastModified: new Date("2026-03-18") },
-// // //     { url: "/case-converter",    lastModified: new Date("2026-03-18") },
-// // //     { url: "/lorem-ipsum",       lastModified: new Date("2026-03-18") },
+// // //     // Writing / Text Tools
+// // //     "/word-counter",
+// // //     "/case-converter",
+// // //     "/lorem-ipsum",
+// // //     "/text-to-speech",
+// // //     "/text-to-slug",
 
-// // //     // ── Developer Tools ──
-// // //     { url: "/json-formatter",    lastModified: new Date("2026-03-18") },
-// // //     { url: "/base64-tool",            lastModified: new Date("2026-03-18") },
+// // //     // Developer Tools
+// // //     "/json-formatter",
+// // //     "/base64-tool",
+// // //     "/metatag-generator",
 
-// // //     // ── Design Tools ──
-// // //     { url: "/color-picker",      lastModified: new Date("2026-03-18") },
+// // //     // Design Tools
+// // //     "/color-picker",
 
-// // //     // ── Other Utilities ──
-// // //     { url: "/qr-generator",      lastModified: new Date("2026-03-18") },
-// // //     { url: "/password-gen",      lastModified: new Date("2026-03-18") },
-// // //     { url: "/unit-converter",    lastModified: new Date("2026-03-18") },
-// // //     { url: "/youtube-thumbnail", lastModified: new Date("2026-03-18") },
-// // //     { url: "/signature-maker",   lastModified: new Date("2026-03-18") },
-// // //     { url: "/text-to-pdf",       lastModified: new Date("2026-03-18") },
-// // //   ].map(({ url, lastModified }) => ({
+// // //     // Utilities
+// // //     "/qr-generator",
+// // //     "/password-gen",
+// // //     "/unit-converter",
+// // //     "/youtube-thumbnail",
+// // //     "/signature-maker",
+// // //     "/text-to-pdf",
+// // //   ].map((url) => ({
 // // //     url,
 // // //     changeFrequency: "monthly",
 // // //     priority: 0.8,
-// // //     lastModified,
+// // //     lastModified: new Date("2026-04-02"),
 // // //   }));
 
+// // //   // ── Blog Pages (ONLY EXISTING BLOGS ✅) ──
 // // //   const blogRoutes = [
-// // //     // ── Image Tools Blogs ──
-// // //     { url: "/blog/image-compressor",  lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/image-resizer",     lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/image-cropper",     lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/image-converter",   lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/image-to-text",     lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/heic-to-jpg",       lastModified: new Date("2026-03-18") },
-
-// // //     // ── Writing Tools Blogs ──
-// // //     // { url: "/blog/word-counter",      lastModified: new Date("2026-03-18") },
-// // //     // { url: "/blog/case-converter",    lastModified: new Date("2026-03-18") },
-// // //     // { url: "/blog/lorem-ipsum",       lastModified: new Date("2026-03-18") },
-
-// // //     // ── Developer Tools Blogs ──
-// // //     // { url: "/blog/json-formatter",    lastModified: new Date("2026-03-18") },
-// // //     // { url: "/blog/base64",            lastModified: new Date("2026-03-18") },
-
-// // //     // ── Design Tools Blogs ──
-// // //     // { url: "/blog/color-picker",      lastModified: new Date("2026-03-18") },
-
-// // //     // ── Other Utilities Blogs ──
-// // //     { url: "/blog/qr-generator",      lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/password-gen",      lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/unit-converter",    lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/youtube-thumbnail", lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/signature-maker",   lastModified: new Date("2026-03-18") },
-// // //     { url: "/blog/text-to-pdf",       lastModified: new Date("2026-03-18") },
-// // //   ].map(({ url, lastModified }) => ({
+// // //     "/blog/qr-generator",
+// // //     "/blog/password-gen",
+// // //     "/blog/unit-converter",
+// // //     "/blog/youtube-thumbnail",
+// // //     "/blog/image-compressor",
+// // //     "/blog/image-to-text",
+// // //     "/blog/signature-maker",
+// // //     "/blog/heic-to-jpg",
+// // //     "/blog/text-to-pdf",
+// // //     "/blog/image-converter",
+// // //   ].map((url) => ({
 // // //     url,
 // // //     changeFrequency: "weekly",
 // // //     priority: 0.7,
-// // //     lastModified,
+// // //     lastModified: new Date("2026-04-02"),
 // // //   }));
 
 // // //   const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
@@ -517,33 +551,64 @@ export default function sitemap() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // // // // // app/sitemap.js
 
 // // // // export default function sitemap() {
 // // // //   const baseUrl = "https://convertlinx.com";
 
 // // // //   const staticRoutes = [
-// // // //     { url: "/", changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
-// // // //     { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2026-03-18") },
-// // // //     { url: "/about", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
-// // // //     { url: "/contact", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
-// // // //     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
+// // // //     { url: "/",               changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
+// // // //     { url: "/blog",           changeFrequency: "weekly",  priority: 0.9, lastModified: new Date("2026-03-18") },
+// // // //     { url: "/about",          changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
+// // // //     { url: "/contact",        changeFrequency: "yearly",  priority: 0.5, lastModified: new Date("2025-01-01") },
+// // // //     { url: "/privacy-policy", changeFrequency: "yearly",  priority: 0.3, lastModified: new Date("2025-01-01") },
 // // // //     { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
 // // // //   ];
 
 // // // //   const toolRoutes = [
-// // // //     { url: "/qr-generator", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/password-gen", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/unit-converter", lastModified: new Date("2026-03-18") },
+// // // //     // ── Image Tools ──
+// // // //     { url: "/image-compressor",  lastModified: new Date("2026-03-18") },
+// // // //     { url: "/image-resizer",     lastModified: new Date("2026-03-18") },
+// // // //     { url: "/image-cropper",     lastModified: new Date("2026-03-18") },
+// // // //     { url: "/image-converter",   lastModified: new Date("2026-03-18") },
+// // // //     { url: "/image-to-text",     lastModified: new Date("2026-03-18") },
+// // // //     { url: "/heic-to-jpg",       lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Writing Tools ──
+// // // //     { url: "/word-counter",      lastModified: new Date("2026-03-18") },
+// // // //     { url: "/case-converter",    lastModified: new Date("2026-03-18") },
+// // // //     { url: "/lorem-ipsum",       lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Developer Tools ──
+// // // //     { url: "/json-formatter",    lastModified: new Date("2026-03-18") },
+// // // //     { url: "/base64-tool",            lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Design Tools ──
+// // // //     { url: "/color-picker",      lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Other Utilities ──
+// // // //     { url: "/qr-generator",      lastModified: new Date("2026-03-18") },
+// // // //     { url: "/password-gen",      lastModified: new Date("2026-03-18") },
+// // // //     { url: "/unit-converter",    lastModified: new Date("2026-03-18") },
 // // // //     { url: "/youtube-thumbnail", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/image-compressor", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/image-to-text", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/signature-maker", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/heic-to-jpg", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/text-to-pdf", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/image-converter", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/image-resizer", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/image-cropper", lastModified: new Date("2026-03-18") },
+// // // //     { url: "/signature-maker",   lastModified: new Date("2026-03-18") },
+// // // //     { url: "/text-to-pdf",       lastModified: new Date("2026-03-18") },
 // // // //   ].map(({ url, lastModified }) => ({
 // // // //     url,
 // // // //     changeFrequency: "monthly",
@@ -552,18 +617,33 @@ export default function sitemap() {
 // // // //   }));
 
 // // // //   const blogRoutes = [
-// // // //     { url: "/blog/qr-generator", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/password-gen", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/unit-converter", lastModified: new Date("2026-03-18") },
+// // // //     // ── Image Tools Blogs ──
+// // // //     { url: "/blog/image-compressor",  lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/image-resizer",     lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/image-cropper",     lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/image-converter",   lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/image-to-text",     lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/heic-to-jpg",       lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Writing Tools Blogs ──
+// // // //     // { url: "/blog/word-counter",      lastModified: new Date("2026-03-18") },
+// // // //     // { url: "/blog/case-converter",    lastModified: new Date("2026-03-18") },
+// // // //     // { url: "/blog/lorem-ipsum",       lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Developer Tools Blogs ──
+// // // //     // { url: "/blog/json-formatter",    lastModified: new Date("2026-03-18") },
+// // // //     // { url: "/blog/base64",            lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Design Tools Blogs ──
+// // // //     // { url: "/blog/color-picker",      lastModified: new Date("2026-03-18") },
+
+// // // //     // ── Other Utilities Blogs ──
+// // // //     { url: "/blog/qr-generator",      lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/password-gen",      lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/unit-converter",    lastModified: new Date("2026-03-18") },
 // // // //     { url: "/blog/youtube-thumbnail", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/image-compressor", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/image-to-text", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/signature-maker", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/heic-to-jpg", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/text-to-pdf", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/image-converter", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/image-resizer", lastModified: new Date("2026-03-18") },
-// // // //     { url: "/blog/image-cropper", lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/signature-maker",   lastModified: new Date("2026-03-18") },
+// // // //     { url: "/blog/text-to-pdf",       lastModified: new Date("2026-03-18") },
 // // // //   ].map(({ url, lastModified }) => ({
 // // // //     url,
 // // // //     changeFrequency: "weekly",
@@ -599,21 +679,6 @@ export default function sitemap() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // // // // // // app/sitemap.js
 
 // // // // // export default function sitemap() {
@@ -621,7 +686,7 @@ export default function sitemap() {
 
 // // // // //   const staticRoutes = [
 // // // // //     { url: "/", changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2025-06-01") },
+// // // // //     { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2026-03-18") },
 // // // // //     { url: "/about", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
 // // // // //     { url: "/contact", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
 // // // // //     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
@@ -629,18 +694,18 @@ export default function sitemap() {
 // // // // //   ];
 
 // // // // //   const toolRoutes = [
-// // // // //     { url: "/tools/qr-generator", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/password-gen", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/unit-converter", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/youtube-thumbnail", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/image-compressor", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/image-to-text", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/signature-maker", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/heic-to-jpg", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/text-to-pdf", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/image-converter", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/tools/image-resizer", lastModified: new Date("2025-02-01") },
-// // // // //     { url: "/tools/image-cropper", lastModified: new Date("2025-03-01") },
+// // // // //     { url: "/qr-generator", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/password-gen", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/unit-converter", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/youtube-thumbnail", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/image-compressor", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/image-to-text", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/signature-maker", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/heic-to-jpg", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/text-to-pdf", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/image-converter", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/image-resizer", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/image-cropper", lastModified: new Date("2026-03-18") },
 // // // // //   ].map(({ url, lastModified }) => ({
 // // // // //     url,
 // // // // //     changeFrequency: "monthly",
@@ -649,18 +714,18 @@ export default function sitemap() {
 // // // // //   }));
 
 // // // // //   const blogRoutes = [
-// // // // //     { url: "/blog/qr-generator", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/password-gen", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/unit-converter", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/youtube-thumbnail", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/image-compressor", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/image-to-text", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/signature-maker", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/heic-to-jpg", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/text-to-pdf", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/image-converter", lastModified: new Date("2025-01-01") },
-// // // // //     { url: "/blog/image-resizer", lastModified: new Date("2025-02-01") },
-// // // // //     { url: "/blog/image-cropper", lastModified: new Date("2025-03-01") },
+// // // // //     { url: "/blog/qr-generator", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/password-gen", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/unit-converter", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/youtube-thumbnail", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/image-compressor", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/image-to-text", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/signature-maker", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/heic-to-jpg", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/text-to-pdf", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/image-converter", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/image-resizer", lastModified: new Date("2026-03-18") },
+// // // // //     { url: "/blog/image-cropper", lastModified: new Date("2026-03-18") },
 // // // // //   ].map(({ url, lastModified }) => ({
 // // // // //     url,
 // // // // //     changeFrequency: "weekly",
@@ -697,57 +762,154 @@ export default function sitemap() {
 
 
 
-// // // // // // app/sitemap.js
 
-// // // // // export default function sitemap() {
-// // // // //   const baseUrl = "https://convertlinx.com";
 
-// // // // //   const staticRoutes = [
-// // // // //     { url: "/", changeFrequency: "monthly", priority: 1.0 },
-// // // // //     { url: "/blog", changeFrequency: "weekly", priority: 0.9 },
-// // // // //     { url: "/about", changeFrequency: "yearly", priority: 0.5 },
-// // // // //     { url: "/contact", changeFrequency: "yearly", priority: 0.5 },
-// // // // //     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
-// // // // //     { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3 },
-// // // // //   ];
 
-// // // // //   const toolRoutes = [
-// // // // //     "/tools/qr-generator",
-// // // // //     "/tools/password-gen",
-// // // // //     "/tools/unit-converter",
-// // // // //     "/tools/youtube-thumbnail",
-// // // // //     "/tools/image-compressor",
-// // // // //     "/tools/image-to-text",
-// // // // //     "/tools/signature-maker",
-// // // // //     "/tools/heic-to-jpg",
-// // // // //     "/tools/text-to-pdf",
-// // // // //     "/tools/image-converter",
-// // // // //     "/tools/image-resizer",
-// // // // //     "/tools/image-cropper",
-// // // // //   ].map((url) => ({ url, changeFrequency: "monthly", priority: 0.8 }));
 
-// // // // //   const blogRoutes = [
-// // // // //     "/blog/qr-generator",
-// // // // //     "/blog/password-gen",
-// // // // //     "/blog/unit-converter",
-// // // // //     "/blog/youtube-thumbnail",
-// // // // //     "/blog/image-compressor",
-// // // // //     "/blog/image-to-text",
-// // // // //     "/blog/signature-maker",
-// // // // //     "/blog/heic-to-jpg",
-// // // // //     "/blog/text-to-pdf",
-// // // // //     "/blog/image-converter",
-// // // // //     "/blog/image-resizer",
-// // // // //     "/blog/image-cropper",
-// // // // //   ].map((url) => ({ url, changeFrequency: "weekly", priority: 0.7 }));
 
-// // // // //   const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
 
-// // // // //   return allRoutes.map(({ url, changeFrequency, priority }) => ({
-// // // // //     url: `${baseUrl}${url}`,
-// // // // //     lastModified: new Date(),
-// // // // //     changeFrequency,
-// // // // //     priority,
-// // // // //   }));
-// // // // // }
+
+
+
+
+
+
+
+
+// // // // // // // app/sitemap.js
+
+// // // // // // export default function sitemap() {
+// // // // // //   const baseUrl = "https://convertlinx.com";
+
+// // // // // //   const staticRoutes = [
+// // // // // //     { url: "/", changeFrequency: "monthly", priority: 1.0, lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog", changeFrequency: "weekly", priority: 0.9, lastModified: new Date("2025-06-01") },
+// // // // // //     { url: "/about", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/contact", changeFrequency: "yearly", priority: 0.5, lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3, lastModified: new Date("2025-01-01") },
+// // // // // //   ];
+
+// // // // // //   const toolRoutes = [
+// // // // // //     { url: "/tools/qr-generator", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/password-gen", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/unit-converter", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/youtube-thumbnail", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/image-compressor", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/image-to-text", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/signature-maker", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/heic-to-jpg", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/text-to-pdf", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/image-converter", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/tools/image-resizer", lastModified: new Date("2025-02-01") },
+// // // // // //     { url: "/tools/image-cropper", lastModified: new Date("2025-03-01") },
+// // // // // //   ].map(({ url, lastModified }) => ({
+// // // // // //     url,
+// // // // // //     changeFrequency: "monthly",
+// // // // // //     priority: 0.8,
+// // // // // //     lastModified,
+// // // // // //   }));
+
+// // // // // //   const blogRoutes = [
+// // // // // //     { url: "/blog/qr-generator", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/password-gen", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/unit-converter", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/youtube-thumbnail", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/image-compressor", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/image-to-text", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/signature-maker", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/heic-to-jpg", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/text-to-pdf", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/image-converter", lastModified: new Date("2025-01-01") },
+// // // // // //     { url: "/blog/image-resizer", lastModified: new Date("2025-02-01") },
+// // // // // //     { url: "/blog/image-cropper", lastModified: new Date("2025-03-01") },
+// // // // // //   ].map(({ url, lastModified }) => ({
+// // // // // //     url,
+// // // // // //     changeFrequency: "weekly",
+// // // // // //     priority: 0.7,
+// // // // // //     lastModified,
+// // // // // //   }));
+
+// // // // // //   const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
+
+// // // // // //   return allRoutes.map(({ url, changeFrequency, priority, lastModified }) => ({
+// // // // // //     url: `${baseUrl}${url}`,
+// // // // // //     lastModified,
+// // // // // //     changeFrequency,
+// // // // // //     priority,
+// // // // // //   }));
+// // // // // // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // // // // // // app/sitemap.js
+
+// // // // // // export default function sitemap() {
+// // // // // //   const baseUrl = "https://convertlinx.com";
+
+// // // // // //   const staticRoutes = [
+// // // // // //     { url: "/", changeFrequency: "monthly", priority: 1.0 },
+// // // // // //     { url: "/blog", changeFrequency: "weekly", priority: 0.9 },
+// // // // // //     { url: "/about", changeFrequency: "yearly", priority: 0.5 },
+// // // // // //     { url: "/contact", changeFrequency: "yearly", priority: 0.5 },
+// // // // // //     { url: "/privacy-policy", changeFrequency: "yearly", priority: 0.3 },
+// // // // // //     { url: "/terms-of-service", changeFrequency: "yearly", priority: 0.3 },
+// // // // // //   ];
+
+// // // // // //   const toolRoutes = [
+// // // // // //     "/tools/qr-generator",
+// // // // // //     "/tools/password-gen",
+// // // // // //     "/tools/unit-converter",
+// // // // // //     "/tools/youtube-thumbnail",
+// // // // // //     "/tools/image-compressor",
+// // // // // //     "/tools/image-to-text",
+// // // // // //     "/tools/signature-maker",
+// // // // // //     "/tools/heic-to-jpg",
+// // // // // //     "/tools/text-to-pdf",
+// // // // // //     "/tools/image-converter",
+// // // // // //     "/tools/image-resizer",
+// // // // // //     "/tools/image-cropper",
+// // // // // //   ].map((url) => ({ url, changeFrequency: "monthly", priority: 0.8 }));
+
+// // // // // //   const blogRoutes = [
+// // // // // //     "/blog/qr-generator",
+// // // // // //     "/blog/password-gen",
+// // // // // //     "/blog/unit-converter",
+// // // // // //     "/blog/youtube-thumbnail",
+// // // // // //     "/blog/image-compressor",
+// // // // // //     "/blog/image-to-text",
+// // // // // //     "/blog/signature-maker",
+// // // // // //     "/blog/heic-to-jpg",
+// // // // // //     "/blog/text-to-pdf",
+// // // // // //     "/blog/image-converter",
+// // // // // //     "/blog/image-resizer",
+// // // // // //     "/blog/image-cropper",
+// // // // // //   ].map((url) => ({ url, changeFrequency: "weekly", priority: 0.7 }));
+
+// // // // // //   const allRoutes = [...staticRoutes, ...toolRoutes, ...blogRoutes];
+
+// // // // // //   return allRoutes.map(({ url, changeFrequency, priority }) => ({
+// // // // // //     url: `${baseUrl}${url}`,
+// // // // // //     lastModified: new Date(),
+// // // // // //     changeFrequency,
+// // // // // //     priority,
+// // // // // //   }));
+// // // // // // }
 

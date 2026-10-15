@@ -13,7 +13,6 @@ import {
 import Script from "next/script";
 import NextLink from "next/link";
 import "@/styles/QrGenerator.css";
-// import PDFLinxEmbedWrapper from "@/components/embeds/PDFLinxEmbedWrapper";
 
 /* ── FAQ data (Expanded with Internal Links) ── */
 
@@ -603,8 +602,6 @@ export default function QRGenerator() {
           </div>
         </section>
 
-        {/* ── PDF EMBED ── */}
-        {/* <PDFLinxEmbedWrapper tool="compress-pdf" /> */}
 
         {/* ── FAQ ── */}
         <hr className="mid-divider" />

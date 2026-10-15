@@ -32,7 +32,8 @@ const toolMap = {
   'regex-tester':            dynamic(() => import('@/components/tools/RegexTester')),
   'og-preview-checker':      dynamic(() => import('@/components/tools/OgPreviewChecker')),
   'png-to-ico':              dynamic(() => import('@/components/tools/PngToIco')),
-
+  'jfif-to-jpg':              dynamic(() => import('@/components/tools/JfifToJpg')),
+  'png-to-jpg':              dynamic(() => import('@/components/tools/PngToJpg')),
 
 }
 
