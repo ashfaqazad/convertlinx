@@ -498,13 +498,35 @@ export default function QRGenerator() {
                 >
                   Text to PDF
                 </NextLink>{" "}
-                tool can help.
+                tool can help. New to QR codes? Read our{" "}
+                <NextLink
+                  href="/blog/how-to-generate-qr-code-online-free"
+                  className="text-indigo-600 hover:underline font-medium"
+                >
+                  step-by-step guide to generating a QR code online for free
+                </NextLink>
+                .
               </p>
 
               <p className="leading-7 text-sm mt-3">
                 This QR Code Generator lets you enter your content and generate
                 a QR code in your browser. Type or paste a website URL, text, or
-                another supported value, then download your QR code.
+                another supported value, then download your QR code. Designing a
+                flyer or business card around it? Fill the layout with{" "}
+                <NextLink
+                  href="/lorem-ipsum"
+                  className="text-indigo-600 hover:underline font-medium"
+                >
+                  Lorem Ipsum placeholder text
+                </NextLink>{" "}
+                first, and pick brand-matching shades with the{" "}
+                <NextLink
+                  href="/color-picker"
+                  className="text-indigo-600 hover:underline font-medium"
+                >
+                  color picker
+                </NextLink>
+                .
               </p>
             </div>
 
@@ -544,7 +566,21 @@ export default function QRGenerator() {
                 >
                   Text to PDF
                 </NextLink>{" "}
-                tool.
+                tool. For linked images, shrink the file size with the{" "}
+                <NextLink
+                  href="/image-compressor"
+                  className="text-indigo-600 hover:underline font-medium"
+                >
+                  image compressor
+                </NextLink>{" "}
+                and set the right dimensions with the{" "}
+                <NextLink
+                  href="/image-resizer"
+                  className="text-indigo-600 hover:underline font-medium"
+                >
+                  image resizer
+                </NextLink>{" "}
+                so the page opens fast after the scan.
               </p>
             </div>
 
@@ -558,12 +594,32 @@ export default function QRGenerator() {
 
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  "Share a website URL without people typing it manually",
-                  "Let guests connect to WiFi by scanning a QR code",
-                  "Share a messaging link on a business card or flyer",
-                  "Share contact details at events",
-                  "Add QR codes to restaurant menus",
-                  "Link product packaging to instructional videos or websites",
+                  <>Share a website URL without people typing it manually</>,
+                  <>
+                    Let guests connect to WiFi by scanning a QR code, with a
+                    strong network key from the{" "}
+                    <NextLink
+                      href="/password-gen"
+                      className="text-indigo-600 hover:underline font-medium"
+                    >
+                      password generator
+                    </NextLink>
+                  </>,
+                  <>
+                    Share a messaging link on a business card or flyer, created
+                    with the{" "}
+                    <NextLink
+                      href="/whatsapp-link-generator"
+                      className="text-indigo-600 hover:underline font-medium"
+                    >
+                      WhatsApp link generator
+                    </NextLink>
+                  </>,
+                  <>Share contact details at events</>,
+                  <>Add QR codes to restaurant menus</>,
+                  <>
+                    Link product packaging to instructional videos or websites
+                  </>,
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-sm">
                     <span className="feature-dot w-1.5 h-1.5 rounded-full shrink-0" />
@@ -601,7 +657,6 @@ export default function QRGenerator() {
             </div>
           </div>
         </section>
-
 
         {/* ── FAQ ── */}
         <hr className="mid-divider" />
