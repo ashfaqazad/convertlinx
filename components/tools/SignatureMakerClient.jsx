@@ -1021,6 +1021,7 @@ export default function SignatureMaker() {
                 <NextLink href="/text-to-pdf" className={linkClass}>
                   Text to PDF
                 </NextLink>{" "}
+                
                 tool, and use the{" "}
                 <NextLink href="/image-cropper" className={linkClass}>
                   Image Cropper
@@ -1044,6 +1045,31 @@ export default function SignatureMaker() {
                 </NextLink>{" "}
                 tool.
               </p>
+
+              <p className="leading-7 text-sm mt-3">
+                Want to learn more about creating and using digital signatures?
+                Read our{" "}
+                <NextLink
+                  href="/blog/create-digital-signature-online-free"
+                  className={linkClass}
+                >
+                  guide to digital signatures
+                </NextLink>{" "}
+                for step-by-step instructions.
+              </p>
+
+              {" "}If you want to place your signature directly on a PDF,
+              use our{" "}
+              <a
+                href="https://pdflinx.com/sign-pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={linkClass}
+              >
+                Sign PDF tool
+              </a>
+              {" "}to add it to your document.
+
             </div>
 
             {/* ── NEW BLOCK 1: photo / scanner cluster ── */}
