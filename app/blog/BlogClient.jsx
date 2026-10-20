@@ -159,6 +159,7 @@ export default function BlogClient() {
       date: "Dec 23, 2025",
       slug: "free-text-to-speech-converter-online",
     },
+
     {
       title: "Free Text to URL Slug Converter — Create SEO-Friendly Slugs Instantly",
       description:
@@ -182,6 +183,14 @@ export default function BlogClient() {
   date: "Oct 11, 2026",
   slug: "best-free-image-converter-utility-tools",
 },
+
+    {
+      title: "Image Converter Guide: How to Convert Image Formats Online (JPG, PNG, WebP, HEIC)",
+      description:
+        "Learn how to convert image format online for free. Compare JPG, PNG, WebP and HEIC, pick the right format and change pic format in seconds, privately.",
+      date: "Oct 18, 2026",
+      slug: "image-converter",
+    },
 
   ];
 

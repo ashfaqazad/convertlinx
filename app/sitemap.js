@@ -22,6 +22,9 @@ export default function sitemap() {
     "/image-converter",
     "/png-to-ico",
     "/image-to-text",
+    "/scan-to-text",
+    "/screenshot-to-text",
+
     "/heic-to-jpg",
     "/add-watermark",
     "/rotate-flip-image",

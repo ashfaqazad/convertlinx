@@ -388,6 +388,50 @@ const getTrimmedDataUrl = (canvas) => {
   return out.toDataURL("image/png");
 };
 
+/* Tiny before/after preview (inline SVG, zero extra requests) */
+const SigSample = ({ after }) => {
+  const id = after ? "sm-checker-after" : "sm-checker-before";
+  return (
+    <svg
+      viewBox="0 0 120 64"
+      className="w-full h-full"
+      role="img"
+      aria-label={
+        after
+          ? "Signature after: transparent background"
+          : "Signature before: photo on paper"
+      }
+    >
+      {after ? (
+        <>
+          <defs>
+            <pattern
+              id={id}
+              width="10"
+              height="10"
+              patternUnits="userSpaceOnUse"
+            >
+              <rect width="10" height="10" fill="#ffffff" />
+              <rect width="5" height="5" fill="#E5E7EB" />
+              <rect x="5" y="5" width="5" height="5" fill="#E5E7EB" />
+            </pattern>
+          </defs>
+          <rect width="120" height="64" fill={`url(#${id})`} />
+        </>
+      ) : (
+        <rect width="120" height="64" fill="#EFEBDD" />
+      )}
+      <path
+        d="M12 42 C20 14, 30 14, 28 36 S40 50, 48 26 S60 20, 62 38 S78 50, 86 28 S100 22, 108 34"
+        fill="none"
+        stroke={after ? "#4F46E5" : "#4B5563"}
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+};
+
 export default function SignatureMaker() {
   const canvasRef = useRef(null);
   const fileRef = useRef(null);
@@ -504,6 +548,12 @@ export default function SignatureMaker() {
     if (next === "type" && typedName.trim()) {
       renderTyped(typedName, typedFonts[fontIdx], color);
     }
+  };
+
+  /* Primary CTA: works from both tabs (switches to Draw/Upload first, then opens the file picker) */
+  const openUpload = () => {
+    if (mode !== "draw") switchMode("draw");
+    fileRef.current?.click();
   };
 
   const onTypedName = (e) => {
@@ -648,6 +698,75 @@ export default function SignatureMaker() {
         <section className="sm-section-main py-10 px-6">
           <div className="max-w-2xl mx-auto sm-fade-up">
             <div className="sm-tool-card">
+              {/* ── Primary CTA: convert signature photo to digital ── */}
+              <div
+                className="flex flex-wrap items-center justify-center gap-5 rounded-2xl border p-4 mb-5"
+                style={{ background: "#F5F7FF", borderColor: "#E0E7FF" }}
+              >
+                {/* <div className="text-center sm:text-left"> */}
+                <div className="text-center">
+                  <button
+                    type="button"
+                    onClick={openUpload}
+                    className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-base font-bold text-white shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5"
+                    style={{
+                      background: "linear-gradient(135deg,#6366F1,#8B5CF6)",
+                    }}
+                  >
+                    <Upload className="w-5 h-5" />
+                    Upload signature photo
+                  </button>
+                  <p className="text-xs mt-2" style={{ color: "#6B7280" }}>
+                    Convert a photo or scan to a transparent PNG. JPG or PNG,
+                    processed in your browser.
+                  </p>
+                </div>
+
+                {/* Before / After preview */}
+                <div className="flex items-center gap-2">
+                  <div className="text-center">
+                    <div
+                      className="w-24 h-12 rounded-lg overflow-hidden border"
+                      style={{ borderColor: "#E0E7FF" }}
+                    >
+                      <SigSample />
+                    </div>
+                    <span
+                      className="text-[10px] font-semibold"
+                      style={{ color: "#6B7280" }}
+                    >
+                      Before
+                    </span>
+                  </div>
+                  <span className="font-bold" style={{ color: "#6366F1" }}>
+                    →
+                  </span>
+                  <div className="text-center">
+                    <div
+                      className="w-24 h-12 rounded-lg overflow-hidden border"
+                      style={{ borderColor: "#E0E7FF" }}
+                    >
+                      <SigSample after />
+                    </div>
+                    <span
+                      className="text-[10px] font-semibold"
+                      style={{ color: "#6B7280" }}
+                    >
+                      After
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Single hidden file input, always mounted so both tabs can use it */}
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                onChange={onUpload}
+                hidden
+              />
+
               {/* Mode tabs: Draw / Upload  |  Type */}
               <div
                 className="flex justify-center gap-2 mb-4"
@@ -740,35 +859,22 @@ export default function SignatureMaker() {
                 </button>
               </div>
 
-              {/* Upload + background slider (draw mode only) */}
-              {mode === "draw" && (
-                <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-                  <label className="sm-clear-btn cursor-pointer">
-                    <Upload className="w-4 h-4" />
-                    Upload signature photo
+              {/* Background slider (only after a photo is uploaded) */}
+              {mode === "draw" && srcImg && (
+                <div className="flex justify-center mt-4">
+                  <label
+                    className="text-xs font-semibold flex items-center gap-2"
+                    style={{ color: "#6B7280" }}
+                  >
+                    Background removal
                     <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={onUpload}
-                      hidden
+                      type="range"
+                      min="100"
+                      max="250"
+                      value={threshold}
+                      onChange={onThreshold}
                     />
                   </label>
-                  {srcImg && (
-                    <label
-                      className="text-xs font-semibold flex items-center gap-2"
-                      style={{ color: "#6B7280" }}
-                    >
-                      Background removal
-                      <input
-                        type="range"
-                        min="100"
-                        max="250"
-                        value={threshold}
-                        onChange={onThreshold}
-                      />
-                    </label>
-                  )}
                 </div>
               )}
 
@@ -1021,7 +1127,6 @@ export default function SignatureMaker() {
                 <NextLink href="/text-to-pdf" className={linkClass}>
                   Text to PDF
                 </NextLink>{" "}
-                
                 tool, and use the{" "}
                 <NextLink href="/image-cropper" className={linkClass}>
                   Image Cropper
@@ -1058,18 +1163,30 @@ export default function SignatureMaker() {
                 for step-by-step instructions.
               </p>
 
-              {" "}If you want to place your signature directly on a PDF,
-              use our{" "}
-              <a
+              <p className="leading-7 text-sm mt-3">
+                If you want to place your signature directly on a PDF, use our{" "}
+                <a
+                  href="https://pdflinx.com/sign-pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  Sign PDF tool
+                </a>{" "}
+                to add it to your document.
+              </p>
+
+              {/* {" "}If you want to place your signature directly on a PDF,
+              use our{" "} */}
+              {/* <a
                 href="https://pdflinx.com/sign-pdf"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={linkClass}
-              >
-                Sign PDF tool
+              > */}
+              {/* Sign PDF tool
               </a>
-              {" "}to add it to your document.
-
+              {" "}to add it to your document. */}
             </div>
 
             {/* ── NEW BLOCK 1: photo / scanner cluster ── */}
@@ -1204,8 +1321,8 @@ export default function SignatureMaker() {
                 generator, or an electronic signature generator online for forms
                 and signature lines. Prefer your own handwriting? Use the Draw /
                 Upload tab instead, and use the Type tab when you want a clean
-                cursive signature from your name. Want a smaller file? Shrink
-                it with the{" "}
+                cursive signature from your name. Want a smaller file? Shrink it
+                with the{" "}
                 <NextLink href="/image-compressor" className={linkClass}>
                   Image Compressor
                 </NextLink>
@@ -1442,52 +1559,6 @@ export default function SignatureMaker() {
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 
@@ -2572,80 +2643,6 @@ export default function SignatureMaker() {
 //     </>
 //   );
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // // "use client";
 
