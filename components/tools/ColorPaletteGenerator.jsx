@@ -13,7 +13,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import '@/styles/ColorPicker.css';
-import '@/styles/ColorPalette.css';
+import '@/styles/Colorpalette.css';
 import Link from 'next/link';
 
 const SITE = 'https://convertlinx.com';
