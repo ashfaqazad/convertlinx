@@ -34,6 +34,10 @@ const toolMap = {
   'png-to-ico':              dynamic(() => import('@/components/tools/PngToIco')),
   'jfif-to-jpg':              dynamic(() => import('@/components/tools/JfifToJpg')),
   'png-to-jpg':              dynamic(() => import('@/components/tools/PngToJpg')),
+  'color-palette-generator':              dynamic(() => import('@/components/tools/ColorPaletteGenerator')),
+
+
+  
 
 }
 

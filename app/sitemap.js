@@ -43,6 +43,7 @@ export default function sitemap() {
 
     // Design Tools
     "/color-picker",
+    "/color-palette-generator",
 
     // Utilities
     "/qr-generator",

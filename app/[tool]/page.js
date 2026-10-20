@@ -39,6 +39,7 @@ const BASE_TOOLS = new Set([
   "png-to-ico",
   "png-to-jpg",
   "jfif-to-jpg",
+  "color-palette-generator",
 ]);
 
 // 🔹 Resolve base tool (for variants)

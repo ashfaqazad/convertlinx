@@ -77,6 +77,7 @@ const textTools = [
     group: "Other Utilities",
     tools: [
       { href: "/color-picker",      icon: Pipette,  color: "#EC4899", label: "Color Picker"       },
+      { href: "/color-palette-generator", icon: Palette, color: "#8B5CF6", label: "Color Palette Generator" },
       { href: "/qr-generator",      icon: QrCode,   color: "#0EA5E9", label: "QR Generator"       },
       { href: "/password-gen",      icon: Lock,     color: "#F59E0B", label: "Password Generator" },
       { href: "/unit-converter",    icon: Ruler,    color: "#84CC16", label: "Unit Converter"     },
