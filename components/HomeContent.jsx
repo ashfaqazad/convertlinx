@@ -668,9 +668,13 @@ export default function HomeContent() {
                 27+ Free Tools · No Signup · No Ads
               </div>
 
-              <h1 className="home-hero-title">
+              {/* <h1 className="home-hero-title">
                 Free Online Tools for Images, QR Codes & Documents {" "}
                 <span className="home-hero-grad">Images, QR Codes & Documents.</span>
+              </h1> */}
+              <h1 className="home-hero-title">
+                Free Online Tools for{" "}
+                <span className="home-hero-grad">Images, QR Codes &amp; Documents</span>
               </h1>
 
               <p className="home-hero-sub">
