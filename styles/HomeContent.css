@@ -87,7 +87,8 @@
   align-items: center;
 }
 
-.home-hero-text { text-align: left; }
+.home-hero-text { text-align: left; min-width: 0; }
+.home-hero-text > * { max-width: 100%; }
 
 /* ── HERO BADGE ── */
 .home-hero-badge {
@@ -160,7 +161,8 @@
 }
 
 .home-search input {
-  flex: 1;
+  flex: 1 1 0%;
+  width: 0;
   min-width: 0;
   border: 0;
   outline: 0;
@@ -776,8 +778,30 @@
 }
 
 @media (max-width: 960px) {
-  .home-hero-inner { grid-template-columns: 1fr; }
-  .home-hero-stack { display: none; }
+  .home-hero-inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+
+  /* compact 3-card strip instead of the big floating cards */
+  .home-hero-stack {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    height: auto;
+  }
+  .home-hcard-a, .home-hcard-b, .home-hcard-c {
+    position: static;
+    width: auto;
+    transform: none;
+    padding: 12px;
+    border-radius: 16px;
+    box-shadow: 0 10px 24px -16px rgba(79,70,229,0.3);
+  }
+  .home-hcard-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .home-hcard-ico { width: 34px; height: 34px; }
+  .home-hcard h4 { font-size: 0.8rem; line-height: 1.25; }
+  .home-hcard p,
+  .home-sign-svg,
+  .home-fmt-row,
+  .home-mini-qr { display: none; }
 }
 
 @media (max-width: 760px) {
