@@ -669,13 +669,12 @@ export default function HomeContent() {
               </div>
 
               <h1 className="home-hero-title">
-                What do you want to do?{" "}
-                <span className="home-hero-grad">The tool is right here.</span>
+                Free Online Tools for Images, QR Codes & Documents {" "}
+                <span className="home-hero-grad">Images, QR Codes & Documents.</span>
               </h1>
 
               <p className="home-hero-sub">
-                QR codes, image tools, converters, OCR and more. All free, all
-                in your browser, and your files are never uploaded.
+                Convert images, make QR codes, create signatures, extract text with OCR and more. All free, all in your browser, and your files are never uploaded.
               </p>
 
               {/* Search */}
