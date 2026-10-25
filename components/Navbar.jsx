@@ -4,6 +4,40 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 
+// import {
+//   ChevronDown,
+//   QrCode,
+//   Lock,
+//   Ruler,
+//   Youtube,
+//   Image as ImageIcon,
+//   PenTool,
+//   FileText,
+//   FileImage,
+//   Crop,
+//   Maximize2,
+//   AlignLeft,
+//   CaseSensitive,
+//   Braces,
+//   Binary,
+//   Pipette,
+//   FileOutput,
+//   FileInput,
+//   FileDown,
+//   Layers,
+//   RotateCw,
+//   Droplets,
+//   Tag,
+//   Volume2,
+//   Link2,
+//   Shield,
+//   Globe,
+//   Code2,
+//   MessageCircle,
+//   Palette,
+//   FileOutput, FileInput, FileDown, PenLine
+// } from "lucide-react";
+
 import {
   ChevronDown,
   QrCode,
@@ -24,6 +58,7 @@ import {
   FileOutput,
   FileInput,
   FileDown,
+  PenLine,
   Layers,
   RotateCw,
   Droplets,
@@ -35,7 +70,10 @@ import {
   Code2,
   MessageCircle,
   Palette,
+  Scissors,
+
 } from "lucide-react";
+
 // ─────────────────────────────────────────
 // DATA
 // ─────────────────────────────────────────
@@ -104,10 +142,21 @@ const imageTools = [
 ];
 
 const pdfTools = [
+  { href: "https://pdflinx.com/sign-pdf",       icon: PenLine,    color: "#8B5CF6", label: "Sign PDF"     },
+  { href: "https://pdflinx.com/merge-pdf",      icon: Layers,     color: "#3B82F6", label: "Merge PDF"    },
+  { href: "https://pdflinx.com/compress-pdf",   icon: FileDown,   color: "#EC4899", label: "Compress PDF" },
+  { href: "https://pdflinx.com/split-pdf",      icon: Scissors,   color: "#10B981", label: "Split PDF"    },
   { href: "https://pdflinx.com/image-to-pdf",   icon: FileOutput, color: "#EF4444", label: "JPG to PDF"   },
   { href: "https://pdflinx.com/pdf-to-jpg",     icon: FileInput,  color: "#F97316", label: "PDF to JPG"   },
-  { href: "https://pdflinx.com/compress-pdf",   icon: FileDown,   color: "#EC4899", label: "Compress PDF" },
 ];
+
+// const pdfTools = [
+//   { href: "https://pdflinx.com/image-to-pdf",   icon: FileOutput, color: "#EF4444", label: "JPG to PDF"   },
+//   { href: "https://pdflinx.com/pdf-to-jpg",     icon: FileInput,  color: "#F97316", label: "PDF to JPG"   },
+//   { href: "https://pdflinx.com/compress-pdf",   icon: FileDown,   color: "#EC4899", label: "Compress PDF" },
+//   { href: "https://pdflinx.com/sign-pdf",       icon: PenLine,    color: "#8B5CF6", label: "Sign PDF"     },
+
+// ];
 
 // ─────────────────────────────────────────
 // TOOL LINK — Desktop

@@ -518,10 +518,19 @@ export default function ImageToText({ seo }) {
                 picture of handwritten notes — you need OCR to unlock that text. Manually
                 retyping it wastes time and introduces errors. After extracting your text, you can calculate word density using our <Link href="/word-counter" className="text-cyan-600 hover:underline font-medium">Word Counter</Link> or format text casing effortlessly via the <Link href="/case-converter" className="text-cyan-600 hover:underline font-medium">Case Converter</Link>.
               </p>
+
+
               <p className="leading-7 text-sm mt-3">
                 This free image to text converter uses Tesseract OCR running entirely in your
-                browser — no file is ever sent to a server. If you are working with mobile camera photos or iOS screenshots, consider optimizing them with our <Link href="/heic-to-jpg" className="text-cyan-600 hover:underline font-medium">HEIC to JPG Converter</Link> or resizing large documents through our <Link href="/image-resizer" className="text-cyan-600 hover:underline font-medium">Image Resizer</Link> before processing.
+                browser — no file is ever sent to a server. If you are working with mobile camera photos or iOS screenshots, consider optimizing them with our <Link href="/heic-to-jpg" className="text-cyan-600 hover:underline font-medium">HEIC to JPG Converter</Link> or resizing large documents through our <Link href="/image-resizer" className="text-cyan-600 hover:underline font-medium">Image Resizer</Link> before processing. You can also use our <Link href="/screenshot-to-text" className="text-cyan-600 hover:underline font-medium">Screenshot to Text Converter</Link> to extract text from screenshots, or try the <Link href="/scan-to-text" className="text-cyan-600 hover:underline font-medium">Scan to Text Converter</Link> to extract editable text from scanned pages and document photos.
               </p>
+
+
+              {/* <p className="leading-7 text-sm mt-3">
+                This free image to text converter uses Tesseract OCR running entirely in your
+                browser — no file is ever sent to a server. If you are working with mobile camera photos or iOS screenshots, consider optimizing them with our <Link href="/heic-to-jpg" className="text-cyan-600 hover:underline font-medium">HEIC to JPG Converter</Link> or resizing large documents through our <Link href="/image-resizer" className="text-cyan-600 hover:underline font-medium">Image Resizer</Link> before processing.
+              </p> */}
+
             </div>
 
             <div>
