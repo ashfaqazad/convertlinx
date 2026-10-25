@@ -95,6 +95,43 @@
 .li-card-desc        { color: #78716C; }
 .li-arrow            { color: #7C3AED; }
 
+/* ── PRESETS (NEW) ── */
+.li-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.li-preset-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1.5px solid #DDD6FE;
+  background: #ffffff;
+  color: #7C3AED;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.li-preset-btn:hover {
+  background: #F5F3FF;
+  border-color: #C4B5FD;
+}
+.li-preset-btn.active {
+  background: linear-gradient(135deg, #7C3AED, #A78BFA);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(124,58,237,0.25);
+}
+.li-preset-btn:focus-visible,
+.li-type-tab:focus-visible,
+.li-btn:focus-visible,
+.li-number:focus-visible {
+  outline: 2px solid #7C3AED;
+  outline-offset: 2px;
+}
+
 /* ── STATS GRID ── */
 .li-stats-grid {
   display: grid;
@@ -202,6 +239,28 @@
   box-shadow: 0 4px 12px rgba(124,58,237,0.25);
 }
 
+/* ── AMOUNT: NUMBER + SLIDER (NEW) ── */
+.li-count-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.li-count-row .li-range { flex: 1; min-width: 0; }
+.li-number {
+  width: 96px;
+  flex-shrink: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1C1917;
+  background: #ffffff;
+  border: 1.5px solid #E7E5E4;
+  border-radius: 10px;
+  padding: 8px 12px;
+  transition: border-color 0.2s;
+}
+.li-number:hover { border-color: #C4B5FD; }
+
 /* ── RANGE SLIDER ── */
 .li-range {
   -webkit-appearance: none;
@@ -224,6 +283,18 @@
   transition: transform 0.15s;
 }
 .li-range::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.li-range::-moz-range-thumb {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #7C3AED;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(124,58,237,0.35);
+  cursor: pointer;
+}
+.li-range:focus-visible {
+  outline: 2px solid #7C3AED;
+  outline-offset: 4px;
+}
 .li-range-labels {
   display: flex;
   justify-content: space-between;
@@ -232,15 +303,26 @@
   font-weight: 500;
 }
 
-/* ── CHECKBOX ── */
-.li-checkbox-group { flex-direction: row; align-items: center; }
+/* ── CHECKBOX (now 2 options, stacked) ── */
+.li-checkbox-group {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
 .li-checkbox-label {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
+  position: relative;
 }
-.li-checkbox { display: none; }
+/* hidden but still keyboard-accessible (was display:none) */
+.li-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
 .li-checkbox-custom {
   width: 20px; height: 20px;
   border-radius: 6px;
@@ -249,6 +331,10 @@
   flex-shrink: 0;
   transition: all 0.2s;
   position: relative;
+}
+.li-checkbox:focus-visible + .li-checkbox-custom {
+  outline: 2px solid #7C3AED;
+  outline-offset: 2px;
 }
 .li-checkbox:checked + .li-checkbox-custom {
   background: #7C3AED;
@@ -270,6 +356,13 @@
   color: #57534E;
 }
 .li-checkbox-text em { font-style: italic; color: #A8A29E; }
+.li-checkbox-text code {
+  font-size: 12px;
+  background: #F5F3FF;
+  color: #7C3AED;
+  padding: 1px 6px;
+  border-radius: 5px;
+}
 
 /* ── TOOLBAR ── */
 .li-toolbar {
@@ -316,6 +409,8 @@
 /* ── OUTPUT ── */
 .li-output-wrap {
   min-height: 160px;
+  max-height: 520px;           /* long text (5000 words) scroll ho, page lamba na ho */
+  overflow-y: auto;
   border: 1.5px dashed #E7E5E4;
   border-radius: 16px;
   padding: 24px;
@@ -345,8 +440,10 @@
   line-height: 1.85;
   color: #57534E;
   margin-bottom: 16px;
+  overflow-wrap: anywhere;
 }
 .li-para:last-child { margin-bottom: 0; }
+pre.li-para { margin: 0; }
 
 /* ── TRUST STRIP ── */
 .li-trust-strip {
@@ -495,9 +592,21 @@
   transform: translateY(-2px);
 }
 
+/* ── MOBILE ── */
+@media (max-width: 480px) {
+  .li-tool-card { padding: 20px; }
+  .li-count-row { gap: 10px; }
+  .li-number    { width: 84px; }
+}
+
 /* ── ANIMATIONS ── */
 @keyframes li-fadeUp {
   from { opacity: 0; transform: translateY(18px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 .li-fade-up { animation: li-fadeUp 0.5s ease forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .li-fade-up { animation: none; }
+  .li-stat-card, .li-benefit-card, .li-btn, .li-cta-btn { transition: none; }
+}
