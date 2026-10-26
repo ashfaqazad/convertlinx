@@ -37,10 +37,6 @@ const toolMap = {
   'color-palette-generator':              dynamic(() => import('@/components/tools/ColorPaletteGenerator')),
   'background-remover':              dynamic(() => import('@/components/tools/BackgroundRemover')),
 
-
-
-  
-
 }
 
 export default function ToolLoader({ tool, seo }) {

@@ -19,6 +19,9 @@ import {
   Volume2,
   LinkIcon,
   Search,
+  Eraser,
+  Palette,
+
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
@@ -51,11 +54,11 @@ const faqSchemaData = [
   },
   {
     q: "How do I edit or convert images on ConvertLinx?",
-    a: "You can compress images via Image Compressor, resize with Image Resizer, crop using Image Cropper, convert formats with Image Converter, handle iPhone photos with HEIC to JPG, change PNG images to JPG with PNG to JPG, convert JFIF files using JFIF to JPG, make favicons with PNG to ICO, extract text using Image to Text (OCR), adjust orientation using Rotate & Flip Image, or protect photos with Add Watermark.",
+    a: "You can compress images via Image Compressor, resize with Image Resizer, crop using Image Cropper, convert formats with Image Converter, remove backgrounds with Background Remover, handle iPhone photos with HEIC to JPG, change PNG images to JPG with PNG to JPG, convert JFIF files using JFIF to JPG, make favicons with PNG to ICO, extract text using Image to Text (OCR), adjust orientation using Rotate & Flip Image, or protect photos with Add Watermark.",
   },
   {
     q: "Does ConvertLinx offer handy everyday utility tools?",
-    a: "Yes, easily build codes using our QR Code Generator, generate secure passwords via Password Generator, convert units using Unit Converter, pick color codes with Color Picker, download media covers with YouTube Thumbnail, sign documents with Signature Maker, convert notes with Text to PDF, and create audio using Text to Speech.",
+    a: "Yes, easily build codes using our QR Code Generator, generate secure passwords via Password Generator, convert units using Unit Converter, pick color codes with Color Picker, build color schemes with Color Palette Generator, download media covers with YouTube Thumbnail, sign documents with Signature Maker, convert notes with Text to PDF, and create audio using Text to Speech.",
   },
   {
     q: "Looking for advanced PDF tools and document management?",
@@ -132,6 +135,8 @@ const seoParagraphs = [
   [
     "For everyday digital tasks, explore tools like our custom ",
     ["/color-picker", "Color Picker"],
+    ", ",
+    ["/color-palette-generator", "Color Palette Generator"],
     ", instant ",
     ["/qr-generator", "QR Generator"],
     ", secure ",
@@ -157,6 +162,8 @@ const seoParagraphs = [
     ["/image-cropper", "Image Cropper"],
     ", change file formats with ",
     ["/image-converter", "Image Converter"],
+    ", remove photo backgrounds using ",
+    ["/background-remover", "Background Remover"],
     ", turn iPhone images to standard files via ",
     ["/heic-to-jpg", "HEIC to JPG"],
     ", turn PNG images into smaller JPG files with ",
@@ -239,6 +246,8 @@ const faqItems = [
       ["/image-cropper", "Image Cropper"],
       ", convert formats with ",
       ["/image-converter", "Image Converter"],
+      ", remove backgrounds with ",
+      ["/background-remover", "Background Remover"],
       ", handle iPhone photos with ",
       ["/heic-to-jpg", "HEIC to JPG"],
       ", change PNG images to JPG with ",
@@ -267,6 +276,8 @@ const faqItems = [
       ["/unit-converter", "Unit Converter"],
       ", pick color codes with ",
       ["/color-picker", "Color Picker"],
+      ", build color schemes with ",
+      ["/color-palette-generator", "Color Palette Generator"],
       ", download media covers with ",
       ["/youtube-thumbnail", "YouTube Thumbnail"],
       ", sign documents with ",
@@ -602,10 +613,30 @@ export default function HomeContent() {
       tag: "SEO",
       cat: "text",
     },
+
+    {
+      title: "Background Remover",
+      desc: "Remove image backgrounds with AI and get a transparent PNG in seconds.",
+      link: "/background-remover",
+      icon: <Eraser className="w-7 h-7" />,
+      accent: "#9333EA",
+      tag: "AI",
+      cat: "images",
+    },
+    {
+      title: "Color Palette Generator",
+      desc: "Create beautiful color schemes and matching palettes for websites and designs.",
+      link: "/color-palette-generator",
+      icon: <Palette className="w-7 h-7" />,
+      accent: "#8B5CF6",
+      tag: "Design",
+      cat: "utility",
+    },
+
   ];
 
   const stats = [
-    { value: "30+", label: "Free Tools" },
+    { value: "32+", label: "Free Tools" },
     { value: "0", label: "Ads" },
     { value: "100%", label: "Browser-based" },
     { value: "∞", label: "Free Forever" },
@@ -665,7 +696,7 @@ export default function HomeContent() {
             <div className="home-hero-text">
               <div className="home-hero-badge">
                 <span className="home-hero-badge-dot" />
-                27+ Free Tools · No Signup · No Ads
+                32+ Free Tools · No Signup · No Ads
               </div>
 
               {/* <h1 className="home-hero-title">
