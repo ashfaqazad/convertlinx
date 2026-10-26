@@ -4,40 +4,6 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import { usePathname } from "next/navigation";
 
-// import {
-//   ChevronDown,
-//   QrCode,
-//   Lock,
-//   Ruler,
-//   Youtube,
-//   Image as ImageIcon,
-//   PenTool,
-//   FileText,
-//   FileImage,
-//   Crop,
-//   Maximize2,
-//   AlignLeft,
-//   CaseSensitive,
-//   Braces,
-//   Binary,
-//   Pipette,
-//   FileOutput,
-//   FileInput,
-//   FileDown,
-//   Layers,
-//   RotateCw,
-//   Droplets,
-//   Tag,
-//   Volume2,
-//   Link2,
-//   Shield,
-//   Globe,
-//   Code2,
-//   MessageCircle,
-//   Palette,
-//   FileOutput, FileInput, FileDown, PenLine
-// } from "lucide-react";
-
 import {
   ChevronDown,
   QrCode,
@@ -71,6 +37,7 @@ import {
   MessageCircle,
   Palette,
   Scissors,
+  Eraser,
 
 } from "lucide-react";
 
@@ -132,6 +99,8 @@ const imageTools = [
   { href: "/image-resizer",      icon: Maximize2, color: "#8B5CF6", label: "Image Resizer"       },
   { href: "/image-cropper",      icon: Crop,      color: "#D946EF", label: "Image Cropper"       },
   { href: "/image-converter",    icon: ImageIcon, color: "#3B82F6", label: "Image Converter"     },
+  { href: "/background-remover", icon: Eraser,    color: "#9333EA", label: "Background Remover"  }, 
+
   { href: "/png-to-ico",         icon: FileImage, color: "#F59E0B", label: "PNG to ICO"          },
   { href: "/heic-to-jpg",        icon: FileImage, color: "#F97316", label: "HEIC to JPG"         },
   { href: "/png-to-jpg",         icon: FileImage, color: "#EC4899", label: "PNG to JPG"          },

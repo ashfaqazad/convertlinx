@@ -20,6 +20,7 @@ export default function sitemap() {
     "/image-resizer",
     "/image-cropper",
     "/image-converter",
+    "/background-remover",
     "/png-to-ico",
     "/image-to-text",
     "/scan-to-text",

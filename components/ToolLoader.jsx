@@ -35,6 +35,8 @@ const toolMap = {
   'jfif-to-jpg':              dynamic(() => import('@/components/tools/JfifToJpg')),
   'png-to-jpg':              dynamic(() => import('@/components/tools/PngToJpg')),
   'color-palette-generator':              dynamic(() => import('@/components/tools/ColorPaletteGenerator')),
+  'background-remover':              dynamic(() => import('@/components/tools/BackgroundRemover')),
+
 
 
   

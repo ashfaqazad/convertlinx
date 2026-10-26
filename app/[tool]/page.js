@@ -40,6 +40,8 @@ const BASE_TOOLS = new Set([
   "png-to-jpg",
   "jfif-to-jpg",
   "color-palette-generator",
+  "background-remover",
+  
 ]);
 
 // 🔹 Resolve base tool (for variants)
