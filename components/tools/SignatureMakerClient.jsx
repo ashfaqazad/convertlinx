@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NextLink from "next/link";
 import {
   Dancing_Script,
@@ -19,6 +19,10 @@ import {
   ChevronDown,
   Upload,
   Type as TypeIcon,
+  Undo2,
+  Redo2,
+  Sparkles,
+  SlidersHorizontal,
 } from "lucide-react";
 import "@/styles/SignatureMaker.css";
 
@@ -263,6 +267,27 @@ const faqs = [
     aText:
       "Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.",
   },
+  /* ── NEW FAQ (undo / redo) ── */
+  {
+    q: "Can I undo a mistake while I draw my signature online?",
+    a: "Yes. Use the Undo and Redo buttons next to Clear, or press Ctrl+Z to undo and Ctrl+Y (or Ctrl+Shift+Z) to redo. Undo removes only your last stroke, so you can fix one wrong line without clearing the whole signature and starting over. On a Mac, use Cmd instead of Ctrl. Undo and Redo work while you draw on the canvas.",
+    aText:
+      "Yes. Use the Undo and Redo buttons next to Clear, or press Ctrl+Z to undo and Ctrl+Y (or Ctrl+Shift+Z) to redo. Undo removes only your last stroke, so you can fix one wrong line without clearing the whole signature and starting over. On a Mac, use Cmd instead of Ctrl. Undo and Redo work while you draw on the canvas.",
+  },
+  /* ── NEW FAQ (better background removal) ── */
+  {
+    q: "Does the background remover work on photos with shadows or grey paper?",
+    a: "Yes. The signature photo converter checks how bright the paper is in each part of the photo, so uneven lighting, grey paper, and soft shadows are handled much better than with a simple brightness cut-off. If a bit of background is still left, move the Background removal slider until only the ink remains. For best results, sign on plain paper with a dark pen.",
+    aText:
+      "Yes. The signature photo converter checks how bright the paper is in each part of the photo, so uneven lighting, grey paper, and soft shadows are handled much better than with a simple brightness cut-off. If a bit of background is still left, move the Background removal slider until only the ink remains. For best results, sign on plain paper with a dark pen.",
+  },
+  /* ── NEW FAQ (edge smoothing / outline thickness) ── */
+  {
+    q: "How do I smooth the edges or change the line thickness of an uploaded signature?",
+    a: "After you upload a signature photo, three sliders appear: Background removal, Edge smoothing, and Outline thickness. Raise Edge smoothing to soften rough or pixelated edges. Move Outline thickness up to make thin lines bolder, or down to make heavy lines thinner. You can also change the pen color, then download the transparent PNG.",
+    aText:
+      "After you upload a signature photo, three sliders appear: Background removal, Edge smoothing, and Outline thickness. Raise Edge smoothing to soften rough or pixelated edges. Move Outline thickness up to make thin lines bolder, or down to make heavy lines thinner. You can also change the pen color, then download the transparent PNG.",
+  },
 ];
 
 const relatedTools = [
@@ -351,6 +376,123 @@ const faqSchema = {
 const hexToRgb = (hex) =>
   [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
 
+/* Paper brightness map: 90th percentile of every 40px cell, then bilinear interpolation.
+   This lets us cancel shadows, grey paper and uneven light. */
+const estimateBackground = (lum, alpha, W, H, cell = 40) => {
+  const gw = Math.ceil(W / cell),
+    gh = Math.ceil(H / cell);
+  const grid = new Float32Array(gw * gh);
+  const valid = new Uint8Array(gw * gh);
+  let sumV = 0,
+    cnt = 0;
+
+  for (let gy = 0; gy < gh; gy++) {
+    for (let gx = 0; gx < gw; gx++) {
+      const hist = new Uint32Array(256);
+      let n = 0;
+      const y1 = Math.min(H, (gy + 1) * cell);
+      const x1 = Math.min(W, (gx + 1) * cell);
+      for (let y = gy * cell; y < y1; y++) {
+        for (let x = gx * cell; x < x1; x++) {
+          const i = y * W + x;
+          if (alpha[i] < 128) continue;
+          hist[lum[i] | 0]++;
+          n++;
+        }
+      }
+      if (n > 50) {
+        let acc = 0,
+          v = 0;
+        for (; v < 255; v++) {
+          acc += hist[v];
+          if (acc >= n * 0.9) break;
+        }
+        grid[gy * gw + gx] = v;
+        valid[gy * gw + gx] = 1;
+        sumV += v;
+        cnt++;
+      }
+    }
+  }
+  const fallback = cnt ? sumV / cnt : 255;
+  for (let i = 0; i < grid.length; i++) if (!valid[i]) grid[i] = fallback;
+
+  const bg = new Float32Array(W * H);
+  for (let y = 0; y < H; y++) {
+    const fy = Math.min(gh - 1, Math.max(0, y / cell - 0.5));
+    const y0 = Math.floor(fy),
+      y1 = Math.min(gh - 1, y0 + 1),
+      ty = fy - y0;
+    for (let x = 0; x < W; x++) {
+      const fx = Math.min(gw - 1, Math.max(0, x / cell - 0.5));
+      const x0 = Math.floor(fx),
+        x1 = Math.min(gw - 1, x0 + 1),
+        tx = fx - x0;
+      const top = grid[y0 * gw + x0] * (1 - tx) + grid[y0 * gw + x1] * tx;
+      const bot = grid[y1 * gw + x0] * (1 - tx) + grid[y1 * gw + x1] * tx;
+      bg[y * W + x] = Math.max(60, top * (1 - ty) + bot * ty);
+    }
+  }
+  return bg;
+};
+
+/* Edge smoothing (separable box blur) */
+const boxBlur = (src, W, H, r) => {
+  const tmp = new Float32Array(W * H);
+  const out = new Uint8ClampedArray(W * H);
+  const size = 2 * r + 1;
+  for (let y = 0; y < H; y++) {
+    let sum = 0;
+    for (let x = -r; x <= r; x++)
+      sum += src[y * W + Math.min(W - 1, Math.max(0, x))];
+    for (let x = 0; x < W; x++) {
+      tmp[y * W + x] = sum / size;
+      sum +=
+        src[y * W + Math.min(W - 1, x + r + 1)] -
+        src[y * W + Math.max(0, x - r)];
+    }
+  }
+  for (let x = 0; x < W; x++) {
+    let sum = 0;
+    for (let y = -r; y <= r; y++)
+      sum += tmp[Math.min(H - 1, Math.max(0, y)) * W + x];
+    for (let y = 0; y < H; y++) {
+      out[y * W + x] = sum / size;
+      sum +=
+        tmp[Math.min(H - 1, y + r + 1) * W + x] -
+        tmp[Math.max(0, y - r) * W + x];
+    }
+  }
+  return out;
+};
+
+/* Outline thickness (grow = thicker, !grow = thinner), 1px per call */
+const morph = (src, W, H, grow) => {
+  const pick = grow ? Math.max : Math.min;
+  const tmp = new Uint8ClampedArray(W * H);
+  const out = new Uint8ClampedArray(W * H);
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      const i = y * W + x;
+      tmp[i] = pick(
+        src[y * W + Math.max(0, x - 1)],
+        src[i],
+        src[y * W + Math.min(W - 1, x + 1)],
+      );
+    }
+  }
+  for (let y = 0; y < H; y++) {
+    for (let x = 0; x < W; x++) {
+      out[y * W + x] = pick(
+        tmp[Math.max(0, y - 1) * W + x],
+        tmp[y * W + x],
+        tmp[Math.min(H - 1, y + 1) * W + x],
+      );
+    }
+  }
+  return out;
+};
+
 /* Returns a PNG data URL cropped to the signature's bounding box (transparent margins removed) */
 const getTrimmedDataUrl = (canvas) => {
   const ctx = canvas.getContext("2d");
@@ -436,15 +578,91 @@ export default function SignatureMaker() {
   const canvasRef = useRef(null);
   const fileRef = useRef(null);
   const renderId = useRef(0);
+  const normRef = useRef(null); // cached normalized photo (keeps the sliders fast)
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState("#1a1a2e");
   const [stroke, setStroke] = useState(5); // 2, 3, 5
   const [srcImg, setSrcImg] = useState(null);
   const [threshold, setThreshold] = useState(190);
+  const [smooth, setSmooth] = useState(0); // edge smoothing 0..4
+  const [thick, setThick] = useState(0); // outline thickness -2..3
   const [notice, setNotice] = useState("");
   const [mode, setMode] = useState("draw"); // "draw" | "type"
   const [typedName, setTypedName] = useState("");
   const [fontIdx, setFontIdx] = useState(0);
+
+  /* ── Undo / Redo history (stores strokes, not heavy snapshots) ── */
+  const strokesRef = useRef([]); // committed strokes
+  const redoRef = useRef([]);
+  const currentRef = useRef(null); // stroke that is being drawn right now
+  const [hist, setHist] = useState({ undo: 0, redo: 0 });
+
+  const syncHist = () =>
+    setHist({ undo: strokesRef.current.length, redo: redoRef.current.length });
+
+  const resetHistory = () => {
+    strokesRef.current = [];
+    redoRef.current = [];
+    currentRef.current = null;
+    syncHist();
+  };
+
+  const redrawStrokes = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const s of strokesRef.current) {
+      ctx.beginPath();
+      ctx.lineWidth = s.size;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = s.color;
+      ctx.moveTo(s.points[0].x, s.points[0].y);
+      for (let i = 1; i < s.points.length; i++)
+        ctx.lineTo(s.points[i].x, s.points[i].y);
+      ctx.stroke();
+    }
+  };
+
+  const canHistory = mode === "draw" && !srcImg;
+
+  const undo = () => {
+    if (!canHistory) return;
+    const s = strokesRef.current.pop();
+    if (!s) return;
+    redoRef.current.push(s);
+    redrawStrokes();
+    syncHist();
+  };
+
+  const redo = () => {
+    if (!canHistory) return;
+    const s = redoRef.current.pop();
+    if (!s) return;
+    strokesRef.current.push(s);
+    redrawStrokes();
+    syncHist();
+  };
+
+  // Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z, Ctrl+Y
+  useEffect(() => {
+    const onKey = (e) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      if (/input|textarea/i.test(e.target.tagName)) return;
+      const k = e.key.toLowerCase();
+      if (k === "z" && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      } else if (k === "y" || (k === "z" && e.shiftKey)) {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode, srcImg]);
 
   /* Coordinate helper — supports mouse + touch */
   const getCoords = (e) => {
@@ -466,6 +684,7 @@ export default function SignatureMaker() {
     const ctx = canvasRef.current.getContext("2d");
     ctx.beginPath();
     ctx.moveTo(x, y);
+    currentRef.current = { color, size: stroke, points: [{ x, y }] };
     setDrawing(true);
     setNotice("");
   };
@@ -479,11 +698,21 @@ export default function SignatureMaker() {
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     ctx.strokeStyle = color;
+    currentRef.current?.points.push({ x, y });
     ctx.lineTo(x, y);
     ctx.stroke();
   };
 
-  const stopDrawing = () => setDrawing(false);
+  const stopDrawing = () => {
+    const s = currentRef.current;
+    currentRef.current = null;
+    setDrawing(false);
+    if (s && s.points.length > 1) {
+      strokesRef.current.push(s);
+      redoRef.current = []; // a new stroke clears the redo list
+      syncHist();
+    }
+  };
 
   /* Canvas stays transparent: the white you see is only CSS, so the PNG keeps a transparent background */
   const clear = () => {
@@ -492,6 +721,8 @@ export default function SignatureMaker() {
     renderId.current++; // cancel any typed-signature render still waiting for its font
     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     setSrcImg(null);
+    resetHistory();
+    normRef.current = null;
     setTypedName("");
     setNotice("");
     if (fileRef.current) fileRef.current.value = "";
@@ -541,6 +772,8 @@ export default function SignatureMaker() {
     setNotice("");
     setDrawing(false);
     setSrcImg(null);
+    resetHistory();
+    normRef.current = null;
     if (canvas) {
       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     }
@@ -568,36 +801,68 @@ export default function SignatureMaker() {
     renderTyped(typedName, typedFonts[i], color);
   };
 
-  /* Upload: draw the photo, turn light paper transparent, recolor the ink */
-  const processImage = (img, t, penColor) => {
+  /* Upload: normalize the photo against the local paper brightness (handles shadows,
+     grey paper, uneven light), threshold it, optionally thicken/smooth, then recolor the ink */
+  const processImage = (img, t, penColor, sm, th) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const scale = Math.min(
-      canvas.width / img.width,
-      canvas.height / img.height,
-    );
-    const w = img.width * scale;
-    const h = img.height * scale;
+    const W = canvas.width,
+      H = canvas.height,
+      n = W * H;
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const d = imageData.data;
-    const [r, g, b] = hexToRgb(penColor);
-
-    for (let i = 0; i < d.length; i += 4) {
-      if (d[i + 3] === 0) continue;
-      const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-      // paper (light) -> transparent, ink (dark) -> pen color, soft edge in between
-      const a = lum >= t ? 0 : lum <= t - 40 ? 255 : ((t - lum) / 40) * 255;
-      d[i] = r;
-      d[i + 1] = g;
-      d[i + 2] = b;
-      d[i + 3] = a;
+    // Build the normalized photo once per image, later slider moves reuse the cache
+    if (normRef.current?.img !== img) {
+      const scale = Math.min(W / img.width, H / img.height);
+      const w = img.width * scale,
+        h = img.height * scale;
+      ctx.clearRect(0, 0, W, H);
+      ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
+      const d = ctx.getImageData(0, 0, W, H).data;
+      const lum = new Float32Array(n);
+      const alpha = new Uint8Array(n);
+      for (let i = 0; i < n; i++) {
+        lum[i] =
+          0.299 * d[i * 4] + 0.587 * d[i * 4 + 1] + 0.114 * d[i * 4 + 2];
+        alpha[i] = d[i * 4 + 3];
+      }
+      const bg = estimateBackground(lum, alpha, W, H);
+      const norm = new Float32Array(n);
+      for (let i = 0; i < n; i++) {
+        norm[i] = alpha[i] === 0 ? 255 : Math.min(255, (lum[i] / bg[i]) * 255);
+      }
+      normRef.current = { img, norm, alpha };
     }
-    ctx.putImageData(imageData, 0, 0);
+    const { norm, alpha } = normRef.current;
+
+    // 1) threshold -> ink mask (0..255): paper -> transparent, ink -> solid, soft edge in between
+    let mask = new Uint8ClampedArray(n);
+    for (let i = 0; i < n; i++) {
+      if (alpha[i] === 0) continue;
+      const l = norm[i];
+      mask[i] = l >= t ? 0 : l <= t - 40 ? 255 : ((t - l) / 40) * 255;
+    }
+
+    // 2) outline thickness: th > 0 thicker, th < 0 thinner
+    for (let k = 0; k < Math.abs(th); k++) mask = morph(mask, W, H, th > 0);
+
+    // 3) edge smoothing: blur + contrast so edges stay soft but solid
+    if (sm > 0) {
+      mask = boxBlur(mask, W, H, sm);
+      for (let i = 0; i < n; i++) mask[i] = (mask[i] - 100) * 2 + 100;
+    }
+
+    // 4) write the result to the canvas with the pen color
+    const [r, g, b] = hexToRgb(penColor);
+    const out = ctx.createImageData(W, H);
+    const o = out.data;
+    for (let i = 0; i < n; i++) {
+      o[i * 4] = r;
+      o[i * 4 + 1] = g;
+      o[i * 4 + 2] = b;
+      o[i * 4 + 3] = mask[i];
+    }
+    ctx.putImageData(out, 0, 0);
   };
 
   const onUpload = (e) => {
@@ -608,7 +873,8 @@ export default function SignatureMaker() {
     img.onload = () => {
       setSrcImg(img);
       setNotice("");
-      processImage(img, threshold, color);
+      processImage(img, threshold, color, smooth, thick);
+      resetHistory();
       URL.revokeObjectURL(url);
     };
     img.onerror = () => {
@@ -623,13 +889,25 @@ export default function SignatureMaker() {
   const onThreshold = (e) => {
     const v = Number(e.target.value);
     setThreshold(v);
-    if (srcImg) processImage(srcImg, v, color);
+    if (srcImg) processImage(srcImg, v, color, smooth, thick);
+  };
+
+  const onSmooth = (e) => {
+    const v = Number(e.target.value);
+    setSmooth(v);
+    if (srcImg) processImage(srcImg, threshold, color, v, thick);
+  };
+
+  const onThick = (e) => {
+    const v = Number(e.target.value);
+    setThick(v);
+    if (srcImg) processImage(srcImg, threshold, color, smooth, v);
   };
 
   const onColor = (e) => {
     const v = e.target.value;
     setColor(v);
-    if (srcImg) processImage(srcImg, threshold, v);
+    if (srcImg) processImage(srcImg, threshold, v, smooth, thick);
     else if (mode === "type") renderTyped(typedName, typedFonts[fontIdx], v);
   };
 
@@ -690,6 +968,15 @@ export default function SignatureMaker() {
               background. Download a transparent PNG with no sign up, right in
               your browser. Use it as an e signature maker and signature
               converter to convert image to signature online free.
+            </p>
+            {/* NEW: mention of the new options */}
+            <p
+              className="text-sm md:text-base max-w-xl mx-auto leading-relaxed mt-3"
+              style={{ color: "#6B7280" }}
+            >
+              Made a mistake? Undo and redo your strokes. Uploading a photo?
+              Smart background removal handles shadows and grey paper, and you
+              can smooth the edges and adjust the line thickness.
             </p>
           </div>
         </section>
@@ -846,6 +1133,38 @@ export default function SignatureMaker() {
                   </div>
                 )}
 
+                {/* Undo / Redo (draw mode only) */}
+                {mode === "draw" && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={undo}
+                      disabled={!canHistory || hist.undo === 0}
+                      className="sm-clear-btn"
+                      style={{
+                        opacity: !canHistory || hist.undo === 0 ? 0.4 : 1,
+                      }}
+                      title="Undo (Ctrl+Z)"
+                    >
+                      <Undo2 className="w-4 h-4" />
+                      Undo
+                    </button>
+                    <button
+                      type="button"
+                      onClick={redo}
+                      disabled={!canHistory || hist.redo === 0}
+                      className="sm-clear-btn"
+                      style={{
+                        opacity: !canHistory || hist.redo === 0 ? 0.4 : 1,
+                      }}
+                      title="Redo (Ctrl+Y)"
+                    >
+                      <Redo2 className="w-4 h-4" />
+                      Redo
+                    </button>
+                  </div>
+                )}
+
                 {/* Clear */}
                 <button onClick={clear} className="sm-clear-btn">
                   <Trash2 className="w-4 h-4" />
@@ -859,9 +1178,9 @@ export default function SignatureMaker() {
                 </button>
               </div>
 
-              {/* Background slider (only after a photo is uploaded) */}
+              {/* Background slider + refinement sliders (only after a photo is uploaded) */}
               {mode === "draw" && srcImg && (
-                <div className="flex justify-center mt-4">
+                <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 mt-4">
                   <label
                     className="text-xs font-semibold flex items-center gap-2"
                     style={{ color: "#6B7280" }}
@@ -873,6 +1192,34 @@ export default function SignatureMaker() {
                       max="250"
                       value={threshold}
                       onChange={onThreshold}
+                    />
+                  </label>
+                  <label
+                    className="text-xs font-semibold flex items-center gap-2"
+                    style={{ color: "#6B7280" }}
+                  >
+                    Edge smoothing
+                    <input
+                      type="range"
+                      min="0"
+                      max="4"
+                      step="1"
+                      value={smooth}
+                      onChange={onSmooth}
+                    />
+                  </label>
+                  <label
+                    className="text-xs font-semibold flex items-center gap-2"
+                    style={{ color: "#6B7280" }}
+                  >
+                    Outline thickness
+                    <input
+                      type="range"
+                      min="-2"
+                      max="3"
+                      step="1"
+                      value={thick}
+                      onChange={onThick}
                     />
                   </label>
                 </div>
@@ -958,7 +1305,10 @@ export default function SignatureMaker() {
                   💡 Draw with your mouse or finger to make a signature online
                   free. Or upload a photo of your signature on white paper to
                   convert it to a digital signature, then use the slider until
-                  the paper disappears. Press Clear to start over.
+                  the paper disappears. Press Clear to start over. Made a
+                  wrong stroke? Use Undo / Redo (Ctrl+Z / Ctrl+Y) to fix just
+                  that line. After uploading a photo, use Edge smoothing and
+                  Outline thickness to refine your signature.
                 </div>
               ) : (
                 <div className="sm-tip">
@@ -976,6 +1326,8 @@ export default function SignatureMaker() {
                   "Transparent PNG",
                   "Nothing stored",
                   "100% free online signature",
+                  "Undo / Redo",
+                  "Smart background removal",
                 ].map((t, i) => (
                   <span key={i} className="sm-trust-item">
                     <span className="sm-trust-dot" />
@@ -1019,6 +1371,27 @@ export default function SignatureMaker() {
                   bg: "rgba(16,185,129,0.08)",
                   title: "Transparent PNG Download",
                   desc: "Get a transparent PNG e signature, trimmed to your signature, ready to place on PDFs, contracts, and forms.",
+                },
+                {
+                  icon: <Undo2 className="w-6 h-6" />,
+                  color: "#F59E0B",
+                  bg: "rgba(245,158,11,0.08)",
+                  title: "Undo and Redo",
+                  desc: "Drew a wrong line? Undo or redo your strokes (Ctrl+Z / Ctrl+Y) without clearing the whole signature.",
+                },
+                {
+                  icon: <Sparkles className="w-6 h-6" />,
+                  color: "#EC4899",
+                  bg: "rgba(236,72,153,0.08)",
+                  title: "Smart Background Removal",
+                  desc: "Photos with shadows, grey paper, or uneven light are cleaned up better, so only your ink is left.",
+                },
+                {
+                  icon: <SlidersHorizontal className="w-6 h-6" />,
+                  color: "#0EA5E9",
+                  bg: "rgba(14,165,233,0.08)",
+                  title: "Refine Your Signature",
+                  desc: "Smooth rough edges and make uploaded lines thinner or bolder with the Edge smoothing and Outline thickness sliders.",
                 },
               ].map((b, i) => (
                 <div key={i} className="sm-benefit-card">
@@ -1067,7 +1440,7 @@ export default function SignatureMaker() {
                 {
                   num: "2",
                   title: "Adjust",
-                  desc: "Choose pen color and thickness, or move the background slider until the paper disappears.",
+                  desc: "Choose pen color and thickness, or move the background slider until the paper disappears. Use Undo / Redo for drawn strokes, or Edge smoothing and Outline thickness for uploaded photos.",
                 },
                 {
                   num: "3",
@@ -1216,6 +1589,15 @@ export default function SignatureMaker() {
                 PNG files, and you can change the pen color after the signature
                 is extracted.
               </p>
+              {/* NEW: smart background removal + refinement */}
+              <p className="leading-7 text-sm mt-3">
+                The background remover checks the paper brightness in every
+                part of your photo, so shadows, grey paper, and uneven lighting
+                are handled much better than with a basic brightness cut-off.
+                After uploading, you can also use the Edge smoothing slider to
+                soften rough edges and the Outline thickness slider to make
+                thin lines bolder or heavy lines thinner.
+              </p>
             </div>
 
             {/* ── NEW BLOCK 2: PNG cluster ── */}
@@ -1261,6 +1643,34 @@ export default function SignatureMaker() {
                 online signature free no sign up tool that takes about 40
                 seconds. Looking for a signature tool online or a signature
                 maker free online? Open this page, sign, and download.
+              </p>
+            </div>
+
+            {/* ── NEW BLOCK 5: undo / redo, background removal, refinement ── */}
+            <div>
+              <h2
+                className="text-2xl font-bold mb-4"
+                style={{ color: "#1a1a2e" }}
+              >
+                Undo, Redo and Signature Refinement Tools
+              </h2>
+              <p className="leading-7 text-sm">
+                Drawing a signature with a mouse or finger is not always
+                perfect on the first try. The Undo and Redo buttons let you
+                remove or bring back your last stroke without clearing the
+                whole signature, and the shortcuts Ctrl+Z, Ctrl+Y, and
+                Ctrl+Shift+Z work on desktop (use Cmd on a Mac). This makes it
+                easy to fix one wrong line and keep the rest of your drawn
+                signature.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                For uploaded signature photos, the smart background removal
+                adjusts to shadows, grey paper, and uneven light. Then use the
+                Edge smoothing slider to soften rough or pixelated edges, and
+                the Outline thickness slider to make a thin signature bolder or
+                a heavy signature thinner. Together with the pen color option,
+                these controls help you get a clean, transparent PNG signature
+                even from a difficult photo.
               </p>
             </div>
 
@@ -1445,6 +1855,9 @@ export default function SignatureMaker() {
                   "Works on Android, iOS, Windows & Mac",
                   "Electronic signature free, no sign up needed",
                   "Private: nothing is uploaded or saved on servers",
+                  "Undo and Redo for drawn signatures (Ctrl+Z / Ctrl+Y)",
+                  "Smart background removal for shadows, grey paper and uneven light",
+                  "Edge smoothing and outline thickness controls for uploaded signatures",
                 ].map((f, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-sm">
                     <span
@@ -1560,10 +1973,47 @@ export default function SignatureMaker() {
   );
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // "use client";
 
 // import { useRef, useState } from "react";
 // import NextLink from "next/link";
+// import {
+//   Dancing_Script,
+//   Great_Vibes,
+//   Allura,
+//   Sacramento,
+//   Satisfy,
+//   Herr_Von_Muellerhoff,
+// } from "next/font/google";
 // import {
 //   Download,
 //   PenTool,
@@ -1572,6 +2022,7 @@ export default function SignatureMaker() {
 //   CheckCircle,
 //   ChevronDown,
 //   Upload,
+//   Type as TypeIcon,
 // } from "lucide-react";
 // import "@/styles/SignatureMaker.css";
 
@@ -1579,6 +2030,52 @@ export default function SignatureMaker() {
 // const PAGE_URL = `${SITE}/signature-maker`;
 
 // const linkClass = "text-indigo-600 hover:underline font-medium";
+
+// /* ── Typed-signature fonts (preload off: they only download when the Type tab is opened) ── */
+// const dancingScript = Dancing_Script({
+//   subsets: ["latin"],
+//   display: "swap",
+//   preload: false,
+// });
+// const greatVibes = Great_Vibes({
+//   subsets: ["latin"],
+//   weight: "400",
+//   display: "swap",
+//   preload: false,
+// });
+// const allura = Allura({
+//   subsets: ["latin"],
+//   weight: "400",
+//   display: "swap",
+//   preload: false,
+// });
+// const sacramento = Sacramento({
+//   subsets: ["latin"],
+//   weight: "400",
+//   display: "swap",
+//   preload: false,
+// });
+// const satisfy = Satisfy({
+//   subsets: ["latin"],
+//   weight: "400",
+//   display: "swap",
+//   preload: false,
+// });
+// const herrVonMuellerhoff = Herr_Von_Muellerhoff({
+//   subsets: ["latin"],
+//   weight: "400",
+//   display: "swap",
+//   preload: false,
+// });
+
+// const typedFonts = [
+//   { name: "Dancing Script", font: dancingScript },
+//   { name: "Great Vibes", font: greatVibes },
+//   { name: "Allura", font: allura },
+//   { name: "Sacramento", font: sacramento },
+//   { name: "Satisfy", font: satisfy },
+//   { name: "Herr Von Muellerhoff", font: herrVonMuellerhoff },
+// ];
 
 // // const strokeSizes = [
 // //   { size: 2, label: 'S' },
@@ -1644,6 +2141,50 @@ export default function SignatureMaker() {
 //     a: "Draw your signature on the canvas, or upload a photo of it, then click Download PNG. The file is saved as a transparent PNG, trimmed to the ink, so you can use it as a signed PNG on any document, form, or website. No sign up is needed to create a signature online free.",
 //     aText:
 //       "Draw your signature on the canvas, or upload a photo of it, then click Download PNG. The file is saved as a transparent PNG, trimmed to the ink, so you can use it as a signed PNG on any document, form, or website. No sign up is needed to create a signature online free.",
+//   },
+//   /* ── NEW FAQ (typed signature cluster) ── */
+//   {
+//     q: "How do I type my name and turn it into a signature online?",
+//     a: "Open the Type tab, enter your name, and choose one of the six cursive signature styles. Pick a pen color, then click Download PNG. This typed signature generator turns your name into a handwriting-style signature with a transparent background, so you can create a signature from text online free, with no sign up, no watermark, and no upload to a server.",
+//     aText:
+//       "Open the Type tab, enter your name, and choose one of the six cursive signature styles. Pick a pen color, then click Download PNG. This typed signature generator turns your name into a handwriting-style signature with a transparent background, so you can create a signature from text online free, with no sign up, no watermark, and no upload to a server.",
+//   },
+//   {
+//     q: "Which cursive signature fonts can I choose for a typed signature?",
+//     a: "The Type tab includes six free signature fonts: Dancing Script, Great Vibes, Allura, Sacramento, Satisfy and Herr Von Muellerhoff. Your name is previewed in every style, so you can pick the one that looks most like a real handwritten signature, change the pen color, and download it. It works as a quick cursive signature generator and signature font generator for any name.",
+//     aText:
+//       "The Type tab includes six free signature fonts: Dancing Script, Great Vibes, Allura, Sacramento, Satisfy and Herr Von Muellerhoff. Your name is previewed in every style, so you can pick the one that looks most like a real handwritten signature, change the pen color, and download it. It works as a quick cursive signature generator and signature font generator for any name.",
+//   },
+//   {
+//     q: "How do I add my typed signature to a PDF or Word document?",
+//     a: (
+//       <span>
+//         After you create a signature from your name and download the transparent
+//         PNG, insert it into your PDF or Word file using the "insert image"
+//         option and drag it onto the signature line. If your document is plain
+//         text, turn it into a PDF first with our{" "}
+//         <NextLink href="/text-to-pdf" className={linkClass}>
+//           Text to PDF
+//         </NextLink>{" "}
+//         tool. Use the{" "}
+//         <NextLink href="/image-resizer" className={linkClass}>
+//           Image Resizer
+//         </NextLink>{" "}
+//         to make the typed signature fit the line, or the{" "}
+//         <NextLink href="/image-cropper" className={linkClass}>
+//           Image Cropper
+//         </NextLink>{" "}
+//         to trim it.
+//       </span>
+//     ),
+//     aText:
+//       "After you create a signature from your name and download the transparent PNG, insert it into your PDF or Word file using the insert image option and drag it onto the signature line. If your document is plain text, turn it into a PDF first with the Text to PDF tool. Use the Image Resizer to make the typed signature fit the line, or the Image Cropper to trim it.",
+//   },
+//   {
+//     q: "Is a typed signature valid as an electronic signature?",
+//     a: "In many countries a typed name, or an image of it, is accepted as an electronic signature on everyday forms, applications, and simple agreements, but the rules differ by country and document type. Some contracts require a certificate-based digital signature or a specific e-signing platform. This tool creates the signature image only, so check the requirements with the person or organization you are signing for.",
+//     aText:
+//       "In many countries a typed name, or an image of it, is accepted as an electronic signature on everyday forms, applications, and simple agreements, but the rules differ by country and document type. Some contracts require a certificate-based digital signature or a specific e-signing platform. This tool creates the signature image only, so check the requirements with the person or organization you are signing for.",
 //   },
 //   {
 //     q: "Can I draw or capture my signature online on mobile phones and tablets?",
@@ -1851,15 +2392,63 @@ export default function SignatureMaker() {
 //   return out.toDataURL("image/png");
 // };
 
+// /* Tiny before/after preview (inline SVG, zero extra requests) */
+// const SigSample = ({ after }) => {
+//   const id = after ? "sm-checker-after" : "sm-checker-before";
+//   return (
+//     <svg
+//       viewBox="0 0 120 64"
+//       className="w-full h-full"
+//       role="img"
+//       aria-label={
+//         after
+//           ? "Signature after: transparent background"
+//           : "Signature before: photo on paper"
+//       }
+//     >
+//       {after ? (
+//         <>
+//           <defs>
+//             <pattern
+//               id={id}
+//               width="10"
+//               height="10"
+//               patternUnits="userSpaceOnUse"
+//             >
+//               <rect width="10" height="10" fill="#ffffff" />
+//               <rect width="5" height="5" fill="#E5E7EB" />
+//               <rect x="5" y="5" width="5" height="5" fill="#E5E7EB" />
+//             </pattern>
+//           </defs>
+//           <rect width="120" height="64" fill={`url(#${id})`} />
+//         </>
+//       ) : (
+//         <rect width="120" height="64" fill="#EFEBDD" />
+//       )}
+//       <path
+//         d="M12 42 C20 14, 30 14, 28 36 S40 50, 48 26 S60 20, 62 38 S78 50, 86 28 S100 22, 108 34"
+//         fill="none"
+//         stroke={after ? "#4F46E5" : "#4B5563"}
+//         strokeWidth="3"
+//         strokeLinecap="round"
+//       />
+//     </svg>
+//   );
+// };
+
 // export default function SignatureMaker() {
 //   const canvasRef = useRef(null);
 //   const fileRef = useRef(null);
+//   const renderId = useRef(0);
 //   const [drawing, setDrawing] = useState(false);
 //   const [color, setColor] = useState("#1a1a2e");
 //   const [stroke, setStroke] = useState(5); // 2, 3, 5
 //   const [srcImg, setSrcImg] = useState(null);
 //   const [threshold, setThreshold] = useState(190);
 //   const [notice, setNotice] = useState("");
+//   const [mode, setMode] = useState("draw"); // "draw" | "type"
+//   const [typedName, setTypedName] = useState("");
+//   const [fontIdx, setFontIdx] = useState(0);
 
 //   /* Coordinate helper — supports mouse + touch */
 //   const getCoords = (e) => {
@@ -1876,7 +2465,7 @@ export default function SignatureMaker() {
 
 //   const startDrawing = (e) => {
 //     e.preventDefault();
-//     if (srcImg) return; // an uploaded photo is loaded: press Clear to draw again
+//     if (srcImg || mode === "type") return; // an uploaded photo is loaded (press Clear to draw again) or Type tab is open
 //     const { x, y } = getCoords(e);
 //     const ctx = canvasRef.current.getContext("2d");
 //     ctx.beginPath();
@@ -1904,10 +2493,83 @@ export default function SignatureMaker() {
 //   const clear = () => {
 //     const canvas = canvasRef.current;
 //     if (!canvas) return;
+//     renderId.current++; // cancel any typed-signature render still waiting for its font
 //     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
 //     setSrcImg(null);
+//     setTypedName("");
 //     setNotice("");
 //     if (fileRef.current) fileRef.current.value = "";
+//   };
+
+//   /* Typed signature: draw the name in the chosen cursive font, fitted to the canvas */
+//   const renderTyped = async (text, fontItem, penColor) => {
+//     const id = ++renderId.current;
+//     const canvas = canvasRef.current;
+//     if (!canvas) return;
+//     const value = text.trim();
+//     if (!value) {
+//       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+//       return;
+//     }
+//     const family = fontItem.font.style.fontFamily;
+//     try {
+//       // make sure the web font is loaded before it is drawn on the canvas
+//       await document.fonts.load(`120px ${family}`, value);
+//     } catch (err) {
+//       /* fall back to whatever font is available */
+//     }
+//     if (id !== renderId.current || !canvasRef.current) return; // a newer render took over
+
+//     const ctx = canvas.getContext("2d");
+//     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+//     let size = 150;
+//     ctx.font = `${size}px ${family}`;
+//     const maxW = canvas.width - 100;
+//     const measured = ctx.measureText(value).width;
+//     if (measured > maxW) {
+//       size = Math.max(24, Math.floor((size * maxW) / measured));
+//       ctx.font = `${size}px ${family}`;
+//     }
+//     ctx.fillStyle = penColor;
+//     ctx.textAlign = "center";
+//     ctx.textBaseline = "middle";
+//     ctx.fillText(value, canvas.width / 2, canvas.height / 2);
+//   };
+
+//   const switchMode = (next) => {
+//     if (next === mode) return;
+//     const canvas = canvasRef.current;
+//     renderId.current++;
+//     setMode(next);
+//     setNotice("");
+//     setDrawing(false);
+//     setSrcImg(null);
+//     if (canvas) {
+//       canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+//     }
+//     if (fileRef.current) fileRef.current.value = "";
+//     if (next === "type" && typedName.trim()) {
+//       renderTyped(typedName, typedFonts[fontIdx], color);
+//     }
+//   };
+
+//   /* Primary CTA: works from both tabs (switches to Draw/Upload first, then opens the file picker) */
+//   const openUpload = () => {
+//     if (mode !== "draw") switchMode("draw");
+//     fileRef.current?.click();
+//   };
+
+//   const onTypedName = (e) => {
+//     const v = e.target.value;
+//     setTypedName(v);
+//     setNotice("");
+//     renderTyped(v, typedFonts[fontIdx], color);
+//   };
+
+//   const onFont = (i) => {
+//     setFontIdx(i);
+//     renderTyped(typedName, typedFonts[i], color);
 //   };
 
 //   /* Upload: draw the photo, turn light paper transparent, recolor the ink */
@@ -1972,6 +2634,7 @@ export default function SignatureMaker() {
 //     const v = e.target.value;
 //     setColor(v);
 //     if (srcImg) processImage(srcImg, threshold, v);
+//     else if (mode === "type") renderTyped(typedName, typedFonts[fontIdx], v);
 //   };
 
 //   const download = () => {
@@ -1979,7 +2642,11 @@ export default function SignatureMaker() {
 //     if (!canvas) return;
 //     const url = getTrimmedDataUrl(canvas);
 //     if (!url) {
-//       setNotice("Draw or upload your signature first.");
+//       setNotice(
+//         mode === "type"
+//           ? "Type your name first."
+//           : "Draw or upload your signature first.",
+//       );
 //       return;
 //     }
 //     const link = document.createElement("a");
@@ -2035,6 +2702,111 @@ export default function SignatureMaker() {
 //         <section className="sm-section-main py-10 px-6">
 //           <div className="max-w-2xl mx-auto sm-fade-up">
 //             <div className="sm-tool-card">
+//               {/* ── Primary CTA: convert signature photo to digital ── */}
+//               <div
+//                 className="flex flex-wrap items-center justify-center gap-5 rounded-2xl border p-4 mb-5"
+//                 style={{ background: "#F5F7FF", borderColor: "#E0E7FF" }}
+//               >
+//                 {/* <div className="text-center sm:text-left"> */}
+//                 <div className="text-center">
+//                   <button
+//                     type="button"
+//                     onClick={openUpload}
+//                     className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-base font-bold text-white shadow-md transition-all hover:shadow-lg hover:-translate-y-0.5"
+//                     style={{
+//                       background: "linear-gradient(135deg,#6366F1,#8B5CF6)",
+//                     }}
+//                   >
+//                     <Upload className="w-5 h-5" />
+//                     Upload signature photo
+//                   </button>
+//                   <p className="text-xs mt-2" style={{ color: "#6B7280" }}>
+//                     Convert a photo or scan to a transparent PNG. JPG or PNG,
+//                     processed in your browser.
+//                   </p>
+//                 </div>
+
+//                 {/* Before / After preview */}
+//                 <div className="flex items-center gap-2">
+//                   <div className="text-center">
+//                     <div
+//                       className="w-24 h-12 rounded-lg overflow-hidden border"
+//                       style={{ borderColor: "#E0E7FF" }}
+//                     >
+//                       <SigSample />
+//                     </div>
+//                     <span
+//                       className="text-[10px] font-semibold"
+//                       style={{ color: "#6B7280" }}
+//                     >
+//                       Before
+//                     </span>
+//                   </div>
+//                   <span className="font-bold" style={{ color: "#6366F1" }}>
+//                     →
+//                   </span>
+//                   <div className="text-center">
+//                     <div
+//                       className="w-24 h-12 rounded-lg overflow-hidden border"
+//                       style={{ borderColor: "#E0E7FF" }}
+//                     >
+//                       <SigSample after />
+//                     </div>
+//                     <span
+//                       className="text-[10px] font-semibold"
+//                       style={{ color: "#6B7280" }}
+//                     >
+//                       After
+//                     </span>
+//                   </div>
+//                 </div>
+//               </div>
+
+//               {/* Single hidden file input, always mounted so both tabs can use it */}
+//               <input
+//                 ref={fileRef}
+//                 type="file"
+//                 accept="image/*"
+//                 onChange={onUpload}
+//                 hidden
+//               />
+
+//               {/* Mode tabs: Draw / Upload  |  Type */}
+//               <div
+//                 className="flex justify-center gap-2 mb-4"
+//                 role="group"
+//                 aria-label="Signature mode"
+//               >
+//                 {[
+//                   {
+//                     id: "draw",
+//                     label: "Draw / Upload",
+//                     icon: <PenTool className="w-4 h-4" />,
+//                   },
+//                   {
+//                     id: "type",
+//                     label: "Type",
+//                     icon: <TypeIcon className="w-4 h-4" />,
+//                   },
+//                 ].map((t) => (
+//                   <button
+//                     key={t.id}
+//                     type="button"
+//                     onClick={() => switchMode(t.id)}
+//                     aria-pressed={mode === t.id}
+//                     className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold border transition-all"
+//                     style={{
+//                       background: mode === t.id ? "#6366F1" : "#EEF2FF",
+//                       color: mode === t.id ? "#ffffff" : "#4F46E5",
+//                       borderColor: mode === t.id ? "#6366F1" : "#E0E7FF",
+//                     }}
+//                   >
+//                     {t.icon}
+//                     {t.label}
+//                   </button>
+//                 ))}
+//               </div>
+
 //               {/* Controls row */}
 //               <div className="sm-controls">
 //                 {/* Pen color */}
@@ -2055,26 +2827,28 @@ export default function SignatureMaker() {
 //                   />
 //                 </div>
 
-//                 {/* Stroke size */}
-//                 <div className="flex items-center gap-2">
-//                   {strokeSizes.map(({ size, label }) => (
-//                     <button
-//                       key={size}
-//                       onClick={() => setStroke(size)}
-//                       className={`sm-stroke-btn ${stroke === size ? "active" : ""}`}
-//                       title={`Stroke ${label}`}
-//                     >
-//                       <div
-//                         style={{
-//                           width: `${size * 3}px`,
-//                           height: `${size * 3}px`,
-//                           borderRadius: "50%",
-//                           background: stroke === size ? "#6366F1" : "#9CA3AF",
-//                         }}
-//                       />
-//                     </button>
-//                   ))}
-//                 </div>
+//                 {/* Stroke size (draw mode only) */}
+//                 {mode === "draw" && (
+//                   <div className="flex items-center gap-2">
+//                     {strokeSizes.map(({ size, label }) => (
+//                       <button
+//                         key={size}
+//                         onClick={() => setStroke(size)}
+//                         className={`sm-stroke-btn ${stroke === size ? "active" : ""}`}
+//                         title={`Stroke ${label}`}
+//                       >
+//                         <div
+//                           style={{
+//                             width: `${size * 3}px`,
+//                             height: `${size * 3}px`,
+//                             borderRadius: "50%",
+//                             background: stroke === size ? "#6366F1" : "#9CA3AF",
+//                           }}
+//                         />
+//                       </button>
+//                     ))}
+//                   </div>
+//                 )}
 
 //                 {/* Clear */}
 //                 <button onClick={clear} className="sm-clear-btn">
@@ -2089,20 +2863,9 @@ export default function SignatureMaker() {
 //                 </button>
 //               </div>
 
-//               {/* Upload + background slider */}
-//               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-//                 <label className="sm-clear-btn cursor-pointer">
-//                   <Upload className="w-4 h-4" />
-//                   Upload signature photo
-//                   <input
-//                     ref={fileRef}
-//                     type="file"
-//                     accept="image/*"
-//                     onChange={onUpload}
-//                     hidden
-//                   />
-//                 </label>
-//                 {srcImg && (
+//               {/* Background slider (only after a photo is uploaded) */}
+//               {mode === "draw" && srcImg && (
+//                 <div className="flex justify-center mt-4">
 //                   <label
 //                     className="text-xs font-semibold flex items-center gap-2"
 //                     style={{ color: "#6B7280" }}
@@ -2116,8 +2879,54 @@ export default function SignatureMaker() {
 //                       onChange={onThreshold}
 //                     />
 //                   </label>
-//                 )}
-//               </div>
+//                 </div>
+//               )}
+
+//               {/* Typed signature: name input + font styles (type mode only) */}
+//               {mode === "type" && (
+//                 <div className="mt-4">
+//                   <label
+//                     htmlFor="sm-typed-name"
+//                     className="block text-xs font-semibold mb-2"
+//                     style={{ color: "#6B7280" }}
+//                   >
+//                     Type your name
+//                   </label>
+//                   <input
+//                     id="sm-typed-name"
+//                     type="text"
+//                     value={typedName}
+//                     onChange={onTypedName}
+//                     maxLength={40}
+//                     autoComplete="off"
+//                     placeholder="Type your name"
+//                     className="w-full rounded-xl border px-4 py-3 text-base"
+//                     style={{ borderColor: "#E0E7FF", color: "#1a1a2e" }}
+//                   />
+//                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3">
+//                     {typedFonts.map((f, i) => (
+//                       <button
+//                         key={f.name}
+//                         type="button"
+//                         onClick={() => onFont(i)}
+//                         aria-pressed={fontIdx === i}
+//                         title={f.name}
+//                         className="rounded-xl border px-3 py-2 overflow-hidden whitespace-nowrap text-ellipsis"
+//                         style={{
+//                           fontFamily: f.font.style.fontFamily,
+//                           fontSize: "1.5rem",
+//                           lineHeight: 1.3,
+//                           color: "#1a1a2e",
+//                           borderColor: fontIdx === i ? "#6366F1" : "#E0E7FF",
+//                           background: fontIdx === i ? "#EEF2FF" : "#ffffff",
+//                         }}
+//                       >
+//                         {typedName.trim() || "Your Name"}
+//                       </button>
+//                     ))}
+//                   </div>
+//                 </div>
+//               )}
 
 //               {/* Canvas (white background is CSS only, the exported PNG is transparent) */}
 //               <div className="sm-canvas-wrap">
@@ -2148,12 +2957,20 @@ export default function SignatureMaker() {
 //               )}
 
 //               {/* Tip */}
-//               <div className="sm-tip">
-//                 💡 Draw with your mouse or finger to make a signature online
-//                 free. Or upload a photo of your signature on white paper to
-//                 convert it to a digital signature, then use the slider until the
-//                 paper disappears. Press Clear to start over.
-//               </div>
+//               {mode === "draw" ? (
+//                 <div className="sm-tip">
+//                   💡 Draw with your mouse or finger to make a signature online
+//                   free. Or upload a photo of your signature on white paper to
+//                   convert it to a digital signature, then use the slider until
+//                   the paper disappears. Press Clear to start over.
+//                 </div>
+//               ) : (
+//                 <div className="sm-tip">
+//                   💡 Type your name, pick a cursive signature style, and choose
+//                   a pen color. Your typed signature is saved as a transparent
+//                   PNG. Press Clear to start over.
+//                 </div>
+//               )}
 
 //               {/* Trust row */}
 //               <div className="flex flex-wrap justify-center gap-5 mt-5">
@@ -2337,6 +3154,43 @@ export default function SignatureMaker() {
 //                 </NextLink>{" "}
 //                 tool.
 //               </p>
+
+//               <p className="leading-7 text-sm mt-3">
+//                 Want to learn more about creating and using digital signatures?
+//                 Read our{" "}
+//                 <NextLink
+//                   href="/blog/create-digital-signature-online-free"
+//                   className={linkClass}
+//                 >
+//                   guide to digital signatures
+//                 </NextLink>{" "}
+//                 for step-by-step instructions.
+//               </p>
+
+//               <p className="leading-7 text-sm mt-3">
+//                 If you want to place your signature directly on a PDF, use our{" "}
+//                 <a
+//                   href="https://pdflinx.com/sign-pdf"
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   className={linkClass}
+//                 >
+//                   Sign PDF tool
+//                 </a>{" "}
+//                 to add it to your document.
+//               </p>
+
+//               {/* {" "}If you want to place your signature directly on a PDF,
+//               use our{" "} */}
+//               {/* <a
+//                 href="https://pdflinx.com/sign-pdf"
+//                 target="_blank"
+//                 rel="noopener noreferrer"
+//                 className={linkClass}
+//               > */}
+//               {/* Sign PDF tool
+//               </a>
+//               {" "}to add it to your document. */}
 //             </div>
 
 //             {/* ── NEW BLOCK 1: photo / scanner cluster ── */}
@@ -2411,6 +3265,72 @@ export default function SignatureMaker() {
 //                 online signature free no sign up tool that takes about 40
 //                 seconds. Looking for a signature tool online or a signature
 //                 maker free online? Open this page, sign, and download.
+//               </p>
+//             </div>
+
+//             {/* ── NEW BLOCK 4: typed signature cluster ── */}
+//             <div>
+//               <h2
+//                 className="text-2xl font-bold mb-4"
+//                 style={{ color: "#1a1a2e" }}
+//               >
+//                 Typed Signature Generator: Type Your Name to Create a Signature
+//                 Online
+//               </h2>
+//               <p className="leading-7 text-sm">
+//                 Do not want to draw with a mouse or a shaky finger? Open the
+//                 Type tab and use this free typed signature generator to turn
+//                 your name into a signature. Type your name, preview it in six
+//                 cursive signature fonts, pick a pen color, and download a
+//                 transparent PNG. It works as a name to signature generator, a
+//                 text to signature converter, and a cursive signature maker, so
+//                 you can create a signature online free in a few seconds with no
+//                 sign up and nothing uploaded to a server.
+//               </p>
+//               <p className="leading-7 text-sm mt-3">
+//                 A typed e signature is useful when you need a clean, readable
+//                 signature fast: on a laptop without a touchscreen, for online
+//                 forms, job applications, invoices, or school paperwork. Type
+//                 your printed name, turn it into an electronic signature, and
+//                 keep the file as a transparent signature PNG for Word, PDF, and
+//                 email. After you download it, trim the margins with the{" "}
+//                 <NextLink href="/image-cropper" className={linkClass}>
+//                   Image Cropper
+//                 </NextLink>
+//                 , resize it with the{" "}
+//                 <NextLink href="/image-resizer" className={linkClass}>
+//                   Image Resizer
+//                 </NextLink>
+//                 , or add it to a document that you first create with{" "}
+//                 <NextLink href="/text-to-pdf" className={linkClass}>
+//                   Text to PDF
+//                 </NextLink>
+//                 .
+//               </p>
+//             </div>
+
+//             <div>
+//               <h3
+//                 className="font-bold text-lg mb-3"
+//                 style={{ color: "#1a1a2e" }}
+//               >
+//                 Cursive Signature Generator and Signature Font Styles
+//               </h3>
+//               <p className="leading-7 text-sm">
+//                 Choose from six handwriting signature styles, from a flowing
+//                 script like Great Vibes to a compact casual style like Satisfy.
+//                 Each style is a free signature font, so your typed signature
+//                 looks like real handwriting instead of a plain typed name. Use
+//                 it as an online signature generator, a free digital signature
+//                 generator, or an electronic signature generator online for forms
+//                 and signature lines. Prefer your own handwriting? Use the Draw /
+//                 Upload tab instead, and use the Type tab when you want a clean
+//                 cursive signature from your name. Want a smaller file? Shrink it
+//                 with the{" "}
+//                 <NextLink href="/image-compressor" className={linkClass}>
+//                   Image Compressor
+//                 </NextLink>
+//                 .
 //               </p>
 //             </div>
 
@@ -2643,1906 +3563,3 @@ export default function SignatureMaker() {
 //     </>
 //   );
 // }
-
-// // "use client";
-
-// // import { useRef, useState } from "react";
-// // import NextLink from "next/link";
-// // import {
-// //   Download,
-// //   PenTool,
-// //   Palette,
-// //   Trash2,
-// //   CheckCircle,
-// //   ChevronDown,
-// //   Upload,
-// // } from "lucide-react";
-// // import "@/styles/SignatureMaker.css";
-
-// // const SITE = "https://convertlinx.com";
-// // const PAGE_URL = `${SITE}/signature-maker`;
-
-// // const linkClass = "text-indigo-600 hover:underline font-medium";
-
-// // // const strokeSizes = [
-// // //   { size: 2, label: 'S' },
-// // //   { size: 3, label: 'M' },
-// // //   { size: 5, label: 'L' },
-// // // ];
-
-// // const strokeSizes = [
-// //   { size: 3, label: "S" },
-// //   { size: 5, label: "M" },
-// //   { size: 7, label: "L" },
-// // ];
-
-// // /* ── FAQ data: `a` = what users see (can contain links), `aText` = plain text for schema ── */
-// // const faqs = [
-// //   {
-// //     q: "Is this free online signature maker and signature converter completely free to use?",
-// //     a: "Yes. Our online signature maker and signature converter is 100% free with no signup, watermarks, or usage limits. You can create a digital signature online free, or convert image to digital signature online free, as many times as you need.",
-// //     aText:
-// //       "Yes. Our online signature maker and signature converter is 100% free with no signup, watermarks, or usage limits. You can create a digital signature online free, or convert image to digital signature online free, as many times as you need.",
-// //   },
-// //   {
-// //     q: "How do I convert my handwritten signature on paper to digital?",
-// //     a: 'Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click "Upload signature photo", then move the background slider to convert signature on paper to digital until the paper disappears. This lets you scan signature online free using only your phone camera. Pick your pen color if you like and download the transparent PNG.',
-// //     aText:
-// //       "Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click Upload signature photo, then move the background slider to convert signature on paper to digital until the paper disappears. This lets you scan signature online free using only your phone camera. Pick your pen color if you like and download the transparent PNG.",
-// //   },
-// //   {
-// //     q: "How do I add my electronic signature to PDF files or documents?",
-// //     a: (
-// //       <span>
-// //         After you convert signature to digital with this e signature free online
-// //         tool and download your transparent PNG signature, insert it into your
-// //         PDF or Word document using any editor's "insert image" option. If your
-// //         document starts as plain text, convert it first with our{" "}
-// //         <NextLink href="/text-to-pdf" className={linkClass}>
-// //           Text to PDF
-// //         </NextLink>{" "}
-// //         tool. To trim or resize the signature image, use the{" "}
-// //         <NextLink href="/image-cropper" className={linkClass}>
-// //           Image Cropper
-// //         </NextLink>{" "}
-// //         or{" "}
-// //         <NextLink href="/image-resizer" className={linkClass}>
-// //           Image Resizer
-// //         </NextLink>
-// //         .
-// //       </span>
-// //     ),
-// //     aText:
-// //       "After you convert signature to digital with this e signature free online tool and download your transparent PNG signature, insert it into your PDF or Word document using any editor's insert image option. If your document starts as plain text, convert it first with the Text to PDF tool. To trim or resize the signature image, use the Image Cropper or Image Resizer.",
-// //   },
-// //   {
-// //     q: "Can I draw or capture my signature online on mobile phones and tablets?",
-// //     a: "Yes. You can convert to signature by drawing with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets. It works as a signature capture online tool on any phone, tablet, or computer.",
-// //     aText:
-// //       "Yes. You can convert to signature by drawing with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets. It works as a signature capture online tool on any phone, tablet, or computer.",
-// //   },
-// //   {
-// //     q: "Can I make a digital signature online free without signing up?",
-// //     a: "Yes. This online signature tool is an electronic signature free no sign up option: there is no account, no email, and no login. Open the page, create your digital signature free online by drawing or uploading a photo, and download the PNG.",
-// //     aText:
-// //       "Yes. This online signature tool is an electronic signature free no sign up option: there is no account, no email, and no login. Open the page, create your digital signature free online by drawing or uploading a photo, and download the PNG.",
-// //   },
-// //   {
-// //     q: "Does this digital signature maker download signatures with a transparent background?",
-// //     a: "Yes. When you convert image to digital signature online free, the signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.",
-// //     aText:
-// //       "Yes. When you convert image to digital signature online free, the signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.",
-// //   },
-// //   {
-// //     q: "My signature photo is from an iPhone (HEIC). Can I upload it?",
-// //     a: (
-// //       <span>
-// //         Browsers often cannot open HEIC photos. Convert the photo first with our{" "}
-// //         <NextLink href="/heic-to-jpg" className={linkClass}>
-// //           HEIC to JPG
-// //         </NextLink>{" "}
-// //         converter, then upload the JPG here to convert signature to digital. If
-// //         the photo is sideways or upside down, fix it with{" "}
-// //         <NextLink href="/rotate-flip-image" className={linkClass}>
-// //           Rotate &amp; Flip Image
-// //         </NextLink>
-// //         .
-// //       </span>
-// //     ),
-// //     aText:
-// //       "Browsers often cannot open HEIC photos. Convert the photo first with the HEIC to JPG converter, then upload the JPG here to convert signature to digital. If the photo is sideways or upside down, fix it with Rotate and Flip Image.",
-// //   },
-// //   {
-// //     q: "Is this a virtual signature free tool I can use for online forms?",
-// //     a: "Yes. Use it as a virtual signature free tool for online forms, job applications, rental agreements, and school paperwork. Make a signature online free, download the transparent PNG, and upload or paste it wherever a signature image is accepted.",
-// //     aText:
-// //       "Yes. Use it as a virtual signature free tool for online forms, job applications, rental agreements, and school paperwork. Make a signature online free, download the transparent PNG, and upload or paste it wherever a signature image is accepted.",
-// //   },
-// //   {
-// //     q: "Are my signatures or photos stored on your server?",
-// //     a: "No. Your signature and any photo you upload to our signature converter are processed only in your web browser. Nothing is uploaded, saved, or logged on a server, so this online signature tool is safe for private documents.",
-// //     aText:
-// //       "No. Your signature and any photo you upload to our signature converter are processed only in your web browser. Nothing is uploaded, saved, or logged on a server, so this online signature tool is safe for private documents.",
-// //   },
-// //   {
-// //     q: "Can I reduce the size or change the format of my signature image?",
-// //     a: (
-// //       <span>
-// //         Yes. Shrink the file with our{" "}
-// //         <NextLink href="/image-compressor" className={linkClass}>
-// //           Image Compressor
-// //         </NextLink>{" "}
-// //         or switch formats, for example PNG to WebP, with our{" "}
-// //         <NextLink href="/image-converter" className={linkClass}>
-// //           Image Converter
-// //         </NextLink>
-// //         . Note that JPG does not support transparency, so keep PNG if you need a
-// //         transparent background.
-// //       </span>
-// //     ),
-// //     aText:
-// //       "Yes. Shrink the file with the Image Compressor or switch formats, for example PNG to WebP, with the Image Converter. Note that JPG does not support transparency, so keep PNG if you need a transparent background.",
-// //   },
-// //   {
-// //     q: "Is an image of my e signature legally valid?",
-// //     a: "Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.",
-// //     aText:
-// //       "Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.",
-// //   },
-// // ];
-
-// // const relatedTools = [
-// //   { name: "Text to PDF", href: "/text-to-pdf" },
-// //   { name: "Image Cropper", href: "/image-cropper" },
-// //   { name: "Image Resizer", href: "/image-resizer" },
-// //   { name: "Image Compressor", href: "/image-compressor" },
-// //   { name: "Image Converter", href: "/image-converter" },
-// //   { name: "HEIC to JPG", href: "/heic-to-jpg" },
-// //   { name: "Add Watermark", href: "/add-watermark" },
-// //   { name: "Rotate & Flip Image", href: "/rotate-flip-image" },
-// // ];
-
-// // /* ── Structured data (plain <script>, so it is in the server-rendered HTML) ── */
-// // const JsonLd = ({ data }) => (
-// //   <script
-// //     type="application/ld+json"
-// //     dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-// //   />
-// // );
-
-// // const howToSchema = {
-// //   "@context": "https://schema.org",
-// //   "@type": "HowTo",
-// //   name: "How to Create a Digital Signature Online Free or Convert a Signature to Digital",
-// //   description:
-// //     "Draw your signature or upload a photo of it, remove the background, and download a transparent PNG. A free online signature maker with no sign up.",
-// //   url: PAGE_URL,
-// //   step: [
-// //     {
-// //       "@type": "HowToStep",
-// //       name: "Draw or upload",
-// //       text: "Draw your signature with a mouse or finger, or upload a photo of your signature on white paper to scan signature online free.",
-// //     },
-// //     {
-// //       "@type": "HowToStep",
-// //       name: "Adjust",
-// //       text: "Choose a pen color, set the stroke thickness, or move the background slider until the paper disappears.",
-// //     },
-// //     {
-// //       "@type": "HowToStep",
-// //       name: "Download PNG",
-// //       text: "Download your digital signature as a transparent background PNG.",
-// //     },
-// //   ],
-// //   totalTime: "PT40S",
-// //   estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
-// // };
-
-// // // const breadcrumbSchema = {
-// // //   "@context": "https://schema.org",
-// // //   "@type": "BreadcrumbList",
-// // //   itemListElement: [
-// // //     { "@type": "ListItem", position: 1, name: "Home", item: SITE },
-// // //     {
-// // //       "@type": "ListItem",
-// // //       position: 2,
-// // //       name: "Signature Maker",
-// // //       item: PAGE_URL,
-// // //     },
-// // //   ],
-// // // };
-
-// // // const webAppSchema = {
-// // //   "@context": "https://schema.org",
-// // //   "@type": "WebApplication",
-// // //   name: "ConvertLinx Signature Maker",
-// // //   url: PAGE_URL,
-// // //   applicationCategory: "UtilitiesApplication",
-// // //   operatingSystem: "Any",
-// // //   browserRequirements: "Requires JavaScript",
-// // //   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-// // // };
-
-// // const faqSchema = {
-// //   "@context": "https://schema.org",
-// //   "@type": "FAQPage",
-// //   mainEntity: faqs.map((faq) => ({
-// //     "@type": "Question",
-// //     name: faq.q,
-// //     acceptedAnswer: { "@type": "Answer", text: faq.aText },
-// //   })),
-// // };
-
-// // /* ── Helpers ── */
-// // const hexToRgb = (hex) =>
-// //   [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-
-// // /* Returns a PNG data URL cropped to the signature's bounding box (transparent margins removed) */
-// // const getTrimmedDataUrl = (canvas) => {
-// //   const ctx = canvas.getContext("2d");
-// //   const { width, height } = canvas;
-// //   const data = ctx.getImageData(0, 0, width, height).data;
-// //   let minX = width,
-// //     minY = height,
-// //     maxX = -1,
-// //     maxY = -1;
-
-// //   for (let y = 0; y < height; y++) {
-// //     for (let x = 0; x < width; x++) {
-// //       if (data[(y * width + x) * 4 + 3] > 10) {
-// //         if (x < minX) minX = x;
-// //         if (x > maxX) maxX = x;
-// //         if (y < minY) minY = y;
-// //         if (y > maxY) maxY = y;
-// //       }
-// //     }
-// //   }
-// //   if (maxX < 0) return null; // nothing drawn
-
-// //   const pad = 10;
-// //   minX = Math.max(0, minX - pad);
-// //   minY = Math.max(0, minY - pad);
-// //   maxX = Math.min(width - 1, maxX + pad);
-// //   maxY = Math.min(height - 1, maxY + pad);
-
-// //   const w = maxX - minX + 1;
-// //   const h = maxY - minY + 1;
-// //   const out = document.createElement("canvas");
-// //   out.width = w;
-// //   out.height = h;
-// //   out.getContext("2d").drawImage(canvas, minX, minY, w, h, 0, 0, w, h);
-// //   return out.toDataURL("image/png");
-// // };
-
-// // export default function SignatureMaker() {
-// //   const canvasRef = useRef(null);
-// //   const fileRef = useRef(null);
-// //   const [drawing, setDrawing] = useState(false);
-// //   const [color, setColor] = useState("#1a1a2e");
-// //   const [stroke, setStroke] = useState(5); // 2, 3, 5
-// //   const [srcImg, setSrcImg] = useState(null);
-// //   const [threshold, setThreshold] = useState(190);
-// //   const [notice, setNotice] = useState("");
-
-// //   /* Coordinate helper — supports mouse + touch */
-// //   const getCoords = (e) => {
-// //     const canvas = canvasRef.current;
-// //     const rect = canvas.getBoundingClientRect();
-// //     const scaleX = canvas.width / rect.width;
-// //     const scaleY = canvas.height / rect.height;
-// //     const src = e.touches?.[0] ?? e;
-// //     return {
-// //       x: (src.clientX - rect.left) * scaleX,
-// //       y: (src.clientY - rect.top) * scaleY,
-// //     };
-// //   };
-
-// //   const startDrawing = (e) => {
-// //     e.preventDefault();
-// //     if (srcImg) return; // an uploaded photo is loaded: press Clear to draw again
-// //     const { x, y } = getCoords(e);
-// //     const ctx = canvasRef.current.getContext("2d");
-// //     ctx.beginPath();
-// //     ctx.moveTo(x, y);
-// //     setDrawing(true);
-// //     setNotice("");
-// //   };
-
-// //   const draw = (e) => {
-// //     e.preventDefault();
-// //     if (!drawing) return;
-// //     const { x, y } = getCoords(e);
-// //     const ctx = canvasRef.current.getContext("2d");
-// //     ctx.lineWidth = stroke;
-// //     ctx.lineCap = "round";
-// //     ctx.lineJoin = "round";
-// //     ctx.strokeStyle = color;
-// //     ctx.lineTo(x, y);
-// //     ctx.stroke();
-// //   };
-
-// //   const stopDrawing = () => setDrawing(false);
-
-// //   /* Canvas stays transparent: the white you see is only CSS, so the PNG keeps a transparent background */
-// //   const clear = () => {
-// //     const canvas = canvasRef.current;
-// //     if (!canvas) return;
-// //     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-// //     setSrcImg(null);
-// //     setNotice("");
-// //     if (fileRef.current) fileRef.current.value = "";
-// //   };
-
-// //   /* Upload: draw the photo, turn light paper transparent, recolor the ink */
-// //   const processImage = (img, t, penColor) => {
-// //     const canvas = canvasRef.current;
-// //     if (!canvas) return;
-// //     const ctx = canvas.getContext("2d");
-// //     const scale = Math.min(
-// //       canvas.width / img.width,
-// //       canvas.height / img.height,
-// //     );
-// //     const w = img.width * scale;
-// //     const h = img.height * scale;
-
-// //     ctx.clearRect(0, 0, canvas.width, canvas.height);
-// //     ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-
-// //     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-// //     const d = imageData.data;
-// //     const [r, g, b] = hexToRgb(penColor);
-
-// //     for (let i = 0; i < d.length; i += 4) {
-// //       if (d[i + 3] === 0) continue;
-// //       const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-// //       // paper (light) -> transparent, ink (dark) -> pen color, soft edge in between
-// //       const a = lum >= t ? 0 : lum <= t - 40 ? 255 : ((t - lum) / 40) * 255;
-// //       d[i] = r;
-// //       d[i + 1] = g;
-// //       d[i + 2] = b;
-// //       d[i + 3] = a;
-// //     }
-// //     ctx.putImageData(imageData, 0, 0);
-// //   };
-
-// //   const onUpload = (e) => {
-// //     const file = e.target.files?.[0];
-// //     if (!file) return;
-// //     const url = URL.createObjectURL(file);
-// //     const img = new Image();
-// //     img.onload = () => {
-// //       setSrcImg(img);
-// //       setNotice("");
-// //       processImage(img, threshold, color);
-// //       URL.revokeObjectURL(url);
-// //     };
-// //     img.onerror = () => {
-// //       setNotice(
-// //         "This image could not be opened. Try a JPG or PNG photo (iPhone HEIC photos need converting first).",
-// //       );
-// //       URL.revokeObjectURL(url);
-// //     };
-// //     img.src = url;
-// //   };
-
-// //   const onThreshold = (e) => {
-// //     const v = Number(e.target.value);
-// //     setThreshold(v);
-// //     if (srcImg) processImage(srcImg, v, color);
-// //   };
-
-// //   const onColor = (e) => {
-// //     const v = e.target.value;
-// //     setColor(v);
-// //     if (srcImg) processImage(srcImg, threshold, v);
-// //   };
-
-// //   const download = () => {
-// //     const canvas = canvasRef.current;
-// //     if (!canvas) return;
-// //     const url = getTrimmedDataUrl(canvas);
-// //     if (!url) {
-// //       setNotice("Draw or upload your signature first.");
-// //       return;
-// //     }
-// //     const link = document.createElement("a");
-// //     link.download = "my-digital-signature.png";
-// //     link.href = url;
-// //     link.click();
-// //   };
-
-// //   return (
-// //     <>
-// //       {/* <JsonLd data={webAppSchema} /> */}
-// //       <JsonLd data={howToSchema} />
-// //       {/* <JsonLd data={breadcrumbSchema} /> */}
-// //       <JsonLd data={faqSchema} />
-
-// //       <main className="sm-page">
-// //         {/* ── HERO ── */}
-// //         <section className="sm-hero">
-// //           <div className="sm-blob-1" />
-// //           <div className="sm-blob-2" />
-// //           <div className="relative z-10 max-w-3xl mx-auto">
-// //             <div className="flex items-center justify-center gap-2 text-sm mb-5">
-// //               <NextLink href="/" className="sm-breadcrumb-link">
-// //                 Home
-// //               </NextLink>
-// //               <span style={{ color: "#C4B5FD" }}>/</span>
-// //               <span style={{ color: "#6366F1" }}>Signature Maker</span>
-// //             </div>
-// //             <span className="sm-badge">Free Digital Signature Maker</span>
-// //             <h1
-// //               className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 mt-2"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               Free Online Signature Maker:{" "}
-// //               <span className="sm-grad-text">
-// //                 Create or Convert Signature to Digital
-// //               </span>
-// //             </h1>
-// //             <p
-// //               className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
-// //               style={{ color: "#6B7280" }}
-// //             >
-// //               Create a digital signature online free: draw your signature, or
-// //               scan signature online free by uploading a photo and removing the
-// //               background. Download a transparent PNG with no sign up, right in
-// //               your browser.
-// //             </p>
-// //           </div>
-// //         </section>
-
-// //         {/* ── TOOL WORKSPACE ── */}
-// //         <section className="sm-section-main py-10 px-6">
-// //           <div className="max-w-2xl mx-auto sm-fade-up">
-// //             <div className="sm-tool-card">
-// //               {/* Controls row */}
-// //               <div className="sm-controls">
-// //                 {/* Pen color */}
-// //                 <div className="sm-color-wrap">
-// //                   <Palette className="w-4 h-4" style={{ color: "#6366F1" }} />
-// //                   <span
-// //                     className="text-xs font-semibold"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     Pen
-// //                   </span>
-// //                   <input
-// //                     type="color"
-// //                     value={color}
-// //                     onChange={onColor}
-// //                     className="sm-color-input"
-// //                     title="Pick pen color"
-// //                   />
-// //                 </div>
-
-// //                 {/* Stroke size */}
-// //                 <div className="flex items-center gap-2">
-// //                   {strokeSizes.map(({ size, label }) => (
-// //                     <button
-// //                       key={size}
-// //                       onClick={() => setStroke(size)}
-// //                       className={`sm-stroke-btn ${stroke === size ? "active" : ""}`}
-// //                       title={`Stroke ${label}`}
-// //                     >
-// //                       <div
-// //                         style={{
-// //                           width: `${size * 3}px`,
-// //                           height: `${size * 3}px`,
-// //                           borderRadius: "50%",
-// //                           background: stroke === size ? "#6366F1" : "#9CA3AF",
-// //                         }}
-// //                       />
-// //                     </button>
-// //                   ))}
-// //                 </div>
-
-// //                 {/* Clear */}
-// //                 <button onClick={clear} className="sm-clear-btn">
-// //                   <Trash2 className="w-4 h-4" />
-// //                   Clear
-// //                 </button>
-
-// //                 {/* Download */}
-// //                 <button onClick={download} className="sm-dl-btn">
-// //                   <Download className="w-4 h-4" />
-// //                   Download PNG
-// //                 </button>
-// //               </div>
-
-// //               {/* Upload + background slider */}
-// //               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-// //                 <label className="sm-clear-btn cursor-pointer">
-// //                   <Upload className="w-4 h-4" />
-// //                   Upload signature photo
-// //                   <input
-// //                     ref={fileRef}
-// //                     type="file"
-// //                     accept="image/*"
-// //                     onChange={onUpload}
-// //                     hidden
-// //                   />
-// //                 </label>
-// //                 {srcImg && (
-// //                   <label
-// //                     className="text-xs font-semibold flex items-center gap-2"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     Background removal
-// //                     <input
-// //                       type="range"
-// //                       min="100"
-// //                       max="250"
-// //                       value={threshold}
-// //                       onChange={onThreshold}
-// //                     />
-// //                   </label>
-// //                 )}
-// //               </div>
-
-// //               {/* Canvas (white background is CSS only, the exported PNG is transparent) */}
-// //               <div className="sm-canvas-wrap">
-// //                 <canvas
-// //                   ref={canvasRef}
-// //                   width={900}
-// //                   height={400}
-// //                   className="sm-canvas"
-// //                   style={{ background: "#ffffff", touchAction: "none" }}
-// //                   onMouseDown={startDrawing}
-// //                   onMouseMove={draw}
-// //                   onMouseUp={stopDrawing}
-// //                   onMouseLeave={stopDrawing}
-// //                   onTouchStart={startDrawing}
-// //                   onTouchMove={draw}
-// //                   onTouchEnd={stopDrawing}
-// //                 />
-// //               </div>
-
-// //               {notice && (
-// //                 <p
-// //                   role="alert"
-// //                   className="text-sm text-center mt-3"
-// //                   style={{ color: "#B91C1C" }}
-// //                 >
-// //                   {notice}
-// //                 </p>
-// //               )}
-
-// //               {/* Tip */}
-// //               <div className="sm-tip">
-// //                 💡 Draw with your mouse or finger to make a signature online
-// //                 free. Or upload a photo of your signature on white paper to
-// //                 convert it to a digital signature, then use the slider until the
-// //                 paper disappears. Press Clear to start over.
-// //               </div>
-
-// //               {/* Trust row */}
-// //               <div className="flex flex-wrap justify-center gap-5 mt-5">
-// //                 {[
-// //                   "No login or sign up",
-// //                   "Draw or upload",
-// //                   "Transparent PNG",
-// //                   "Nothing stored",
-// //                   "100% free online signature",
-// //                 ].map((t, i) => (
-// //                   <span key={i} className="sm-trust-item">
-// //                     <span className="sm-trust-dot" />
-// //                     {t}
-// //                   </span>
-// //                 ))}
-// //               </div>
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── BENEFITS ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-alt py-16 px-6">
-// //           <div className="max-w-5xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold text-center mb-10"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               Why Use Our Free Online Signature Creator?
-// //             </h2>
-// //             <div className="grid md:grid-cols-3 gap-5">
-// //               {[
-// //                 {
-// //                   icon: <PenTool className="w-6 h-6" />,
-// //                   color: "#6366F1",
-// //                   bg: "rgba(99,102,241,0.08)",
-// //                   title: "Draw or Upload",
-// //                   desc: "Draw with a mouse, finger, or stylus, or upload a photo of your signature and convert it to a digital signature online free.",
-// //                 },
-// //                 {
-// //                   icon: <Palette className="w-6 h-6" />,
-// //                   color: "#8B5CF6",
-// //                   bg: "rgba(139,92,246,0.08)",
-// //                   title: "Your Pen Style",
-// //                   desc: "Pick any pen color and line thickness for your digital signature: classic blue, deep black, or a custom shade.",
-// //                 },
-// //                 {
-// //                   icon: <CheckCircle className="w-6 h-6" />,
-// //                   color: "#10B981",
-// //                   bg: "rgba(16,185,129,0.08)",
-// //                   title: "Transparent PNG Download",
-// //                   desc: "Get a transparent PNG e signature, trimmed to your signature, ready to place on PDFs, contracts, and forms.",
-// //                 },
-// //               ].map((b, i) => (
-// //                 <div key={i} className="sm-benefit-card">
-// //                   <div
-// //                     className="sm-benefit-icon"
-// //                     style={{ background: b.bg, color: b.color }}
-// //                   >
-// //                     {b.icon}
-// //                   </div>
-// //                   <h3
-// //                     className="font-bold text-base mb-2"
-// //                     style={{ color: "#1a1a2e" }}
-// //                   >
-// //                     {b.title}
-// //                   </h3>
-// //                   <p
-// //                     className="text-sm leading-relaxed"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     {b.desc}
-// //                   </p>
-// //                 </div>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── HOW TO ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-main py-16 px-6">
-// //           <div className="max-w-4xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold text-center mb-12"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               How to Create a Digital Signature Online Free or Convert a
-// //               Signature in 3 Steps
-// //             </h2>
-// //             <div className="grid md:grid-cols-3 gap-6">
-// //               {[
-// //                 {
-// //                   num: "1",
-// //                   title: "Draw or Upload",
-// //                   desc: "Draw your signature with a mouse or finger, or upload a photo of your signature on white paper to scan signature online free.",
-// //                 },
-// //                 {
-// //                   num: "2",
-// //                   title: "Adjust",
-// //                   desc: "Choose pen color and thickness, or move the background slider until the paper disappears.",
-// //                 },
-// //                 {
-// //                   num: "3",
-// //                   title: "Download PNG",
-// //                   desc: "Download the transparent PNG and add it to PDFs, forms, Word files, or emails.",
-// //                 },
-// //               ].map((s, i) => (
-// //                 <div key={i} className="sm-step-card">
-// //                   <div className="sm-step-num">{s.num}</div>
-// //                   <h3
-// //                     className="font-bold text-base mb-2"
-// //                     style={{ color: "#1a1a2e" }}
-// //                   >
-// //                     {s.title}
-// //                   </h3>
-// //                   <p
-// //                     className="text-sm leading-relaxed"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     {s.desc}
-// //                   </p>
-// //                 </div>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── SEO CONTENT ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-alt py-16 px-6">
-// //           <div
-// //             className="max-w-3xl mx-auto space-y-8"
-// //             style={{ color: "#6B7280" }}
-// //           >
-// //             <div>
-// //               <h2
-// //                 className="text-2xl font-bold mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Free Online Signature Maker: Create a Digital Signature or
-// //                 Convert Signature to Digital
-// //               </h2>
-// //               <p className="leading-7 text-sm">
-// //                 The{" "}
-// //                 <span style={{ color: "#1a1a2e", fontWeight: 600 }}>
-// //                   ConvertLinx Signature Maker
-// //                 </span>{" "}
-// //                 is a free online signature tool and signature converter that
-// //                 creates a clean digital signature with a transparent background.
-// //                 Draw with your mouse or finger to make a signature online free,
-// //                 or upload a photo of your signed paper and let the tool remove
-// //                 the background. Download a PNG you can place on PDF agreements,
-// //                 online forms, invoices, or Word documents, with no printing or
-// //                 scanning. Everything runs in your browser, so your signature is
-// //                 never uploaded. If you want to turn plain text into a PDF before
-// //                 adding your signature, try our{" "}
-// //                 <NextLink href="/text-to-pdf" className={linkClass}>
-// //                   Text to PDF
-// //                 </NextLink>{" "}
-// //                 tool, and use the{" "}
-// //                 <NextLink href="/image-cropper" className={linkClass}>
-// //                   Image Cropper
-// //                 </NextLink>{" "}
-// //                 or{" "}
-// //                 <NextLink href="/image-resizer" className={linkClass}>
-// //                   Image Resizer
-// //                 </NextLink>{" "}
-// //                 to trim and resize your signature image.
-// //               </p>
-// //               <p className="leading-7 text-sm mt-3">
-// //                 To convert a handwritten signature to digital, sign on plain
-// //                 white paper with a dark pen and take a sharp photo in good
-// //                 light, without shadows. Upload it to scan signature online free,
-// //                 adjust the background slider until only the ink remains, and
-// //                 download your transparent PNG. This is the fastest way to
-// //                 convert signature on paper to digital without a scanner. If your
-// //                 photo is an iPhone HEIC file, convert it first with our{" "}
-// //                 <NextLink href="/heic-to-jpg" className={linkClass}>
-// //                   HEIC to JPG
-// //                 </NextLink>{" "}
-// //                 tool.
-// //               </p>
-// //             </div>
-
-// //             <div>
-// //               <h3
-// //                 className="font-bold text-lg mb-3"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 What Is an Online Electronic Signature Creator?
-// //               </h3>
-// //               <p className="leading-7 text-sm">
-// //                 An online signature creator, also called a digital signature
-// //                 maker or e signature free online tool, lets you make an image of
-// //                 your handwritten signature on a touchscreen or desktop, or from
-// //                 a photo. It works as a virtual signature free option and a
-// //                 signature capture online tool, with no sign up needed. By saving
-// //                 it as a transparent PNG, you can insert it into PDF files,
-// //                 Google Docs, Word files, and email signatures. A signature image
-// //                 is not the same as a certificate-based digital signature. If a
-// //                 contract requires one, check the requirements with the other
-// //                 party.
-// //               </p>
-// //             </div>
-
-// //             <div className="sm-seo-box rounded-2xl p-6">
-// //               <h3
-// //                 className="font-bold text-lg mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Optimizing Your Signature Image
-// //               </h3>
-// //               <p className="leading-7 text-sm">
-// //                 Small files are easier to send and upload. Reduce the file size
-// //                 of your digital signature with our{" "}
-// //                 <NextLink href="/image-compressor" className={linkClass}>
-// //                   Image Compressor
-// //                 </NextLink>
-// //                 , change formats with our{" "}
-// //                 <NextLink href="/image-converter" className={linkClass}>
-// //                   Image Converter
-// //                 </NextLink>
-// //                 , or protect signed images from reuse with{" "}
-// //                 <NextLink href="/add-watermark" className={linkClass}>
-// //                   Add Watermark
-// //                 </NextLink>
-// //                 .
-// //               </p>
-// //             </div>
-
-// //             <div className="sm-seo-box rounded-2xl p-6">
-// //               <h3
-// //                 className="font-bold text-lg mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Who Should Use This Online Signature Tool?
-// //               </h3>
-// //               <div className="grid sm:grid-cols-2 gap-3">
-// //                 {[
-// //                   "Business professionals who sign contracts and NDAs with a free e signature",
-// //                   "Freelancers and agencies who sign invoices and work agreements",
-// //                   "Students who fill in online forms and academic documents",
-// //                   "Remote teams who sign paperwork without printing",
-// //                   "Anyone who wants a reusable transparent digital signature",
-// //                 ].map((item, i) => (
-// //                   <div key={i} className="flex items-start gap-2 text-sm">
-// //                     <span
-// //                       className="font-bold mt-0.5"
-// //                       style={{ color: "#6366F1" }}
-// //                     >
-// //                       →
-// //                     </span>
-// //                     <span>{item}</span>
-// //                   </div>
-// //                 ))}
-// //               </div>
-// //             </div>
-
-// //             <div className="sm-seo-box rounded-2xl p-6">
-// //               <h3
-// //                 className="font-bold text-lg mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Key Features
-// //               </h3>
-// //               <div className="grid sm:grid-cols-2 gap-3">
-// //                 {[
-// //                   "100% free, unlimited online signatures",
-// //                   "Draw with mouse, stylus, or mobile touch",
-// //                   "Upload a signature photo and remove the background",
-// //                   "Custom pen color selection",
-// //                   "Stroke size customization (Small, Medium, Large)",
-// //                   "Transparent PNG, trimmed to your signature",
-// //                   "Works on Android, iOS, Windows & Mac",
-// //                   "Electronic signature free, no sign up needed",
-// //                   "Private: nothing is uploaded or saved on servers",
-// //                 ].map((f, i) => (
-// //                   <div key={i} className="flex items-center gap-2.5 text-sm">
-// //                     <span
-// //                       className="sm-feature-dot"
-// //                       style={{
-// //                         width: "6px",
-// //                         height: "6px",
-// //                         borderRadius: "50%",
-// //                         background: "#6366F1",
-// //                         display: "inline-block",
-// //                       }}
-// //                     />
-// //                     <span>{f}</span>
-// //                   </div>
-// //                 ))}
-// //               </div>
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── FAQ ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-main py-16 px-6">
-// //           <div className="max-w-3xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold text-center mb-10"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               Frequently Asked Questions
-// //             </h2>
-// //             <div className="space-y-3">
-// //               {faqs.map((faq, i) => (
-// //                 <details
-// //                   key={i}
-// //                   className="sm-faq-item rounded-xl p-5 border border-indigo-100 bg-white shadow-sm"
-// //                 >
-// //                   <summary className="flex items-center justify-between gap-4 cursor-pointer">
-// //                     <span
-// //                       className="font-semibold text-sm"
-// //                       style={{ color: "#374151" }}
-// //                     >
-// //                       {faq.q}
-// //                     </span>
-// //                     <ChevronDown
-// //                       className="w-4 h-4 shrink-0"
-// //                       style={{ color: "#6366F1" }}
-// //                     />
-// //                   </summary>
-// //                   <div
-// //                     className="mt-3 text-sm leading-relaxed"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     {faq.a}
-// //                   </div>
-// //                 </details>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── RELATED TOOLS ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-alt py-14 px-6">
-// //           <div className="max-w-4xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold mb-6 text-center"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               More Free Image & Document Tools
-// //             </h2>
-// //             <div className="flex flex-wrap justify-center gap-3">
-// //               {relatedTools.map((tool, i) => (
-// //                 <NextLink
-// //                   key={i}
-// //                   href={tool.href}
-// //                   className="px-4 py-2 rounded-xl text-sm font-medium border transition-all hover:shadow-md hover:-translate-y-0.5"
-// //                   style={{
-// //                     color: "#4F46E5",
-// //                     borderColor: "#E0E7FF",
-// //                     background: "#EEF2FF",
-// //                   }}
-// //                 >
-// //                   {tool.name}
-// //                 </NextLink>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── BOTTOM CTA ── */}
-// //         <section className="sm-cta-section">
-// //           <div className="max-w-xl mx-auto">
-// //             <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-white">
-// //               Ready to create your digital signature online free?
-// //             </h2>
-// //             <p
-// //               className="mb-8 text-base"
-// //               style={{ color: "rgba(255,255,255,0.7)" }}
-// //             >
-// //               Takes 10 seconds. No signup required. Transparent PNG download.
-// //             </p>
-// //             <button
-// //               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-// //               className="sm-cta-btn"
-// //             >
-// //               <PenTool className="w-5 h-5" />
-// //               Sign Now
-// //             </button>
-// //           </div>
-// //         </section>
-// //       </main>
-// //     </>
-// //   );
-// // }
-
-// // "use client";
-
-// // import { useRef, useState } from "react";
-// // import NextLink from "next/link";
-// // import {
-// //   Download,
-// //   PenTool,
-// //   Palette,
-// //   Trash2,
-// //   CheckCircle,
-// //   ChevronDown,
-// //   Upload,
-// // } from "lucide-react";
-// // import "@/styles/SignatureMaker.css";
-
-// // const SITE = "https://convertlinx.com";
-// // const PAGE_URL = `${SITE}/signature-maker`;
-
-// // const linkClass = "text-indigo-600 hover:underline font-medium";
-
-// // // const strokeSizes = [
-// // //   { size: 2, label: 'S' },
-// // //   { size: 3, label: 'M' },
-// // //   { size: 5, label: 'L' },
-// // // ];
-
-// // const strokeSizes = [
-// //   { size: 3, label: "S" },
-// //   { size: 5, label: "M" },
-// //   { size: 7, label: "L" },
-// // ];
-
-// // /* ── FAQ data: `a` = what users see (can contain links), `aText` = plain text for schema ── */
-// // const faqs = [
-// //   {
-// //     q: "Is this online signature converter completely free to use?",
-// //     a: "Yes. Our signature converter is 100% free with no signup, watermarks, or usage limits. You can convert image to digital signature online free as many times as you need.",
-// //     aText:
-// //       "Yes. Our signature converter is 100% free with no signup, watermarks, or usage limits. You can convert image to digital signature online free as many times as you need.",
-// //   },
-// //   {
-// //     q: "How do I convert my handwritten signature on paper to digital?",
-// //     a: 'Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click "Upload signature photo", then move the background slider to convert signature on paper to digital until the paper disappears. Pick your pen color if you like and download the transparent PNG.',
-// //     aText:
-// //       "Sign on plain white paper with a dark pen and take a clear, well-lit photo. Click Upload signature photo, then move the background slider to convert signature on paper to digital until the paper disappears. Pick your pen color if you like and download the transparent PNG.",
-// //   },
-// //   {
-// //     q: "How do I add my electronic signature to PDF files or documents?",
-// //     a: (
-// //       <span>
-// //         After you convert signature to digital and download your transparent PNG
-// //         signature, insert it into your PDF or Word document using any editor's
-// //         "insert image" option. If your document starts as plain text, convert it
-// //         first with our{" "}
-// //         <NextLink href="/text-to-pdf" className={linkClass}>
-// //           Text to PDF
-// //         </NextLink>{" "}
-// //         tool. To trim or resize the signature image, use the{" "}
-// //         <NextLink href="/image-cropper" className={linkClass}>
-// //           Image Cropper
-// //         </NextLink>{" "}
-// //         or{" "}
-// //         <NextLink href="/image-resizer" className={linkClass}>
-// //           Image Resizer
-// //         </NextLink>
-// //         .
-// //       </span>
-// //     ),
-// //     aText:
-// //       "After you convert signature to digital and download your transparent PNG signature, insert it into your PDF or Word document using any editor's insert image option. If your document starts as plain text, convert it first with the Text to PDF tool. To trim or resize the signature image, use the Image Cropper or Image Resizer.",
-// //   },
-// //   {
-// //     q: "Can I draw or convert to signature on mobile phones and tablets?",
-// //     a: "Yes. You can convert to signature by drawing with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets.",
-// //     aText:
-// //       "Yes. You can convert to signature by drawing with your finger on Android or iPhone touchscreens, or use a stylus or Apple Pencil on tablets.",
-// //   },
-// //   {
-// //     q: "Does it download signatures with a transparent background?",
-// //     a: "Yes. When you convert image to digital signature online free, the signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.",
-// //     aText:
-// //       "Yes. When you convert image to digital signature online free, the signature is saved as a transparent PNG, with the empty space around it trimmed, so you can place it on top of any document or form.",
-// //   },
-// //   {
-// //     q: "My signature photo is from an iPhone (HEIC). Can I upload it?",
-// //     a: (
-// //       <span>
-// //         Browsers often cannot open HEIC photos. Convert the photo first with our{" "}
-// //         <NextLink href="/heic-to-jpg" className={linkClass}>
-// //           HEIC to JPG
-// //         </NextLink>{" "}
-// //         converter, then upload the JPG here to convert signature to digital. If
-// //         the photo is sideways or upside down, fix it with{" "}
-// //         <NextLink href="/rotate-flip-image" className={linkClass}>
-// //           Rotate &amp; Flip Image
-// //         </NextLink>
-// //         .
-// //       </span>
-// //     ),
-// //     aText:
-// //       "Browsers often cannot open HEIC photos. Convert the photo first with the HEIC to JPG converter, then upload the JPG here to convert signature to digital. If the photo is sideways or upside down, fix it with Rotate and Flip Image.",
-// //   },
-// //   {
-// //     q: "Are my signatures or photos stored on your server?",
-// //     a: "No. Your signature and any photo you upload to our signature converter are processed only in your web browser. Nothing is uploaded, saved, or logged on a server.",
-// //     aText:
-// //       "No. Your signature and any photo you upload to our signature converter are processed only in your web browser. Nothing is uploaded, saved, or logged on a server.",
-// //   },
-// //   {
-// //     q: "Can I reduce the size or change the format of my signature image?",
-// //     a: (
-// //       <span>
-// //         Yes. Shrink the file with our{" "}
-// //         <NextLink href="/image-compressor" className={linkClass}>
-// //           Image Compressor
-// //         </NextLink>{" "}
-// //         or switch formats, for example PNG to WebP, with our{" "}
-// //         <NextLink href="/image-converter" className={linkClass}>
-// //           Image Converter
-// //         </NextLink>
-// //         . Note that JPG does not support transparency, so keep PNG if you need a
-// //         transparent background.
-// //       </span>
-// //     ),
-// //     aText:
-// //       "Yes. Shrink the file with the Image Compressor or switch formats, for example PNG to WebP, with the Image Converter. Note that JPG does not support transparency, so keep PNG if you need a transparent background.",
-// //   },
-// //   {
-// //     q: "Is an image of my signature legally valid?",
-// //     a: "Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.",
-// //     aText:
-// //       "Many forms and agreements accept an image when you convert signature on paper to digital, but rules differ by country and document type. Some contracts require a certificate-based digital signature instead. Check the requirements with the person or organization you are signing for.",
-// //   },
-// // ];
-
-// // const relatedTools = [
-// //   { name: "Text to PDF", href: "/text-to-pdf" },
-// //   { name: "Image Cropper", href: "/image-cropper" },
-// //   { name: "Image Resizer", href: "/image-resizer" },
-// //   { name: "Image Compressor", href: "/image-compressor" },
-// //   { name: "Image Converter", href: "/image-converter" },
-// //   { name: "HEIC to JPG", href: "/heic-to-jpg" },
-// //   { name: "Add Watermark", href: "/add-watermark" },
-// //   { name: "Rotate & Flip Image", href: "/rotate-flip-image" },
-// // ];
-
-// // /* ── Structured data (plain <script>, so it is in the server-rendered HTML) ── */
-// // const JsonLd = ({ data }) => (
-// //   <script
-// //     type="application/ld+json"
-// //     dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-// //   />
-// // );
-
-// // const howToSchema = {
-// //   "@context": "https://schema.org",
-// //   "@type": "HowTo",
-// //   name: "How to Create or Convert a Signature to Digital Online for Free",
-// //   description:
-// //     "Draw your signature or upload a photo of it, remove the background, and download a transparent PNG.",
-// //   url: PAGE_URL,
-// //   step: [
-// //     {
-// //       "@type": "HowToStep",
-// //       name: "Draw or upload",
-// //       text: "Draw your signature with a mouse or finger, or upload a photo of your signature on white paper.",
-// //     },
-// //     {
-// //       "@type": "HowToStep",
-// //       name: "Adjust",
-// //       text: "Choose a pen color, set the stroke thickness, or move the background slider until the paper disappears.",
-// //     },
-// //     {
-// //       "@type": "HowToStep",
-// //       name: "Download PNG",
-// //       text: "Download your signature as a transparent background PNG.",
-// //     },
-// //   ],
-// //   totalTime: "PT40S",
-// //   estimatedCost: { "@type": "MonetaryAmount", value: "0", currency: "USD" },
-// // };
-
-// // // const breadcrumbSchema = {
-// // //   "@context": "https://schema.org",
-// // //   "@type": "BreadcrumbList",
-// // //   itemListElement: [
-// // //     { "@type": "ListItem", position: 1, name: "Home", item: SITE },
-// // //     {
-// // //       "@type": "ListItem",
-// // //       position: 2,
-// // //       name: "Signature Maker",
-// // //       item: PAGE_URL,
-// // //     },
-// // //   ],
-// // // };
-
-// // // const webAppSchema = {
-// // //   "@context": "https://schema.org",
-// // //   "@type": "WebApplication",
-// // //   name: "ConvertLinx Signature Maker",
-// // //   url: PAGE_URL,
-// // //   applicationCategory: "UtilitiesApplication",
-// // //   operatingSystem: "Any",
-// // //   browserRequirements: "Requires JavaScript",
-// // //   offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-// // // };
-
-// // const faqSchema = {
-// //   "@context": "https://schema.org",
-// //   "@type": "FAQPage",
-// //   mainEntity: faqs.map((faq) => ({
-// //     "@type": "Question",
-// //     name: faq.q,
-// //     acceptedAnswer: { "@type": "Answer", text: faq.aText },
-// //   })),
-// // };
-
-// // /* ── Helpers ── */
-// // const hexToRgb = (hex) =>
-// //   [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
-
-// // /* Returns a PNG data URL cropped to the signature's bounding box (transparent margins removed) */
-// // const getTrimmedDataUrl = (canvas) => {
-// //   const ctx = canvas.getContext("2d");
-// //   const { width, height } = canvas;
-// //   const data = ctx.getImageData(0, 0, width, height).data;
-// //   let minX = width,
-// //     minY = height,
-// //     maxX = -1,
-// //     maxY = -1;
-
-// //   for (let y = 0; y < height; y++) {
-// //     for (let x = 0; x < width; x++) {
-// //       if (data[(y * width + x) * 4 + 3] > 10) {
-// //         if (x < minX) minX = x;
-// //         if (x > maxX) maxX = x;
-// //         if (y < minY) minY = y;
-// //         if (y > maxY) maxY = y;
-// //       }
-// //     }
-// //   }
-// //   if (maxX < 0) return null; // nothing drawn
-
-// //   const pad = 10;
-// //   minX = Math.max(0, minX - pad);
-// //   minY = Math.max(0, minY - pad);
-// //   maxX = Math.min(width - 1, maxX + pad);
-// //   maxY = Math.min(height - 1, maxY + pad);
-
-// //   const w = maxX - minX + 1;
-// //   const h = maxY - minY + 1;
-// //   const out = document.createElement("canvas");
-// //   out.width = w;
-// //   out.height = h;
-// //   out.getContext("2d").drawImage(canvas, minX, minY, w, h, 0, 0, w, h);
-// //   return out.toDataURL("image/png");
-// // };
-
-// // export default function SignatureMaker() {
-// //   const canvasRef = useRef(null);
-// //   const fileRef = useRef(null);
-// //   const [drawing, setDrawing] = useState(false);
-// //   const [color, setColor] = useState("#1a1a2e");
-// //   const [stroke, setStroke] = useState(5); // 2, 3, 5
-// //   const [srcImg, setSrcImg] = useState(null);
-// //   const [threshold, setThreshold] = useState(190);
-// //   const [notice, setNotice] = useState("");
-
-// //   /* Coordinate helper — supports mouse + touch */
-// //   const getCoords = (e) => {
-// //     const canvas = canvasRef.current;
-// //     const rect = canvas.getBoundingClientRect();
-// //     const scaleX = canvas.width / rect.width;
-// //     const scaleY = canvas.height / rect.height;
-// //     const src = e.touches?.[0] ?? e;
-// //     return {
-// //       x: (src.clientX - rect.left) * scaleX,
-// //       y: (src.clientY - rect.top) * scaleY,
-// //     };
-// //   };
-
-// //   const startDrawing = (e) => {
-// //     e.preventDefault();
-// //     if (srcImg) return; // an uploaded photo is loaded: press Clear to draw again
-// //     const { x, y } = getCoords(e);
-// //     const ctx = canvasRef.current.getContext("2d");
-// //     ctx.beginPath();
-// //     ctx.moveTo(x, y);
-// //     setDrawing(true);
-// //     setNotice("");
-// //   };
-
-// //   const draw = (e) => {
-// //     e.preventDefault();
-// //     if (!drawing) return;
-// //     const { x, y } = getCoords(e);
-// //     const ctx = canvasRef.current.getContext("2d");
-// //     ctx.lineWidth = stroke;
-// //     ctx.lineCap = "round";
-// //     ctx.lineJoin = "round";
-// //     ctx.strokeStyle = color;
-// //     ctx.lineTo(x, y);
-// //     ctx.stroke();
-// //   };
-
-// //   const stopDrawing = () => setDrawing(false);
-
-// //   /* Canvas stays transparent: the white you see is only CSS, so the PNG keeps a transparent background */
-// //   const clear = () => {
-// //     const canvas = canvasRef.current;
-// //     if (!canvas) return;
-// //     canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-// //     setSrcImg(null);
-// //     setNotice("");
-// //     if (fileRef.current) fileRef.current.value = "";
-// //   };
-
-// //   /* Upload: draw the photo, turn light paper transparent, recolor the ink */
-// //   const processImage = (img, t, penColor) => {
-// //     const canvas = canvasRef.current;
-// //     if (!canvas) return;
-// //     const ctx = canvas.getContext("2d");
-// //     const scale = Math.min(
-// //       canvas.width / img.width,
-// //       canvas.height / img.height,
-// //     );
-// //     const w = img.width * scale;
-// //     const h = img.height * scale;
-
-// //     ctx.clearRect(0, 0, canvas.width, canvas.height);
-// //     ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
-
-// //     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-// //     const d = imageData.data;
-// //     const [r, g, b] = hexToRgb(penColor);
-
-// //     for (let i = 0; i < d.length; i += 4) {
-// //       if (d[i + 3] === 0) continue;
-// //       const lum = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-// //       // paper (light) -> transparent, ink (dark) -> pen color, soft edge in between
-// //       const a = lum >= t ? 0 : lum <= t - 40 ? 255 : ((t - lum) / 40) * 255;
-// //       d[i] = r;
-// //       d[i + 1] = g;
-// //       d[i + 2] = b;
-// //       d[i + 3] = a;
-// //     }
-// //     ctx.putImageData(imageData, 0, 0);
-// //   };
-
-// //   const onUpload = (e) => {
-// //     const file = e.target.files?.[0];
-// //     if (!file) return;
-// //     const url = URL.createObjectURL(file);
-// //     const img = new Image();
-// //     img.onload = () => {
-// //       setSrcImg(img);
-// //       setNotice("");
-// //       processImage(img, threshold, color);
-// //       URL.revokeObjectURL(url);
-// //     };
-// //     img.onerror = () => {
-// //       setNotice(
-// //         "This image could not be opened. Try a JPG or PNG photo (iPhone HEIC photos need converting first).",
-// //       );
-// //       URL.revokeObjectURL(url);
-// //     };
-// //     img.src = url;
-// //   };
-
-// //   const onThreshold = (e) => {
-// //     const v = Number(e.target.value);
-// //     setThreshold(v);
-// //     if (srcImg) processImage(srcImg, v, color);
-// //   };
-
-// //   const onColor = (e) => {
-// //     const v = e.target.value;
-// //     setColor(v);
-// //     if (srcImg) processImage(srcImg, threshold, v);
-// //   };
-
-// //   const download = () => {
-// //     const canvas = canvasRef.current;
-// //     if (!canvas) return;
-// //     const url = getTrimmedDataUrl(canvas);
-// //     if (!url) {
-// //       setNotice("Draw or upload your signature first.");
-// //       return;
-// //     }
-// //     const link = document.createElement("a");
-// //     link.download = "my-digital-signature.png";
-// //     link.href = url;
-// //     link.click();
-// //   };
-
-// //   return (
-// //     <>
-// //       {/* <JsonLd data={webAppSchema} /> */}
-// //       <JsonLd data={howToSchema} />
-// //       {/* <JsonLd data={breadcrumbSchema} /> */}
-// //       <JsonLd data={faqSchema} />
-
-// //       <main className="sm-page">
-// //         {/* ── HERO ── */}
-// //         <section className="sm-hero">
-// //           <div className="sm-blob-1" />
-// //           <div className="sm-blob-2" />
-// //           <div className="relative z-10 max-w-3xl mx-auto">
-// //             <div className="flex items-center justify-center gap-2 text-sm mb-5">
-// //               <NextLink href="/" className="sm-breadcrumb-link">
-// //                 Home
-// //               </NextLink>
-// //               <span style={{ color: "#C4B5FD" }}>/</span>
-// //               <span style={{ color: "#6366F1" }}>Signature Maker</span>
-// //             </div>
-// //             <span className="sm-badge">Free Digital Signature Tool</span>
-// //             <h1
-// //               className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 mt-2"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               Free Online Signature Maker:{" "}
-// //               <span className="sm-grad-text">Draw or Convert to Digital</span>
-// //             </h1>
-// //             <p
-// //               className="text-base md:text-lg max-w-xl mx-auto leading-relaxed"
-// //               style={{ color: "#6B7280" }}
-// //             >
-// //               Draw your signature, or upload a photo of it and remove the
-// //               background. Download a transparent PNG, free and in your browser.
-// //             </p>
-// //           </div>
-// //         </section>
-
-// //         {/* ── TOOL WORKSPACE ── */}
-// //         <section className="sm-section-main py-10 px-6">
-// //           <div className="max-w-2xl mx-auto sm-fade-up">
-// //             <div className="sm-tool-card">
-// //               {/* Controls row */}
-// //               <div className="sm-controls">
-// //                 {/* Pen color */}
-// //                 <div className="sm-color-wrap">
-// //                   <Palette className="w-4 h-4" style={{ color: "#6366F1" }} />
-// //                   <span
-// //                     className="text-xs font-semibold"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     Pen
-// //                   </span>
-// //                   <input
-// //                     type="color"
-// //                     value={color}
-// //                     onChange={onColor}
-// //                     className="sm-color-input"
-// //                     title="Pick pen color"
-// //                   />
-// //                 </div>
-
-// //                 {/* Stroke size */}
-// //                 <div className="flex items-center gap-2">
-// //                   {strokeSizes.map(({ size, label }) => (
-// //                     <button
-// //                       key={size}
-// //                       onClick={() => setStroke(size)}
-// //                       className={`sm-stroke-btn ${stroke === size ? "active" : ""}`}
-// //                       title={`Stroke ${label}`}
-// //                     >
-// //                       <div
-// //                         style={{
-// //                           width: `${size * 3}px`,
-// //                           height: `${size * 3}px`,
-// //                           borderRadius: "50%",
-// //                           background: stroke === size ? "#6366F1" : "#9CA3AF",
-// //                         }}
-// //                       />
-// //                     </button>
-// //                   ))}
-// //                 </div>
-
-// //                 {/* Clear */}
-// //                 <button onClick={clear} className="sm-clear-btn">
-// //                   <Trash2 className="w-4 h-4" />
-// //                   Clear
-// //                 </button>
-
-// //                 {/* Download */}
-// //                 <button onClick={download} className="sm-dl-btn">
-// //                   <Download className="w-4 h-4" />
-// //                   Download PNG
-// //                 </button>
-// //               </div>
-
-// //               {/* Upload + background slider */}
-// //               <div className="flex flex-wrap items-center justify-center gap-4 mt-4">
-// //                 <label className="sm-clear-btn cursor-pointer">
-// //                   <Upload className="w-4 h-4" />
-// //                   Upload signature photo
-// //                   <input
-// //                     ref={fileRef}
-// //                     type="file"
-// //                     accept="image/*"
-// //                     onChange={onUpload}
-// //                     hidden
-// //                   />
-// //                 </label>
-// //                 {srcImg && (
-// //                   <label
-// //                     className="text-xs font-semibold flex items-center gap-2"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     Background removal
-// //                     <input
-// //                       type="range"
-// //                       min="100"
-// //                       max="250"
-// //                       value={threshold}
-// //                       onChange={onThreshold}
-// //                     />
-// //                   </label>
-// //                 )}
-// //               </div>
-
-// //               {/* Canvas (white background is CSS only, the exported PNG is transparent) */}
-// //               <div className="sm-canvas-wrap">
-// //                 <canvas
-// //                   ref={canvasRef}
-// //                   width={900}
-// //                   height={400}
-// //                   className="sm-canvas"
-// //                   style={{ background: "#ffffff", touchAction: "none" }}
-// //                   onMouseDown={startDrawing}
-// //                   onMouseMove={draw}
-// //                   onMouseUp={stopDrawing}
-// //                   onMouseLeave={stopDrawing}
-// //                   onTouchStart={startDrawing}
-// //                   onTouchMove={draw}
-// //                   onTouchEnd={stopDrawing}
-// //                 />
-// //               </div>
-
-// //               {notice && (
-// //                 <p
-// //                   role="alert"
-// //                   className="text-sm text-center mt-3"
-// //                   style={{ color: "#B91C1C" }}
-// //                 >
-// //                   {notice}
-// //                 </p>
-// //               )}
-
-// //               {/* Tip */}
-// //               <div className="sm-tip">
-// //                 💡 Draw with your mouse or finger. Or upload a photo of your
-// //                 signature on white paper, then use the slider until the paper
-// //                 disappears. Press Clear to start over.
-// //               </div>
-
-// //               {/* Trust row */}
-// //               <div className="flex flex-wrap justify-center gap-5 mt-5">
-// //                 {[
-// //                   "No login",
-// //                   "Draw or upload",
-// //                   "Transparent PNG",
-// //                   "Nothing stored",
-// //                   "100% free",
-// //                 ].map((t, i) => (
-// //                   <span key={i} className="sm-trust-item">
-// //                     <span className="sm-trust-dot" />
-// //                     {t}
-// //                   </span>
-// //                 ))}
-// //               </div>
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── BENEFITS ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-alt py-16 px-6">
-// //           <div className="max-w-5xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold text-center mb-10"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               Why Use Our Online Signature Creator?
-// //             </h2>
-// //             <div className="grid md:grid-cols-3 gap-5">
-// //               {[
-// //                 {
-// //                   icon: <PenTool className="w-6 h-6" />,
-// //                   color: "#6366F1",
-// //                   bg: "rgba(99,102,241,0.08)",
-// //                   title: "Draw or Upload",
-// //                   desc: "Draw with a mouse, finger, or stylus, or upload a photo of your signature and turn it into a digital one.",
-// //                 },
-// //                 {
-// //                   icon: <Palette className="w-6 h-6" />,
-// //                   color: "#8B5CF6",
-// //                   bg: "rgba(139,92,246,0.08)",
-// //                   title: "Your Pen Style",
-// //                   desc: "Pick any pen color and line thickness: classic blue, deep black, or a custom shade.",
-// //                 },
-// //                 {
-// //                   icon: <CheckCircle className="w-6 h-6" />,
-// //                   color: "#10B981",
-// //                   bg: "rgba(16,185,129,0.08)",
-// //                   title: "Transparent PNG Download",
-// //                   desc: "Get a transparent PNG, trimmed to your signature, ready to place on PDFs, contracts, and forms.",
-// //                 },
-// //               ].map((b, i) => (
-// //                 <div key={i} className="sm-benefit-card">
-// //                   <div
-// //                     className="sm-benefit-icon"
-// //                     style={{ background: b.bg, color: b.color }}
-// //                   >
-// //                     {b.icon}
-// //                   </div>
-// //                   <h3
-// //                     className="font-bold text-base mb-2"
-// //                     style={{ color: "#1a1a2e" }}
-// //                   >
-// //                     {b.title}
-// //                   </h3>
-// //                   <p
-// //                     className="text-sm leading-relaxed"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     {b.desc}
-// //                   </p>
-// //                 </div>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── HOW TO ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-main py-16 px-6">
-// //           <div className="max-w-4xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold text-center mb-12"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               How to Create or Convert a Signature to Digital in 3 Steps
-// //             </h2>
-// //             <div className="grid md:grid-cols-3 gap-6">
-// //               {[
-// //                 {
-// //                   num: "1",
-// //                   title: "Draw or Upload",
-// //                   desc: "Draw your signature with a mouse or finger, or upload a photo of your signature on white paper.",
-// //                 },
-// //                 {
-// //                   num: "2",
-// //                   title: "Adjust",
-// //                   desc: "Choose pen color and thickness, or move the background slider until the paper disappears.",
-// //                 },
-// //                 {
-// //                   num: "3",
-// //                   title: "Download PNG",
-// //                   desc: "Download the transparent PNG and add it to PDFs, forms, Word files, or emails.",
-// //                 },
-// //               ].map((s, i) => (
-// //                 <div key={i} className="sm-step-card">
-// //                   <div className="sm-step-num">{s.num}</div>
-// //                   <h3
-// //                     className="font-bold text-base mb-2"
-// //                     style={{ color: "#1a1a2e" }}
-// //                   >
-// //                     {s.title}
-// //                   </h3>
-// //                   <p
-// //                     className="text-sm leading-relaxed"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     {s.desc}
-// //                   </p>
-// //                 </div>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── SEO CONTENT ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-alt py-16 px-6">
-// //           <div
-// //             className="max-w-3xl mx-auto space-y-8"
-// //             style={{ color: "#6B7280" }}
-// //           >
-// //             <div>
-// //               <h2
-// //                 className="text-2xl font-bold mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Free Online Signature Maker: Create or Convert a Signature to
-// //                 Digital
-// //               </h2>
-// //               <p className="leading-7 text-sm">
-// //                 The{" "}
-// //                 <span style={{ color: "#1a1a2e", fontWeight: 600 }}>
-// //                   ConvertLinx Signature Maker
-// //                 </span>{" "}
-// //                 is a free online tool that creates a clean signature with a
-// //                 transparent background. Draw with your mouse or finger, or
-// //                 upload a photo of your signed paper and let the tool remove the
-// //                 background. Download a PNG you can place on PDF agreements,
-// //                 online forms, invoices, or Word documents, with no printing or
-// //                 scanning. Everything runs in your browser, so your signature is
-// //                 never uploaded. If you want to turn plain text into a PDF before
-// //                 adding your signature, try our{" "}
-// //                 <NextLink href="/text-to-pdf" className={linkClass}>
-// //                   Text to PDF
-// //                 </NextLink>{" "}
-// //                 tool, and use the{" "}
-// //                 <NextLink href="/image-cropper" className={linkClass}>
-// //                   Image Cropper
-// //                 </NextLink>{" "}
-// //                 or{" "}
-// //                 <NextLink href="/image-resizer" className={linkClass}>
-// //                   Image Resizer
-// //                 </NextLink>{" "}
-// //                 to trim and resize your signature image.
-// //               </p>
-// //               <p className="leading-7 text-sm mt-3">
-// //                 To convert a handwritten signature to digital, sign on plain
-// //                 white paper with a dark pen and take a sharp photo in good
-// //                 light, without shadows. Upload it, adjust the background slider
-// //                 until only the ink remains, and download your transparent PNG.
-// //                 If your photo is an iPhone HEIC file, convert it first with our{" "}
-// //                 <NextLink href="/heic-to-jpg" className={linkClass}>
-// //                   HEIC to JPG
-// //                 </NextLink>{" "}
-// //                 tool.
-// //               </p>
-// //             </div>
-
-// //             <div>
-// //               <h3
-// //                 className="font-bold text-lg mb-3"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 What Is an Online Electronic Signature Creator?
-// //               </h3>
-// //               <p className="leading-7 text-sm">
-// //                 An online signature creator lets you make an image of your
-// //                 handwritten signature on a touchscreen or desktop, or from a
-// //                 photo. By saving it as a transparent PNG, you can insert it into
-// //                 PDF files, Google Docs, Word files, and email signatures. A
-// //                 signature image is not the same as a certificate-based digital
-// //                 signature. If a contract requires one, check the requirements
-// //                 with the other party.
-// //               </p>
-// //             </div>
-
-// //             <div className="sm-seo-box rounded-2xl p-6">
-// //               <h3
-// //                 className="font-bold text-lg mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Optimizing Your Signature Image
-// //               </h3>
-// //               <p className="leading-7 text-sm">
-// //                 Small files are easier to send and upload. Reduce the file size
-// //                 with our{" "}
-// //                 <NextLink href="/image-compressor" className={linkClass}>
-// //                   Image Compressor
-// //                 </NextLink>
-// //                 , change formats with our{" "}
-// //                 <NextLink href="/image-converter" className={linkClass}>
-// //                   Image Converter
-// //                 </NextLink>
-// //                 , or protect signed images from reuse with{" "}
-// //                 <NextLink href="/add-watermark" className={linkClass}>
-// //                   Add Watermark
-// //                 </NextLink>
-// //                 .
-// //               </p>
-// //             </div>
-
-// //             <div className="sm-seo-box rounded-2xl p-6">
-// //               <h3
-// //                 className="font-bold text-lg mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Who Should Use This Signature Tool?
-// //               </h3>
-// //               <div className="grid sm:grid-cols-2 gap-3">
-// //                 {[
-// //                   "Business professionals who sign contracts and NDAs",
-// //                   "Freelancers and agencies who sign invoices and work agreements",
-// //                   "Students who fill in online forms and academic documents",
-// //                   "Remote teams who sign paperwork without printing",
-// //                   "Anyone who wants a reusable transparent signature",
-// //                 ].map((item, i) => (
-// //                   <div key={i} className="flex items-start gap-2 text-sm">
-// //                     <span
-// //                       className="font-bold mt-0.5"
-// //                       style={{ color: "#6366F1" }}
-// //                     >
-// //                       →
-// //                     </span>
-// //                     <span>{item}</span>
-// //                   </div>
-// //                 ))}
-// //               </div>
-// //             </div>
-
-// //             <div className="sm-seo-box rounded-2xl p-6">
-// //               <h3
-// //                 className="font-bold text-lg mb-4"
-// //                 style={{ color: "#1a1a2e" }}
-// //               >
-// //                 Key Features
-// //               </h3>
-// //               <div className="grid sm:grid-cols-2 gap-3">
-// //                 {[
-// //                   "100% free, unlimited signatures",
-// //                   "Draw with mouse, stylus, or mobile touch",
-// //                   "Upload a signature photo and remove the background",
-// //                   "Custom pen color selection",
-// //                   "Stroke size customization (Small, Medium, Large)",
-// //                   "Transparent PNG, trimmed to your signature",
-// //                   "Works on Android, iOS, Windows & Mac",
-// //                   "Private: nothing is uploaded or saved on servers",
-// //                 ].map((f, i) => (
-// //                   <div key={i} className="flex items-center gap-2.5 text-sm">
-// //                     <span
-// //                       className="sm-feature-dot"
-// //                       style={{
-// //                         width: "6px",
-// //                         height: "6px",
-// //                         borderRadius: "50%",
-// //                         background: "#6366F1",
-// //                         display: "inline-block",
-// //                       }}
-// //                     />
-// //                     <span>{f}</span>
-// //                   </div>
-// //                 ))}
-// //               </div>
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── FAQ ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-main py-16 px-6">
-// //           <div className="max-w-3xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold text-center mb-10"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               Frequently Asked Questions
-// //             </h2>
-// //             <div className="space-y-3">
-// //               {faqs.map((faq, i) => (
-// //                 <details
-// //                   key={i}
-// //                   className="sm-faq-item rounded-xl p-5 border border-indigo-100 bg-white shadow-sm"
-// //                 >
-// //                   <summary className="flex items-center justify-between gap-4 cursor-pointer">
-// //                     <span
-// //                       className="font-semibold text-sm"
-// //                       style={{ color: "#374151" }}
-// //                     >
-// //                       {faq.q}
-// //                     </span>
-// //                     <ChevronDown
-// //                       className="w-4 h-4 shrink-0"
-// //                       style={{ color: "#6366F1" }}
-// //                     />
-// //                   </summary>
-// //                   <div
-// //                     className="mt-3 text-sm leading-relaxed"
-// //                     style={{ color: "#6B7280" }}
-// //                   >
-// //                     {faq.a}
-// //                   </div>
-// //                 </details>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── RELATED TOOLS ── */}
-// //         <hr className="sm-divider" />
-// //         <section className="sm-section-alt py-14 px-6">
-// //           <div className="max-w-4xl mx-auto">
-// //             <h2
-// //               className="text-2xl font-bold mb-6 text-center"
-// //               style={{ color: "#1a1a2e" }}
-// //             >
-// //               More Free Image & Document Tools
-// //             </h2>
-// //             <div className="flex flex-wrap justify-center gap-3">
-// //               {relatedTools.map((tool, i) => (
-// //                 <NextLink
-// //                   key={i}
-// //                   href={tool.href}
-// //                   className="px-4 py-2 rounded-xl text-sm font-medium border transition-all hover:shadow-md hover:-translate-y-0.5"
-// //                   style={{
-// //                     color: "#4F46E5",
-// //                     borderColor: "#E0E7FF",
-// //                     background: "#EEF2FF",
-// //                   }}
-// //                 >
-// //                   {tool.name}
-// //                 </NextLink>
-// //               ))}
-// //             </div>
-// //           </div>
-// //         </section>
-
-// //         {/* ── BOTTOM CTA ── */}
-// //         <section className="sm-cta-section">
-// //           <div className="max-w-xl mx-auto">
-// //             <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-white">
-// //               Ready to create your digital signature?
-// //             </h2>
-// //             <p
-// //               className="mb-8 text-base"
-// //               style={{ color: "rgba(255,255,255,0.7)" }}
-// //             >
-// //               Takes 10 seconds. No signup required. Transparent PNG download.
-// //             </p>
-// //             <button
-// //               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-// //               className="sm-cta-btn"
-// //             >
-// //               <PenTool className="w-5 h-5" />
-// //               Sign Now
-// //             </button>
-// //           </div>
-// //         </section>
-// //       </main>
-// //     </>
-// //   );
-// // }
