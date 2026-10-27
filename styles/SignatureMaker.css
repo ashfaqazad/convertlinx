@@ -36,6 +36,32 @@
   bottom: -80px; left: -60px; pointer-events: none;
 }
 
+
+/* ── HERO SPLIT LAYOUT (content left, tool right) ── */
+.sm-hero-split {
+  padding: 48px 24px 56px;
+}
+.sm-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: start;
+}
+@media (min-width: 1024px) {
+  .sm-hero-split {
+    padding: 64px 32px 72px;
+  }
+  .sm-hero-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 48px;
+  }
+  .sm-hero-left {
+    padding-top: 24px;
+  }
+}
+
 /* ── BADGE ── */
 .sm-badge {
   background: rgba(99,102,241,0.08);
