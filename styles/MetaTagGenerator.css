@@ -507,6 +507,17 @@
   gap: 8px;
   transition: all 0.3s ease;
 }
+
+.mtg-inline-link {
+  color: #0F766E;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.mtg-inline-link:hover {
+  color: #14B8A6;
+}
+
 .mtg-cta-btn:hover { background: rgba(255,255,255,0.25); transform: translateY(-2px); }
 
 /* ── ANIMATIONS ── */

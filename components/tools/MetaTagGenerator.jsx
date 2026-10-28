@@ -112,6 +112,13 @@ export default function MetaTagGenerator() {
     { q: 'What is a canonical URL?',                           a: 'A canonical tag tells search engines which URL is the "official" version of a page. Use it to prevent duplicate content issues when the same content is accessible via multiple URLs.' },
     { q: 'Do keywords meta tags still matter for SEO?',       a: 'Google has ignored the keywords meta tag since 2009. However, some other search engines still read it, and it is harmless to include relevant keywords.' },
     { q: 'Where do I paste the generated code?',               a: 'Copy the generated tags and paste them inside the <head>...</head> section of your HTML file, or into the head section of your CMS, theme settings, or Next.js layout file.' },
+    
+    { q: 'What is a meta tags generator?',                      a: 'A meta tags generator is an online tool that builds the HTML meta tags for a web page from a few simple fields. You enter the title, description, and social sharing details, and it outputs ready-to-paste code for the head section, including SEO tags, Open Graph tags, and Twitter Card tags. People also search for it as a metatags generator or meta generator.' },
+    { q: 'Is this meta tag generator free to use online?',      a: 'Yes. The ConvertLinx Meta Tag Generator is completely free, needs no signup, and runs in your browser. Nothing you type is uploaded or stored.' },
+    { q: 'How do I add meta tags in Next.js?',                  a: 'In the Next.js App Router, export a metadata object (or a generateMetadata function) from your layout.js or page.js file, and copy the title, description, openGraph, and twitter values from the tags you generated. In the Pages Router, place the tags inside the next/head Head component. For plain HTML, paste them into the head section.' },
+    { q: 'Is the meta description a Google ranking factor?',    a: 'Google has said the meta description is not a direct ranking factor. It still matters because Google often uses it as the snippet in search results, so a clear and relevant description can improve your click-through rate.' },
+    { q: 'What is the difference between the title tag and og:title?', a: 'The title tag is the clickable headline search engines show in results and the text browsers show in the tab. The og:title tag is used by social platforms when your link is shared. They can be identical, but a separate og:title lets you write a more conversational headline for social media.' },
+    { q: 'How can I test my Open Graph tags after generating them?', a: 'After adding the tags to your page, use the ConvertLinx OG Preview Checker to see how your title, description, and image will look when shared. Paste your page HTML into the checker and review the preview before you promote the link.' },
   ];
 
   return (
@@ -603,6 +610,64 @@ export default function MetaTagGenerator() {
               </div>
             </div>
 
+                        <div>
+              <h2 className="mtg-section-title text-2xl mb-4">What Does a Meta Tags Generator Do?</h2>
+              <p className="mtg-body-text leading-7 text-sm">
+                A meta tags generator, also searched for as a metatags generator or meta generator, turns a few
+                plain fields into clean HTML you can paste into your page. Instead of writing the title tag, meta
+                description, robots directive, canonical link, Open Graph tags, and Twitter Card tags by hand, you
+                type your content once and copy the finished code. This meta tag generator online also shows a live
+                Google snippet preview, so you can judge the length and wording before anything goes live.
+              </p>
+              <p className="mtg-body-text leading-7 text-sm mt-3">
+                Once your tags are on the page, check how they look when shared with the{' '}
+                <Link href="/og-preview-checker" className="mtg-inline-link">OG Preview Checker</Link>, and add a
+                matching browser icon with the{' '}
+                <Link href="/favicon-generator" className="mtg-inline-link">Favicon Generator</Link> or the{' '}
+                <Link href="/png-to-ico" className="mtg-inline-link">PNG to ICO converter</Link>.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="mtg-section-subtitle font-bold text-lg mb-4">How to Add Generated Meta Tags to Your Website</h3>
+              <div className="space-y-3">
+                {[
+                  'Static HTML: paste the tags inside the head section of each page.',
+                  'WordPress: use your SEO plugin title and description fields, or add the tags to the head section of your theme through a child theme.',
+                  'Next.js: export a metadata object from layout.js or page.js and copy the title, description, openGraph, and twitter values across.',
+                  'Shopify, Wix, Blogger, and other builders: use the page SEO settings or the custom head code option in your site settings.',
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm">
+                    <span className="mtg-arrow font-bold mt-0.5">→</span>
+                    <span className="mtg-body-text">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mtg-seo-box">
+              <h3 className="mtg-section-subtitle font-bold text-lg mb-4">Common Meta Tag Mistakes to Avoid</h3>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  'Using the same title and description on every page',
+                  'Writing a title over 60 characters so Google cuts it off',
+                  'Leaving out og:image, so shared links show no preview',
+                  'Leaving noindex on a page you want to rank',
+                  'Pointing the canonical URL at the wrong page',
+                  'Stuffing keywords instead of describing the page clearly',
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-sm">
+                    <span className="mtg-feature-dot" />
+                    <span className="mtg-body-text">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mtg-body-text leading-7 text-sm mt-4">
+                Use the character bars in the tool above to keep every title and description inside the
+                recommended limits.
+              </p>
+            </div>
+
           </div>
         </section>
 
@@ -652,7 +717,10 @@ export default function MetaTagGenerator() {
                 { name: 'JSON Formatter',   href: '/json-formatter'  },
                 { name: 'Case Converter',   href: '/case-converter'  },
                 { name: 'Lorem Ipsum',      href: '/lorem-ipsum'     },
-                { name: 'Base64 Encoder',   href: '/base64-tool'          },
+                { name: 'Base64 Encoder',   href: '/base64-tool'     },
+                { name: 'OG Preview Checker', href: '/og-preview-checker' },
+                { name: 'Favicon Generator',  href: '/favicon-generator'  },
+                { name: 'PNG to ICO',         href: '/png-to-ico'         },
               ].map((tool, i) => (
                 <Link
                   key={i}
