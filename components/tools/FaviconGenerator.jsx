@@ -17,6 +17,8 @@ const SIZES = [
   { size: 512, label: 'Web App 512×512', file: 'android-chrome-512x512.png' },
 ];
 
+const linkCls = 'font-semibold underline underline-offset-2 text-[#0F766E] hover:text-[#14B8A6]';
+
 export default function FaviconGenerator() {
   const [sourceImg, setSourceImg] = useState(null);
   const [sourcePreview, setSourcePreview] = useState('');
@@ -336,7 +338,158 @@ export default function FaviconGenerator() {
         </section>
 
         {/* ── SEO CONTENT ── */}
-        <hr className="fg-divider" />
+
+      <hr className="fg-divider" />
+        <section className="fg-section-alt py-16 px-6">
+          <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
+
+            <div>
+              <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
+                Why Every Website Needs a Favicon
+              </h2>
+              <p className="leading-7 text-sm">
+                A favicon is the small icon shown in browser tabs, bookmarks, and search results next
+                to your site's title. It might look tiny, but it plays a big role in brand recognition —
+                visitors with multiple tabs open can instantly spot your site, and a missing favicon
+                (shown as a blank page icon) makes a site look unfinished or untrustworthy.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Modern websites also need favicon variants beyond the classic 16×16 browser tab icon —
+                Apple Touch Icons for iOS home screens, Android Chrome icons for home screen shortcuts,
+                and larger icons for Progressive Web Apps (PWAs). This tool generates the full set at once.
+              </p>
+              {/* NEW: logo preparation links */}
+              <p className="leading-7 text-sm mt-3">
+                Start with a clean, square logo for the sharpest result. If your logo still has a background, remove it with the{' '}
+                <Link href="/background-remover" className={linkCls}>Background Remover</Link> so the icon stays transparent. If the
+                image is not square, crop it with the <Link href="/image-cropper" className={linkCls}>Image Cropper</Link> or set exact
+                dimensions with the <Link href="/image-resizer" className={linkCls}>Image Resizer</Link>. If your logo is in another
+                format, switch it to PNG first with the <Link href="/image-converter" className={linkCls}>Image Converter</Link>.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+                Which Favicon Sizes Do You Actually Need?
+              </h3>
+              <p className="leading-7 text-sm">
+                16×16 and 32×32 cover standard browser tabs and bookmarks. 48×48 is used by Windows
+                site shortcuts. 96×96 and 192×192 are used by Android Chrome. 180×180 is Apple's
+                required size for the iOS home screen (Apple Touch Icon). 512×512 is the high-resolution
+                icon used for Progressive Web Apps and app splash screens — this tool generates all of them.
+              </p>
+              {/* NEW: single .ico link */}
+              <p className="leading-7 text-sm mt-3">
+                Only need a single favicon.ico file from one image? Use the{' '}
+                <Link href="/png-to-ico" className={linkCls}>PNG to ICO converter</Link> to build a multi-size .ico file with
+                transparency preserved. This generator is the better choice when you also need Apple Touch, Android, and PWA icons.
+              </p>
+            </div>
+
+            <div className="fg-seo-box">
+              <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>
+                Common Problems This Tool Solves
+              </h3>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  'Blank or broken favicon showing in browser tabs',
+                  'Blurry icon on iPhone/Android home screen shortcuts',
+                  'No idea which favicon sizes are actually required',
+                  'Manually resizing a logo into 7 different files',
+                  'Missing web manifest for PWA/Add to Home Screen support',
+                  'Need the exact HTML <link> tags without searching docs',
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-sm">
+                    <span className="fg-feature-dot" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Who Should Use This?</h3>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  'Web developers — generate a full favicon set in seconds',
+                  'Bloggers — add a professional favicon without design tools',
+                  'Startups — turn a new logo into all required icon sizes',
+                  'Agencies — quickly deliver favicons for client websites',
+                  'No-code builders — get files ready for Webflow, WordPress, Shopify',
+                  'Anyone launching a site who needs a proper browser icon',
+                ].map((item, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm">
+                    <span className="font-bold mt-0.5" style={{ color: '#059669' }}>→</span>
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="fg-seo-box">
+              <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Features</h3>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  'Free, unlimited favicon generation',
+                  'Generates 7 sizes: 16 to 512px',
+                  'Auto center-crop for non-square images',
+                  'Includes site.webmanifest for PWA support',
+                  'Ready-to-paste HTML <link> code',
+                  'One-click ZIP download',
+                  'Works on mobile & desktop',
+                  'Nothing stored — full privacy',
+                ].map((f, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-sm">
+                    <span className="fg-feature-dot" />
+                    <span>{f}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>
+                Best Uses for This Tool
+              </h3>
+              <div className="grid sm:grid-cols-2 gap-3">
+                {[
+                  'Convert a logo into a complete favicon package',
+                  'Fix a missing or broken favicon on an existing site',
+                  'Prepare icons for a WordPress, Shopify, or Webflow site',
+                  'Generate Apple Touch Icon for an iOS web app',
+                  'Create Android/PWA icons for "Add to Home Screen"',
+                  'Get correct HTML code without reading documentation',
+                  // NEW: items with links
+                  <>Make a transparent logo first with the <Link href="/background-remover" className={linkCls}>Background Remover</Link></>,
+                  <>Create just one .ico file with the <Link href="/png-to-ico" className={linkCls}>PNG to ICO converter</Link></>,
+                ].map((item, i) => (
+                  <div key={i} className="flex items-center gap-2.5 text-sm">
+                    <span className="fg-feature-dot" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* NEW: after-generation block with links */}
+            <div>
+              <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+                What to Do After You Generate Your Favicon
+              </h3>
+              <p className="leading-7 text-sm">
+                Upload the files to your site root, paste the generated link tags into your head section, and build the remaining
+                head tags, such as title, description, and social previews, with the{' '}
+                <Link href="/metatag-generator" className={linkCls}>Meta Tag Generator</Link>. Then test how your page looks when
+                shared with the <Link href="/og-preview-checker" className={linkCls}>OG Preview Checker</Link>. Need the exact brand
+                color for your icon background or site theme? Pick it with the{' '}
+                <Link href="/color-picker" className={linkCls}>Color Picker</Link> or build a matching palette with the{' '}
+                <Link href="/color-palette-generator" className={linkCls}>Color Palette Generator</Link>.
+              </p>
+            </div>
+
+          </div>
+        </section>
+        {/* <hr className="fg-divider" />
         <section className="fg-section-alt py-16 px-6">
           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
 
@@ -452,7 +605,7 @@ export default function FaviconGenerator() {
             </div>
 
           </div>
-        </section>
+        </section> */}
 
         {/* ── FAQ ── */}
         <hr className="fg-divider" />

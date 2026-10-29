@@ -176,6 +176,26 @@ const seoRename = [
   '.',
 ];
 
+
+const seoIconWord = [
+  'Searching for a PNG to icon converter? In everyday use, "icon" usually means an ICO file: the format Windows uses for shortcuts, folders and apps, and the format browsers use for favicon.ico. This tool converts your PNG into a real ICO icon file with transparency intact. Keep in mind that macOS app icons use a different format, ICNS, which this converter does not create. For PNG icons for iOS and Android, use the ',
+  lk('Favicon Generator', '/favicon-generator'),
+  '.',
+];
+
+const seoIcoFormat = [
+  'An ICO file is a small container: a header, a directory that lists each image, and then the images themselves. This converter stores every size as a PNG-compressed 32-bit image with an alpha channel, which keeps transparency clean and the file compact. Modern browsers and Windows Vista or newer read this format without problems. Very old systems such as Windows XP may not display PNG-compressed icons, so test there first if you must support them. Still deciding on dimensions? Set the exact size of your source image with the ',
+  lk('Image Resizer', '/image-resizer'),
+  ' before you convert.',
+];
+
+const seoFaviconFix = [
+  'If your favicon does not show up after you upload favicon.ico, the cause is usually small. Check that the file sits in the root of your domain (yourdomain.com/favicon.ico), that your head section links to it, and that robots.txt does not block it. Browsers cache favicons aggressively, so do a hard refresh or open the page in a private window, and expect Google to take days or even weeks to update the icon in search results. The ',
+  lk('Meta Tag Generator', '/metatag-generator'),
+  ' can help you review the rest of your head tags.',
+];
+
+
 const problems = [
   'Browser tab shows a blank page icon instead of your logo',
   'A PNG simply renamed to .ico not working as a Windows icon',
@@ -311,6 +331,26 @@ const faqs = [
       'There is no limit on the number of conversions and no signup. Very large images are scaled down internally to a 1024px working size before the icons are created, which does not affect the final result because the biggest ICO size is 256×256.',
     ],
   },
+
+    {
+    q: 'What is the difference between ICO and ICNS icons?',
+    a: [
+      'ICO is the icon format used by Windows and by browsers for favicon.ico. ICNS is the format macOS uses for app icons. This converter creates ICO files only, so for a macOS app icon you need a separate ICNS tool.',
+    ],
+  },
+  {
+    q: 'Why is my favicon.ico not showing after I upload it?',
+    a: [
+      'Make sure the file is in the root of your site, your head section links to it, and robots.txt does not block it. Browsers cache favicons, so do a hard refresh or try a private window. Google can take days or weeks to show a new favicon in search results.',
+    ],
+  },
+  {
+    q: 'Will the ICO file work on every version of Windows?',
+    a: [
+      'The ICO file uses PNG-compressed icon images, which Windows Vista and newer and all modern browsers support. Very old systems such as Windows XP may not display them, so test there first if you need to support them.',
+    ],
+  },
+
 ];
 
 const relatedTools = [
@@ -320,6 +360,7 @@ const relatedTools = [
   { name: 'Image Cropper', href: '/image-cropper' },
   { name: 'Image Compressor', href: '/image-compressor' },
   { name: 'Meta Tag Generator', href: '/metatag-generator' },
+  { name: 'OG Preview Checker', href: '/og-preview-checker' },
 ];
 
 const htmlSnippet = `<link rel="icon" href="/favicon.ico" sizes="any">
@@ -915,6 +956,27 @@ export default function PngToIco() {
                 Can You Rename PNG to ICO? Why Conversion Is Needed
               </h3>
               <p className="leading-7 text-sm"><Rich parts={seoRename} /></p>
+            </div>
+
+                        <div>
+              <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+                PNG to Icon Converter: ICO vs ICNS and Which One You Need
+              </h3>
+              <p className="leading-7 text-sm"><Rich parts={seoIconWord} /></p>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+                PNG to ICO Format Explained: What Is Inside the .ico File?
+              </h3>
+              <p className="leading-7 text-sm"><Rich parts={seoIcoFormat} /></p>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+                Favicon Not Showing After Converting PNG to ICO? Quick Fixes
+              </h3>
+              <p className="leading-7 text-sm"><Rich parts={seoFaviconFix} /></p>
             </div>
 
             <div>

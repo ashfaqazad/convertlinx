@@ -566,6 +566,11 @@ export default function ImageConverter() {
               <p className="leading-7 text-sm">
                 <strong>WebP</strong> delivers ultra-lightweight image files tailored for faster page load times and optimal SEO rankings. <strong>JPG / JPEG</strong> works best for photography where compact size takes precedence. <strong>PNG</strong> protects lossless sharpness along with transparent background layers, which makes it ideal for digital logos and web designs.
               </p>
+               {/* NEW */}
+              <p className="leading-7 text-sm mt-3">
+                Need an icon file instead of a regular image? Turn your PNG into a multi-size favicon.ico with the{' '}
+                <Link href="/png-to-ico" className={linkCls}>PNG to ICO converter</Link>.
+              </p>
             </div>
 
             <div>
@@ -593,6 +598,7 @@ export default function ImageConverter() {
                   'Prepare compatible image uploads for portal submission',
                   'Convert a screenshot to JPG for forms and portals',
                   'Change pic format on phone without any app',
+                  'Make a favicon.ico icon file from a PNG logo'
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-sm">
                     <span className="cv-feature-dot" />
