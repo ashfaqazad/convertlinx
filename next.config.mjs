@@ -1,31 +1,9 @@
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   async redirects() {
     return [
-      // 🔥 Specific PDF tool redirects (priority high)
-      {
-        source: "/tools/image-to-pdf",
-        destination: "/image-to-pdf",
-        permanent: true,
-      },
-      {
-        source: "/tools/pdf-to-jpg",
-        destination: "/pdf-to-jpg",
-        permanent: true,
-      },
-      {
-        source: "/tools/compress-pdf",
-        destination: "/compress-pdf",
-        permanent: true,
-      },
-
-      // {
-      //   source: "/tools/text-to-pdf",
-      //   destination: "/text-to-pdf",
-      //   permanent: true,
-      // },
-
-      // ⚠️ Generic fallback (LAST mein hona chahiye)
+      // Legacy /tools/:slug URLs ko new slug URLs par redirect karo
       {
         source: "/tools/:slug*",
         destination: "/:slug*",
@@ -36,6 +14,79 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//   async redirects() {
+//     return [
+//       // 🔥 Specific PDF tool redirects (priority high)
+//       {
+//         source: "/tools/image-to-pdf",
+//         destination: "/image-to-pdf",
+//         permanent: true,
+//       },
+//       {
+//         source: "/tools/pdf-to-jpg",
+//         destination: "/pdf-to-jpg",
+//         permanent: true,
+//       },
+//       {
+//         source: "/tools/compress-pdf",
+//         destination: "/compress-pdf",
+//         permanent: true,
+//       },
+
+//       // {
+//       //   source: "/tools/text-to-pdf",
+//       //   destination: "/text-to-pdf",
+//       //   permanent: true,
+//       // },
+
+//       // ⚠️ Generic fallback (LAST mein hona chahiye)
+//       {
+//         source: "/tools/:slug*",
+//         destination: "/:slug*",
+//         permanent: true,
+//       },
+//     ];
+//   },
+// };
+
+// export default nextConfig;
 
 
 
