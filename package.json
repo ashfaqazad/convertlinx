@@ -7,32 +7,29 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "next lint"
   },
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.12",
     "browser-image-compression": "^2.0.2",
     "convert-units": "^2.3.4",
-    "dotenv": "^16.4.5",
     "generate-password": "^1.7.1",
-    "googleapis": "^157.0.0",
     "heic2any": "^0.0.4",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
     "jszip": "^3.10.1",
     "lucide-react": "^0.554.0",
-    "next": "^14.2.15",
-    "next-sitemap": "^4.2.3",
+    "next": "16.4.3",
     "postcss": "^8.5.6",
     "qrcode": "^1.5.4",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "tailwindcss": "^4.1.12",
     "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.0",
-    "eslint": "^9.0.0",
-    "eslint-config-next": "15.4.6"
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.3"
   }
 }
