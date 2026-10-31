@@ -86,6 +86,8 @@ export default function sitemap() {
     "/blog/convert-heic-to-jpg-free-online",
     "/blog/add-watermark-to-image-online-free",
     "/blog/rotate-flip-image-online-free",
+    "/blog/best-free-image-converter-utility-tools",
+    "/blog/image-converter",
 
     // Writing / Text Tools
     "/blog/free-online-word-counter-tool",
