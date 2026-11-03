@@ -1,47 +1,44 @@
 'use client';
 
-import { useState } from 'react';
-import { Upload, Download, Image as ImageIcon, Zap, Shield, CheckCircle, ChevronDown, RefreshCw } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Upload, Download, Image as ImageIcon, Zap, Shield, CheckCircle, ChevronDown, RefreshCw, AlertCircle } from 'lucide-react';
 import Script from 'next/script';
 import '@/styles/ImageConverter.css';
 import Link from 'next/link';
+import { decodeFile, encodeCanvas, OUTPUT_META } from '../../lib/imageCodecs';
+// import { decodeFile, encodeCanvas, OUTPUT_META } from '@/lib/imageCodecs';
 
 // ─────────────────────────────────────────────
-// 22 formats (single source of truth for all text on the page)
+// OUTPUT formats — every one of these is REALLY encoded (no PNG fallback)
 // ─────────────────────────────────────────────
 const FORMATS = [
-  { value: 'webp', label: 'WebP — best for web, smallest size', category: 'Popular' },
-  { value: 'png',  label: 'PNG — transparency support',          category: 'Popular' },
-  { value: 'jpg',  label: 'JPG/JPEG — universal, good quality',  category: 'Popular' },
-  { value: 'gif',  label: 'GIF — animated support',              category: 'Popular' },
-  { value: 'bmp',  label: 'BMP — uncompressed',                  category: 'Popular' },
-  { value: 'heic', label: 'HEIC — iOS photos, small size',       category: 'Mobile'  },
-  { value: 'heif', label: 'HEIF — high efficiency',              category: 'Mobile'  },
-  { value: 'avif', label: 'AVIF — modern, ultra-small',          category: 'Mobile'  },
-  { value: 'svg',  label: 'SVG — vector, scalable',              category: 'Design'  },
-  { value: 'tiff', label: 'TIFF — high-res print',               category: 'Design'  },
-  { value: 'ico',  label: 'ICO — favicon',                       category: 'Design'  },
-  { value: 'psd',  label: 'PSD — Photoshop layers',              category: 'Design'  },
-  { value: 'eps',  label: 'EPS — vector print',                  category: 'Design'  },
-  { value: 'dng',  label: 'DNG — Adobe RAW',                     category: 'Pro'     },
-  { value: 'cr2',  label: 'CR2 — Canon RAW',                     category: 'Pro'     },
-  { value: 'nef',  label: 'NEF — Nikon RAW',                     category: 'Pro'     },
-  { value: 'arw',  label: 'ARW — Sony RAW',                      category: 'Pro'     },
-  { value: 'raf',  label: 'RAF — Fuji RAW',                      category: 'Pro'     },
-  { value: 'jxl',  label: 'JPEG XL — future-proof',              category: 'Niche'   },
-  { value: 'tga',  label: 'TGA — game textures',                 category: 'Niche'   },
-  { value: 'pcx',  label: 'PCX — old-school',                    category: 'Niche'   },
-  { value: 'dpx',  label: 'DPX — film scan',                     category: 'Niche'   },
+  { value: 'webp', label: 'WebP — best for web, smallest size',     category: 'Popular' },
+  { value: 'png',  label: 'PNG — lossless, transparency support',    category: 'Popular' },
+  { value: 'jpg',  label: 'JPG/JPEG — universal, good quality',      category: 'Popular' },
+  { value: 'gif',  label: 'GIF — 256 colors, works everywhere',      category: 'Popular' },
+  { value: 'avif', label: 'AVIF — modern, ultra-small',              category: 'Modern'  },
+  { value: 'jxl',  label: 'JPEG XL — next-gen, high quality',        category: 'Modern'  },
+  { value: 'ico',  label: 'ICO — multi-size favicon',                category: 'Design'  },
+  { value: 'svg',  label: 'SVG — image in SVG wrapper (not traced)', category: 'Design'  },
+  { value: 'tiff', label: 'TIFF — lossless, for print',              category: 'Design'  },
+  { value: 'bmp',  label: 'BMP — uncompressed bitmap',               category: 'Legacy'  },
+  { value: 'tga',  label: 'TGA — game textures',                     category: 'Legacy'  },
+  { value: 'pcx',  label: 'PCX — old-school paint format',           category: 'Legacy'  },
 ];
 
-const FORMAT_COUNT = FORMATS.length; // 22
-const CATEGORIES = ['All', 'Popular', 'Mobile', 'Design', 'Pro', 'Niche'];
+// INPUT formats — what users can upload and read
+const INPUT_FORMATS = [
+  'JPG', 'PNG', 'WebP', 'GIF', 'BMP', 'ICO', 'SVG', 'AVIF', 'HEIC', 'HEIF', 'TIFF', 'JPEG XL', 'PSD', 'TGA',
+  'DNG', 'CR2', 'CR3', 'NEF', 'ARW', 'RAF', 'ORF', 'RW2',
+];
 
-// Formats the browser canvas cannot encode natively (saved as PNG fallback)
-const UNSUPPORTED_OUTPUT = ['svg','psd','eps','dng','cr2','nef','arw','raf','jxl','tga','pcx','emz','dpx','heic','heif','avif','tiff'];
+const OUTPUT_COUNT = FORMATS.length;       // 12
+const INPUT_COUNT  = INPUT_FORMATS.length; // 22
+const CATEGORIES = ['All', 'Popular', 'Modern', 'Design', 'Legacy'];
+const QUALITY_FORMATS = ['jpg', 'webp', 'avif', 'jxl'];
 
 // Help the file picker show HEIC / RAW etc. (image/* alone hides some of them)
-const ACCEPT_TYPES = 'image/*,.heic,.heif,.avif,.tiff,.tif,.svg,.psd,.eps,.dng,.cr2,.nef,.arw,.raf,.jxl,.tga,.pcx,.dpx,.ico,.bmp';
+const ACCEPT_TYPES = 'image/*,.heic,.heif,.avif,.tif,.tiff,.svg,.psd,.jxl,.tga,.ico,.bmp,.dng,.cr2,.cr3,.nef,.arw,.raf,.orf,.rw2';
 
 // ─────────────────────────────────────────────
 // Format-pair pages (internal linking).
@@ -60,101 +57,151 @@ const FORMAT_PAIR_PAGES = [
 
 const linkCls = 'text-purple-600 font-semibold underline hover:text-purple-800';
 
+const formatSize = (b) => {
+  if (b == null) return '';
+  if (b < 1024) return `${b} B`;
+  if (b < 1024 * 1024) return `${(b / 1024).toFixed(1)} KB`;
+  return `${(b / 1024 / 1024).toFixed(2)} MB`;
+};
+const baseName = (name) => name.replace(/\.[^/.]+$/, '');
+const isHEIC = (file) => {
+  const ext = file.name.toLowerCase().split('.').pop();
+  return ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif';
+};
+
+const revokeResult = (r) => {
+  if (r?.url) URL.revokeObjectURL(r.url);
+  if (r?.previewUrl) URL.revokeObjectURL(r.previewUrl);
+};
+
 export default function ImageConverter() {
-  const [files, setFiles]         = useState([]);
-  const [converted, setConverted] = useState([]);
-  const [toFormat, setToFormat]   = useState('webp');
-  const [category, setCategory]   = useState('All');
-  const [loading, setLoading]     = useState(false);
-  const [quality, setQuality]     = useState(0.94);
+  // items: one per uploaded file → { id, file, status: 'decoding' | 'ready' | 'error', error?, note? }
+  const [items, setItems]       = useState([]);
+  // results: id → { key, url, name, size, error? }   (key = "format|quality" it was encoded with)
+  const [results, setResults]   = useState({});
+  const [toFormat, setToFormat] = useState('webp');
+  const [category, setCategory] = useState('All');
+  const [quality, setQuality]   = useState(0.9);
+  const [encQuality, setEncQuality] = useState(0.9); // debounced copy used for encoding
+  const [decodeTick, setDecodeTick] = useState(0);
 
-  const isHEIC = (file) => {
-    const ext = file.name.toLowerCase().split('.').pop();
-    return ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif';
+  const canvasesRef = useRef(new Map()); // id → decoded canvas (decode once, re-encode many times)
+  const resultsRef  = useRef({});
+  const runRef      = useRef(0);
+  const batchRef    = useRef(0);
+
+  const usesQuality = QUALITY_FORMATS.includes(toFormat);
+  const currentKey  = `${toFormat}|${usesQuality ? encQuality : '-'}`;
+
+  // Debounce the quality slider so we don't re-encode on every pixel of drag
+  useEffect(() => {
+    const t = setTimeout(() => setEncQuality(quality), 350);
+    return () => clearTimeout(t);
+  }, [quality]);
+
+  // Revoke all object URLs on unmount
+  useEffect(() => () => {
+    Object.values(resultsRef.current).forEach(revokeResult);
+  }, []);
+
+  const writeResult = (id, value) => {
+    const prev = resultsRef.current[id];
+    revokeResult(prev);
+    resultsRef.current = { ...resultsRef.current, [id]: value };
+    setResults(resultsRef.current);
   };
 
-  const convertImages = async (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    if (!selectedFiles.length) return;
-    setLoading(true);
+  // ── 1) Upload: decode each file ONCE and cache the pixels ──
+  const handleFiles = async (e) => {
+    const selected = Array.from(e.target.files || []);
+    e.target.value = ''; // allow re-selecting the same file later
+    if (!selected.length) return;
 
-    // free memory from previous run
-    converted.forEach((c) => URL.revokeObjectURL(c.url));
-    setConverted([]);
-    setFiles(selectedFiles);
+    const batch = ++batchRef.current;
+    Object.values(resultsRef.current).forEach(revokeResult);
+    resultsRef.current = {};
+    setResults({});
+    canvasesRef.current = new Map();
 
-    const results = await Promise.all(
-      selectedFiles.map(async (file) => {
-        let processFile = file;
+    const newItems = selected.map((file, i) => ({ id: `${batch}-${i}`, file, status: 'decoding' }));
+    setItems(newItems);
 
-        if (isHEIC(file)) {
-          try {
-            const heic2any = (await import('heic2any')).default;
-            const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality });
-            processFile = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.jpg', { type: 'image/jpeg' });
-          } catch (err) {
-            console.error('HEIC conversion failed', err);
-          }
-        }
+    for (const item of newItems) {
+      if (batch !== batchRef.current) return; // user uploaded a new batch meanwhile
+      try {
+        const { canvas, note } = await decodeFile(item.file);
+        if (batch !== batchRef.current) return;
+        canvasesRef.current.set(item.id, canvas);
+        setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'ready', note } : it)));
+      } catch (err) {
+        console.error('Decode failed', item.file.name, err);
+        if (batch !== batchRef.current) return;
+        setItems((prev) => prev.map((it) => (it.id === item.id ? { ...it, status: 'error', error: err?.message || 'Could not read this file.' } : it)));
+      }
+      setDecodeTick((t) => t + 1); // start encoding this file right away
+    }
+  };
 
-        return new Promise((resolve) => {
-          const srcUrl = URL.createObjectURL(processFile);
-          const img = new Image();
-          img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width  = img.width;
-            canvas.height = img.height;
-            canvas.getContext('2d').drawImage(img, 0, 0);
+  // ── 2) Encode: runs on upload AND whenever format / quality changes ──
+  useEffect(() => {
+    const ready = items.filter((it) => it.status === 'ready' && canvasesRef.current.has(it.id));
+    if (!ready.length) return;
+    const run = ++runRef.current;
+    const fmt = toFormat;
+    const q = encQuality;
+    const key = currentKey;
 
-            let mimeType = 'image/png', extension = 'png';
-            if (!UNSUPPORTED_OUTPUT.includes(toFormat)) {
-              const map = {
-                webp: ['image/webp', 'webp'],
-                png:  ['image/png',  'png'],
-                jpg:  ['image/jpeg', 'jpg'],
-                gif:  ['image/gif',  'gif'],
-                bmp:  ['image/bmp',  'bmp'],
-                ico:  ['image/x-icon','ico'],
-              };
-              if (map[toFormat]) { mimeType = map[toFormat][0]; extension = map[toFormat][1]; }
+    (async () => {
+      for (const it of ready) {
+        if (run !== runRef.current) return;               // a newer run took over
+        if (resultsRef.current[it.id]?.key === key) continue; // already encoded with these settings
+        try {
+          const cv = canvasesRef.current.get(it.id);
+          const blob = await encodeCanvas(cv, fmt, q);
+          if (run !== runRef.current) return;
+          const meta = OUTPUT_META[fmt];
+          const previewable = !['tiff', 'tga', 'pcx', 'jxl'].includes(fmt); // browsers can't show these
+          // For those formats, show a PNG preview of the same pixels (the download stays the real format)
+          let previewUrl = null;
+          if (!previewable) {
+            const pb = await new Promise((res) => cv.toBlob(res, 'image/png'));
+            if (pb) previewUrl = URL.createObjectURL(pb);
+            if (run !== runRef.current) {
+              if (previewUrl) URL.revokeObjectURL(previewUrl);
+              return;
             }
-            const qualityVal = (toFormat === 'jpg' || toFormat === 'webp') ? quality : 1;
+          }
+          writeResult(it.id, {
+            key,
+            url: URL.createObjectURL(blob),
+            previewUrl,
+            name: `${baseName(it.file.name)}.${meta.ext}`,
+            size: blob.size,
+            previewable,
+          });
+        } catch (err) {
+          console.error('Encode failed', fmt, err);
+          if (run !== runRef.current) return;
+          writeResult(it.id, { key, error: `Could not create ${fmt.toUpperCase()}: ${err?.message || 'unknown error'}` });
+        }
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [decodeTick, toFormat, encQuality]);
 
-            canvas.toBlob((blob) => {
-              URL.revokeObjectURL(srcUrl);
-              if (!blob) { resolve(null); return; }
+  const doneResults = items
+    .map((it) => ({ it, r: results[it.id] }))
+    .filter(({ r }) => r && r.key === currentKey && r.url);
 
-              // If the browser could not encode the requested type, it silently returns PNG.
-              // Make the file name honest so the downloaded file opens correctly.
-              let finalExt = extension;
-              let fallback = UNSUPPORTED_OUTPUT.includes(toFormat);
-              if (blob.type && blob.type !== mimeType) { finalExt = 'png'; fallback = true; }
-
-              resolve({
-                originalName: file.name,
-                name:   file.name.replace(/\.[^/.]+$/, '') + '.' + finalExt,
-                url:    URL.createObjectURL(blob),
-                isHeic: isHEIC(file),
-                fallback,
-              });
-            }, mimeType, qualityVal);
-          };
-          img.onerror = () => { URL.revokeObjectURL(srcUrl); resolve(null); };
-          img.src = srcUrl;
-        });
-      })
-    );
-
-    setConverted(results.filter(Boolean));
-    setLoading(false);
-  };
+  const busy = items.some((it) => it.status === 'decoding')
+    || items.some((it) => it.status === 'ready' && results[it.id]?.key !== currentKey);
 
   const downloadAll = () => {
-    converted.forEach((item, i) => {
+    doneResults.forEach(({ r }, i) => {
       setTimeout(() => {
         const a = document.createElement('a');
-        a.href = item.url;
-        a.download = item.name;
+        a.href = r.url;
+        a.download = r.name;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -162,10 +209,9 @@ export default function ImageConverter() {
     });
   };
 
-  const filteredFormats = FORMATS.filter(f => category === 'All' || f.category === category);
-  const showQuality = ['jpg', 'webp', 'heic', 'heif'].includes(toFormat);
-  const hasFallback = converted.some((c) => c.fallback);
+  const filteredFormats = FORMATS.filter((f) => category === 'All' || f.category === category);
   const livePairs = FORMAT_PAIR_PAGES.filter((p) => p.live);
+  const readyCount = doneResults.length;
 
   // ─────────────────────────────────────────────
   // FAQ: `text` is plain text (used in schema), `a` is optional JSX (used on page)
@@ -177,7 +223,7 @@ export default function ImageConverter() {
     },
     {
       q: 'What is an image format converter and which formats are supported?',
-      text: `An image format converter changes a picture from one file type to another. Our image file type converter lists ${FORMAT_COUNT} image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.`,
+      text: `An image format converter changes a picture from one file type to another. Our image file type converter lists ${INPUT_COUNT} image formats you can open, including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF. You can save the result in ${OUTPUT_COUNT} output formats: WebP, PNG, JPG, GIF, AVIF, JPEG XL, ICO, SVG, TIFF, BMP, TGA and PCX.`,
     },
     {
       q: 'How do I convert image format online free?',
@@ -185,7 +231,7 @@ export default function ImageConverter() {
     },
     {
       q: 'Can I use this as a bulk image converter online?',
-      text: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result, or use the Download All button.',
+      text: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result, or use the Download All button. If you change the output format or quality afterwards, all files are re-converted automatically — no need to upload again.',
     },
     {
       q: 'What is a browser image converter and is it safe?',
@@ -200,20 +246,32 @@ export default function ImageConverter() {
       text: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.',
     },
     {
+      q: 'How are RAW camera files (CR2, NEF, ARW, DNG) converted?',
+      text: 'Every RAW file contains a full-size JPEG preview created by the camera. The converter extracts that preview in your browser and saves it to the format you choose, so you get the same image you saw on the camera screen. It does not do full RAW development (white balance, exposure editing).',
+    },
+    {
+      q: 'Can I convert a PSD file to PNG or JPG?',
+      text: 'Yes. The converter reads the merged (flattened) image stored inside the PSD. If a PSD was saved without "Maximize Compatibility" in Photoshop, it has no merged image and cannot be read — re-save it with that option turned on.',
+    },
+    {
       q: 'How do I change pic format on my phone or computer?',
       text: 'Open this page on any phone, tablet or PC, tap the upload area, choose your picture and select the new format. The change pic format process takes a few seconds and works on Android, iPhone, Windows and Mac.',
     },
     {
       q: 'How does the convert quality slider work?',
-      text: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, image clarity remains identical.',
+      text: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. The same slider also works for AVIF and JPEG XL. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, TIFF and BMP, image clarity remains identical.',
     },
     {
       q: 'Will changing image formats affect visual quality?',
-      text: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion.',
+      text: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion. GIF is limited to 256 colors, so photos may show slight banding in GIF.',
     },
     {
       q: 'Can I convert a photo online free without watermark, and keep HD 1080p size?',
       text: 'Yes. Converted photos are never watermarked, and the output keeps the same pixel dimensions as your original — so a Full HD 1080p photo stays 1080p after you change its format. Note that format conversion does not upscale a low-resolution photo to HD.',
+    },
+    {
+      q: 'Is the SVG output a real vector?',
+      text: 'No. The SVG output places your picture inside an SVG file, which is useful when a website or tool only accepts SVG. It does not trace your image into vector paths, so it will not become sharper when scaled up.',
     },
     {
       q: 'Are my images stored on server databases?',
@@ -257,15 +315,15 @@ export default function ImageConverter() {
             '@context': 'https://schema.org',
             '@type': 'HowTo',
             name: 'How to Convert Image Format Online for Free',
-            description: `Use this free image converter online to change JPG, PNG, WebP, HEIC, RAW and ${FORMAT_COUNT} image formats instantly. Bulk conversion, quality control and no watermark.`,
+            description: `Use this free image converter online to change JPG, PNG, WebP, HEIC, RAW and ${INPUT_COUNT} image formats instantly, and save to ${OUTPUT_COUNT} formats including WebP, AVIF, PNG and JPG. Bulk conversion, quality control and no watermark.`,
             url: 'https://convertlinx.com/image-converter',
             totalTime: 'PT30S',
             estimatedCost: { '@type': 'MonetaryAmount', value: '0', currency: 'USD' },
-            supply: [{ '@type': 'HowToSupply', name: 'JPG, PNG, WebP, HEIC, RAW or any image file' }],
+            supply: [{ '@type': 'HowToSupply', name: 'JPG, PNG, WebP, HEIC, RAW, PSD or any image file' }],
             tool: [{ '@type': 'HowToTool', name: 'ConvertLinx Image Converter' }],
             step: [
-              { '@type': 'HowToStep', name: 'Upload Images', text: 'Select one or multiple image files — JPG, PNG, HEIC, RAW, SVG or any supported format.' },
-              { '@type': 'HowToStep', name: 'Choose Output Format', text: 'Browse format categories and pick the target format. Adjust the convert quality slider if needed.' },
+              { '@type': 'HowToStep', name: 'Upload Images', text: 'Select one or multiple image files — JPG, PNG, HEIC, RAW, SVG, PSD, TIFF or any supported format.' },
+              { '@type': 'HowToStep', name: 'Choose Output Format', text: 'Browse format categories and pick the target format. Adjust the convert quality slider if needed — files re-convert automatically.' },
               { '@type': 'HowToStep', name: 'Download Converted Files', text: 'Download your converted images instantly — single or batch download, no watermark.' },
             ],
           }),
@@ -292,7 +350,8 @@ export default function ImageConverter() {
             <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: '#6B7280' }}>
               The fastest free image format converter and image file type converter in your browser.
               Convert photos online — change JPG, PNG, WebP, HEIC (iPhone photos), RAW camera files,
-              SVG, TIFF and {FORMAT_COUNT} formats in total instantly. Bulk conversion, convert quality control,
+              PSD, SVG, TIFF and {INPUT_COUNT} formats in total instantly, and save them as {OUTPUT_COUNT} formats
+              including WebP, AVIF, PNG, JPG, GIF and ICO. Bulk conversion, convert quality control,
               no watermark and no signup required. A private image converter: your files never leave your device.
             </p>
           </div>
@@ -318,13 +377,13 @@ export default function ImageConverter() {
                       Drop images or click to browse
                     </p>
                     <p className="text-xs leading-relaxed" style={{ color: '#9CA3AF' }}>
-                      JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, RAW — {FORMAT_COUNT} formats · Bulk image converter online
+                      JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, PSD, RAW — {INPUT_COUNT} formats · Bulk image converter online
                     </p>
                     <input
                       type="file"
                       accept={ACCEPT_TYPES}
                       multiple
-                      onChange={convertImages}
+                      onChange={handleFiles}
                       className="hidden"
                     />
                   </label>
@@ -340,6 +399,7 @@ export default function ImageConverter() {
                     {CATEGORIES.map(cat => (
                       <button
                         key={cat}
+                        type="button"
                         onClick={() => setCategory(cat)}
                         className={`cv-cat-tab ${category === cat ? 'active' : 'inactive'}`}
                       >
@@ -369,7 +429,7 @@ export default function ImageConverter() {
                     ))}
                   </div>
 
-                  {showQuality && (
+                  {usesQuality && (
                     <div className="cv-quality-wrap">
                       <div className="flex justify-between mb-2">
                         <span className="text-xs font-semibold" style={{ color: '#6B7280' }}>Convert Quality</span>
@@ -387,61 +447,94 @@ export default function ImageConverter() {
                 </div>
               </div>
 
-              {/* Loader */}
-              {loading && (
-                <div className="text-center py-8 mt-6 border-t" style={{ borderColor: 'rgba(147,51,234,0.08)' }}>
-                  <div className="cv-spinner mb-3" />
-                  <p className="text-sm font-semibold" style={{ color: '#9333EA' }}>
-                    Converting{files.length > 1 ? ` ${files.length} images` : ''}...
-                  </p>
-                </div>
-              )}
-
               {/* Results */}
-              {!loading && converted.length > 0 && (
+              {items.length > 0 && (
                 <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(147,51,234,0.08)' }}>
                   <p className="text-sm font-bold uppercase tracking-widest mb-5 text-center" style={{ color: '#9333EA' }}>
-                    {converted.length} {converted.length === 1 ? 'File' : 'Files'} Ready
+                    {busy
+                      ? `Converting to ${OUTPUT_META[toFormat].ext.toUpperCase()}… (${readyCount}/${items.length})`
+                      : `${readyCount} ${readyCount === 1 ? 'File' : 'Files'} Ready`}
                   </p>
 
-                  {hasFallback && (
-                    <p className="text-xs text-center mb-4" style={{ color: '#9CA3AF' }}>
-                      Note: your browser cannot encode this output format directly, so the file was saved as PNG (lossless).
-                    </p>
-                  )}
-
-                  {converted.length > 1 && (
+                  {readyCount > 1 && !busy && (
                     <div className="flex justify-center mb-5">
-                      <button onClick={downloadAll} className="cv-dl-btn justify-center">
+                      <button type="button" onClick={downloadAll} className="cv-dl-btn justify-center">
                         <Download className="w-4 h-4" />
-                        Download All ({converted.length})
+                        Download All ({readyCount})
                       </button>
                     </div>
                   )}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {converted.map((item, i) => (
-                      <div key={i} className="cv-result-card">
-                        <img src={item.url} alt={`Converted picture ${item.name}`} className="w-full h-40 object-cover" />
-                        <div className="p-4 text-center">
-                          <p className="text-xs font-medium mb-3 truncate" style={{ color: '#374151' }}>
-                            {item.isHeic && <span className="cv-heic-tag">HEIC→</span>}
-                            {item.name}
-                          </p>
-                          <a href={item.url} download={item.name} className="cv-dl-btn w-full justify-center">
-                            <Download className="w-4 h-4" />
-                            Download
-                          </a>
+                    {items.map((it) => {
+                      const r = results[it.id];
+                      const fresh = r && r.key === currentKey;
+                      const error = it.status === 'error' ? it.error : (fresh && r.error ? r.error : null);
+                      const ready = fresh && r.url;
+
+                      return (
+                        <div key={it.id} className="cv-result-card">
+                          {/* Preview */}
+                          {ready && (r.previewable || r.previewUrl) ? (
+                            <img src={r.previewable ? r.url : r.previewUrl} alt={`Converted picture ${r.name}`} className="w-full h-40 object-cover" />
+                          ) : (
+                            <div className="w-full h-40 flex flex-col items-center justify-center gap-2" style={{ background: '#FAF5FF' }}>
+                              {error ? (
+                                <AlertCircle className="w-8 h-8" style={{ color: '#EF4444' }} />
+                              ) : ready ? (
+                                <>
+                                  <ImageIcon className="w-8 h-8" style={{ color: '#9333EA' }} />
+                                  <span className="text-xs" style={{ color: '#9CA3AF' }}>Preview not available for {OUTPUT_META[toFormat].ext.toUpperCase()}</span>
+                                </>
+                              ) : (
+                                <div className="cv-spinner" />
+                              )}
+                            </div>
+                          )}
+
+                          <div className="p-4 text-center">
+                            <p className="text-xs font-medium mb-1 truncate" style={{ color: '#374151' }}>
+                              {isHEIC(it.file) && <span className="cv-heic-tag">HEIC→</span>}
+                              {ready ? r.name : it.file.name}
+                            </p>
+
+                            {ready && (
+                              <p className="text-xs mb-3" style={{ color: '#9CA3AF' }}>
+                                {formatSize(it.file.size)} → <strong style={{ color: r.size <= it.file.size ? '#10B981' : '#6B7280' }}>{formatSize(r.size)}</strong>
+                              </p>
+                            )}
+                            {ready && !r.previewable && (
+                              <p className="text-xs mb-3" style={{ color: '#9CA3AF' }}>
+                                Preview shown as PNG. The download is a real {OUTPUT_META[toFormat].ext.toUpperCase()} file — open it in IrfanView, XnView or GIMP.
+                              </p>
+                            )}
+                            {it.note && ready && (
+                              <p className="text-xs mb-3" style={{ color: '#9CA3AF' }}>{it.note}</p>
+                            )}
+
+                            {error ? (
+                              <p className="text-xs" style={{ color: '#EF4444' }}>{error}</p>
+                            ) : ready ? (
+                              <a href={r.url} download={r.name} className="cv-dl-btn w-full justify-center">
+                                <Download className="w-4 h-4" />
+                                Download
+                              </a>
+                            ) : (
+                              <p className="text-xs font-semibold" style={{ color: '#9333EA' }}>
+                                {it.status === 'decoding' ? 'Reading file…' : 'Converting…'}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               )}
 
               {/* Trust row */}
               <div className="flex flex-wrap justify-center gap-5 mt-6">
-                {['No login required', 'Bulk image converter', 'HEIC auto support', 'Browser image converter — 100% private', 'No watermark', 'Totally Free'].map((t, i) => (
+                {['No login required', 'Bulk image converter', 'HEIC auto support', 'RAW & PSD support', 'Browser image converter — 100% private', 'No watermark', 'Totally Free'].map((t, i) => (
                   <span key={i} className="cv-trust-item">
                     <span className="cv-trust-dot" />
                     {t}
@@ -461,9 +554,9 @@ export default function ImageConverter() {
             </h2>
             <div className="grid md:grid-cols-3 gap-6">
               {[
-                { num: '1', title: 'Upload Image Files', desc: 'Drag and drop JPG, PNG, HEIC (iPhone), RAW camera files or pick a picture from your device. Use bulk upload to convert many files at once.' },
-                { num: '2', title: 'Select Target Format', desc: 'Pick WebP for small web sizes, PNG for transparent graphics, or JPG for general sharing, then set the convert quality.' },
-                { num: '3', title: 'Download Converted Images', desc: 'Save single output files or download all converted photos instantly — free and without watermark.' },
+                { num: '1', title: 'Upload Image Files', desc: 'Drag and drop JPG, PNG, HEIC (iPhone), RAW camera files, PSD, TIFF or pick a picture from your device. Use bulk upload to convert many files at once.' },
+                { num: '2', title: 'Select Target Format', desc: 'Pick WebP for small web sizes, PNG for transparent graphics, or JPG for general sharing, then set the convert quality. Try AVIF for even smaller files — change the format anytime and files re-convert automatically.' },
+                { num: '3', title: 'Download Converted Images', desc: 'Save single output files or download all converted photos instantly — free and without watermark. You see the new file size of every output before you download.' },
               ].map((s, i) => (
                 <div key={i} className="cv-step-card">
                   <div className="cv-step-num">{s.num}</div>
@@ -488,15 +581,15 @@ export default function ImageConverter() {
                   icon: <ImageIcon className="w-6 h-6" />,
                   color: '#9333EA',
                   bg: 'rgba(147,51,234,0.08)',
-                  title: `Image File Format Converter — ${FORMAT_COUNT} Formats`,
-                  desc: 'Convert JPG to PNG, HEIC to JPG, WebP, RAW camera formats, SVG, and TIFF smoothly. A complete image formats converter and picture format converter in one place.',
+                  title: `Image File Format Converter — ${INPUT_COUNT} Formats`,
+                  desc: `Convert JPG to PNG, HEIC to JPG, WebP, RAW camera formats, SVG, and TIFF smoothly — plus PNG to AVIF, PSD to PNG and more. It opens ${INPUT_COUNT} input formats and saves to ${OUTPUT_COUNT} real output formats. A complete image formats converter and picture format converter in one place.`,
                 },
                 {
                   icon: <Zap className="w-6 h-6" />,
                   color: '#F59E0B',
                   bg: 'rgba(245,158,11,0.08)',
                   title: 'Bulk Image Converter Online with Quality Control',
-                  desc: 'Convert many images simultaneously. Fine-tune the convert quality of every output file using our quality slider.',
+                  desc: 'Convert many images simultaneously. Fine-tune the convert quality of every output file using our quality slider and see the new file size instantly.',
                 },
                 {
                   icon: <Shield className="w-6 h-6" />,
@@ -536,7 +629,6 @@ export default function ImageConverter() {
               </p>
             </div>
 
-            {/* NEW: covers queries that were missing or weak */}
             <div>
               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
                 Convert Image Format Online Free — Change Pic Format in Seconds
@@ -555,7 +647,7 @@ export default function ImageConverter() {
                 How to Convert Picture Files on Any Device
               </h3>
               <p className="leading-7 text-sm">
-                To convert picture files, open this page on your phone, tablet or computer, tap the upload box and pick one or many pictures. Choose the output type from the list of {FORMAT_COUNT} formats, adjust the quality slider if you need a smaller file, and press download. To change pic format for many files at once, select them together and use Download All.
+                To convert picture files, open this page on your phone, tablet or computer, tap the upload box and pick one or many pictures. Choose the output type from the list of {OUTPUT_COUNT} formats, adjust the quality slider if you need a smaller file, and press download. Changed your mind? Pick another format and every file converts again automatically. To change pic format for many files at once, select them together and use Download All.
               </p>
             </div>
 
@@ -564,9 +656,8 @@ export default function ImageConverter() {
                 WebP vs JPG vs PNG — Selecting the Right Image Format
               </h3>
               <p className="leading-7 text-sm">
-                <strong>WebP</strong> delivers ultra-lightweight image files tailored for faster page load times and optimal SEO rankings. <strong>JPG / JPEG</strong> works best for photography where compact size takes precedence. <strong>PNG</strong> protects lossless sharpness along with transparent background layers, which makes it ideal for digital logos and web designs.
+                <strong>WebP</strong> delivers ultra-lightweight image files tailored for faster page load times and optimal SEO rankings. <strong>AVIF</strong> goes even smaller at the same quality and is supported by all major modern browsers. <strong>JPG / JPEG</strong> works best for photography where compact size takes precedence. <strong>PNG</strong> protects lossless sharpness along with transparent background layers, which makes it ideal for digital logos and web designs.
               </p>
-               {/* NEW */}
               <p className="leading-7 text-sm mt-3">
                 Need an icon file instead of a regular image? Turn your PNG into a multi-size favicon.ico with the{' '}
                 <Link href="/png-to-ico" className={linkCls}>PNG to ICO converter</Link>.
@@ -578,7 +669,22 @@ export default function ImageConverter() {
                 Convert Quality, HD Photos and No Watermark
               </h3>
               <p className="leading-7 text-sm">
-                Use the convert quality slider to balance sharpness and file size when exporting JPG or WebP. The converter keeps your original resolution, so you can convert a photo online free without watermark and a Full HD 1080p picture stays 1080p in its new format. Keep in mind that changing the format does not upscale a small photo to HD — it preserves the quality your original file already has.
+                Use the convert quality slider to balance sharpness and file size when exporting JPG or WebP (and AVIF or JPEG XL) — the new file size is shown right away. The converter keeps your original resolution, so you can convert a photo online free without watermark and a Full HD 1080p picture stays 1080p in its new format. Keep in mind that changing the format does not upscale a small photo to HD — it preserves the quality your original file already has.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+                Supported Input and Output Formats
+              </h3>
+              <p className="leading-7 text-sm">
+                <strong>Open ({INPUT_COUNT} formats):</strong> {INPUT_FORMATS.join(', ')}.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                <strong>Save as ({OUTPUT_COUNT} formats):</strong> {FORMATS.map((f) => f.value.toUpperCase()).join(', ')}.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                HEIC, HEIF, PSD and RAW files (CR2, CR3, NEF, ARW, DNG, RAF, ORF, RW2) can be opened and converted to any format above, but they are not offered as output because a browser cannot create them. RAW files are read from the JPEG preview stored inside the file, and PSD files from their merged image. The SVG output wraps your picture in an SVG file and does not trace it into vector paths.
               </p>
             </div>
 
@@ -598,7 +704,10 @@ export default function ImageConverter() {
                   'Prepare compatible image uploads for portal submission',
                   'Convert a screenshot to JPG for forms and portals',
                   'Change pic format on phone without any app',
-                  'Make a favicon.ico icon file from a PNG logo'
+                  'Make a favicon.ico icon file from a PNG logo',
+                  'Convert Photoshop PSD files to PNG or JPG',
+                  'Convert PNG or JPG to AVIF for ultra-small web images',
+                  'Save images as TIFF, BMP, TGA or PCX for print and legacy software',
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-sm">
                     <span className="cv-feature-dot" />
@@ -614,10 +723,12 @@ export default function ImageConverter() {
                 {[
                   'Photographers — convert camera RAW assets to shareable formats',
                   'Web Developers — build lightweight WebP images for web speed',
-                  'Designers — convert graphic assets to PNG or vector formats',
+                  'Designers — convert graphic assets and PSD files to PNG, ICO or TIFF',
                   'iPhone Users — easily convert HEIC photos to PNG or JPG',
                   'E-commerce Sellers — prepare product image uploads in bulk',
                   'Content Creators — convert visual files without installing apps',
+                  'Game Developers — export TGA textures from PNG or PSD files',
+                  'Print and Archive Users — save images as lossless TIFF or BMP',
                 ].map((item, i) => (
                   <div key={i} className="flex items-start gap-2 text-sm">
                     <span className="font-bold mt-0.5" style={{ color: '#9333EA' }}>→</span>
@@ -730,6 +841,7 @@ export default function ImageConverter() {
               Free image converter online. Takes 5 seconds. No signup. No watermark.
             </p>
             <button
+              type="button"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="cv-cta-btn"
             >
@@ -786,10 +898,6 @@ export default function ImageConverter() {
 
 
 
-
-
-
-
 // 'use client';
 
 // import { useState } from 'react';
@@ -798,6 +906,60 @@ export default function ImageConverter() {
 // import '@/styles/ImageConverter.css';
 // import Link from 'next/link';
 
+// // ─────────────────────────────────────────────
+// // 22 formats (single source of truth for all text on the page)
+// // ─────────────────────────────────────────────
+// const FORMATS = [
+//   { value: 'webp', label: 'WebP — best for web, smallest size', category: 'Popular' },
+//   { value: 'png',  label: 'PNG — transparency support',          category: 'Popular' },
+//   { value: 'jpg',  label: 'JPG/JPEG — universal, good quality',  category: 'Popular' },
+//   { value: 'gif',  label: 'GIF — animated support',              category: 'Popular' },
+//   { value: 'bmp',  label: 'BMP — uncompressed',                  category: 'Popular' },
+//   { value: 'heic', label: 'HEIC — iOS photos, small size',       category: 'Mobile'  },
+//   { value: 'heif', label: 'HEIF — high efficiency',              category: 'Mobile'  },
+//   { value: 'avif', label: 'AVIF — modern, ultra-small',          category: 'Mobile'  },
+//   { value: 'svg',  label: 'SVG — vector, scalable',              category: 'Design'  },
+//   { value: 'tiff', label: 'TIFF — high-res print',               category: 'Design'  },
+//   { value: 'ico',  label: 'ICO — favicon',                       category: 'Design'  },
+//   { value: 'psd',  label: 'PSD — Photoshop layers',              category: 'Design'  },
+//   { value: 'eps',  label: 'EPS — vector print',                  category: 'Design'  },
+//   { value: 'dng',  label: 'DNG — Adobe RAW',                     category: 'Pro'     },
+//   { value: 'cr2',  label: 'CR2 — Canon RAW',                     category: 'Pro'     },
+//   { value: 'nef',  label: 'NEF — Nikon RAW',                     category: 'Pro'     },
+//   { value: 'arw',  label: 'ARW — Sony RAW',                      category: 'Pro'     },
+//   { value: 'raf',  label: 'RAF — Fuji RAW',                      category: 'Pro'     },
+//   { value: 'jxl',  label: 'JPEG XL — future-proof',              category: 'Niche'   },
+//   { value: 'tga',  label: 'TGA — game textures',                 category: 'Niche'   },
+//   { value: 'pcx',  label: 'PCX — old-school',                    category: 'Niche'   },
+//   { value: 'dpx',  label: 'DPX — film scan',                     category: 'Niche'   },
+// ];
+
+// const FORMAT_COUNT = FORMATS.length; // 22
+// const CATEGORIES = ['All', 'Popular', 'Mobile', 'Design', 'Pro', 'Niche'];
+
+// // Formats the browser canvas cannot encode natively (saved as PNG fallback)
+// const UNSUPPORTED_OUTPUT = ['svg','psd','eps','dng','cr2','nef','arw','raf','jxl','tga','pcx','emz','dpx','heic','heif','avif','tiff'];
+
+// // Help the file picker show HEIC / RAW etc. (image/* alone hides some of them)
+// const ACCEPT_TYPES = 'image/*,.heic,.heif,.avif,.tiff,.tif,.svg,.psd,.eps,.dng,.cr2,.nef,.arw,.raf,.jxl,.tga,.pcx,.dpx,.ico,.bmp';
+
+// // ─────────────────────────────────────────────
+// // Format-pair pages (internal linking).
+// // Set live: true ONLY after you actually publish that page, otherwise it would be a 404 link.
+// // ─────────────────────────────────────────────
+// const FORMAT_PAIR_PAGES = [
+//   { name: 'HEIC to JPG',  href: '/heic-to-jpg',  live: false },
+//   { name: 'WebP to PNG',  href: '/webp-to-png',  live: false },
+//   { name: 'PNG to WebP',  href: '/png-to-webp',  live: false },
+//   { name: 'JPG to PNG',   href: '/jpg-to-png',   live: false },
+//   { name: 'PNG to JPG',   href: '/png-to-jpg',   live: false },
+//   { name: 'CMS to PNG',   href: '/cms-to-png',   live: false },
+//   { name: 'Screenshot to JPG', href: '/screenshot-to-jpg', live: false },
+//   { name: 'Image to PDF', href: '/image-to-pdf', live: false },
+// ];
+
+// const linkCls = 'text-purple-600 font-semibold underline hover:text-purple-800';
+
 // export default function ImageConverter() {
 //   const [files, setFiles]         = useState([]);
 //   const [converted, setConverted] = useState([]);
@@ -805,33 +967,6 @@ export default function ImageConverter() {
 //   const [category, setCategory]   = useState('All');
 //   const [loading, setLoading]     = useState(false);
 //   const [quality, setQuality]     = useState(0.94);
-
-//   const formats = [
-//     { value: 'webp', label: 'WebP — best for web, smallest size', category: 'Popular' },
-//     { value: 'png',  label: 'PNG — transparency support',          category: 'Popular' },
-//     { value: 'jpg',  label: 'JPG/JPEG — universal, good quality',  category: 'Popular' },
-//     { value: 'gif',  label: 'GIF — animated support',              category: 'Popular' },
-//     { value: 'bmp',  label: 'BMP — uncompressed',                  category: 'Popular' },
-//     { value: 'heic', label: 'HEIC — iOS photos, small size',       category: 'Mobile'  },
-//     { value: 'heif', label: 'HEIF — high efficiency',              category: 'Mobile'  },
-//     { value: 'avif', label: 'AVIF — modern, ultra-small',          category: 'Mobile'  },
-//     { value: 'svg',  label: 'SVG — vector, scalable',              category: 'Design'  },
-//     { value: 'tiff', label: 'TIFF — high-res print',               category: 'Design'  },
-//     { value: 'ico',  label: 'ICO — favicon',                       category: 'Design'  },
-//     { value: 'psd',  label: 'PSD — Photoshop layers',              category: 'Design'  },
-//     { value: 'eps',  label: 'EPS — vector print',                  category: 'Design'  },
-//     { value: 'dng',  label: 'DNG — Adobe RAW',                     category: 'Pro'     },
-//     { value: 'cr2',  label: 'CR2 — Canon RAW',                     category: 'Pro'     },
-//     { value: 'nef',  label: 'NEF — Nikon RAW',                     category: 'Pro'     },
-//     { value: 'arw',  label: 'ARW — Sony RAW',                      category: 'Pro'     },
-//     { value: 'raf',  label: 'RAF — Fuji RAW',                      category: 'Pro'     },
-//     { value: 'jxl',  label: 'JPEG XL — future-proof',              category: 'Niche'   },
-//     { value: 'tga',  label: 'TGA — game textures',                 category: 'Niche'   },
-//     { value: 'pcx',  label: 'PCX — old-school',                    category: 'Niche'   },
-//     { value: 'dpx',  label: 'DPX — film scan',                     category: 'Niche'   },
-//   ];
-
-//   const categories = ['All', 'Popular', 'Mobile', 'Design', 'Pro', 'Niche'];
 
 //   const isHEIC = (file) => {
 //     const ext = file.name.toLowerCase().split('.').pop();
@@ -842,6 +977,9 @@ export default function ImageConverter() {
 //     const selectedFiles = Array.from(e.target.files);
 //     if (!selectedFiles.length) return;
 //     setLoading(true);
+
+//     // free memory from previous run
+//     converted.forEach((c) => URL.revokeObjectURL(c.url));
 //     setConverted([]);
 //     setFiles(selectedFiles);
 
@@ -860,6 +998,7 @@ export default function ImageConverter() {
 //         }
 
 //         return new Promise((resolve) => {
+//           const srcUrl = URL.createObjectURL(processFile);
 //           const img = new Image();
 //           img.onload = () => {
 //             const canvas = document.createElement('canvas');
@@ -867,9 +1006,8 @@ export default function ImageConverter() {
 //             canvas.height = img.height;
 //             canvas.getContext('2d').drawImage(img, 0, 0);
 
-//             const unsupported = ['svg','psd','eps','dng','cr2','nef','arw','raf','jxl','tga','pcx','emz','dpx','heic','heif','avif','tiff'];
 //             let mimeType = 'image/png', extension = 'png';
-//             if (!unsupported.includes(toFormat)) {
+//             if (!UNSUPPORTED_OUTPUT.includes(toFormat)) {
 //               const map = {
 //                 webp: ['image/webp', 'webp'],
 //                 png:  ['image/png',  'png'],
@@ -883,16 +1021,26 @@ export default function ImageConverter() {
 //             const qualityVal = (toFormat === 'jpg' || toFormat === 'webp') ? quality : 1;
 
 //             canvas.toBlob((blob) => {
+//               URL.revokeObjectURL(srcUrl);
+//               if (!blob) { resolve(null); return; }
+
+//               // If the browser could not encode the requested type, it silently returns PNG.
+//               // Make the file name honest so the downloaded file opens correctly.
+//               let finalExt = extension;
+//               let fallback = UNSUPPORTED_OUTPUT.includes(toFormat);
+//               if (blob.type && blob.type !== mimeType) { finalExt = 'png'; fallback = true; }
+
 //               resolve({
 //                 originalName: file.name,
-//                 name:   file.name.replace(/\.[^/.]+$/, '') + '.' + extension,
+//                 name:   file.name.replace(/\.[^/.]+$/, '') + '.' + finalExt,
 //                 url:    URL.createObjectURL(blob),
 //                 isHeic: isHEIC(file),
+//                 fallback,
 //               });
 //             }, mimeType, qualityVal);
 //           };
-//           img.onerror = () => resolve(null);
-//           img.src = URL.createObjectURL(processFile);
+//           img.onerror = () => { URL.revokeObjectURL(srcUrl); resolve(null); };
+//           img.src = srcUrl;
 //         });
 //       })
 //     );
@@ -901,89 +1049,100 @@ export default function ImageConverter() {
 //     setLoading(false);
 //   };
 
-//   const filteredFormats = formats.filter(f => category === 'All' || f.category === category);
-//   const showQuality = ['jpg', 'webp', 'heic', 'heif'].includes(toFormat);
+//   const downloadAll = () => {
+//     converted.forEach((item, i) => {
+//       setTimeout(() => {
+//         const a = document.createElement('a');
+//         a.href = item.url;
+//         a.download = item.name;
+//         document.body.appendChild(a);
+//         a.click();
+//         a.remove();
+//       }, i * 300);
+//     });
+//   };
 
-//   // FAQ Array with React Elements for Link Rendering
+//   const filteredFormats = FORMATS.filter(f => category === 'All' || f.category === category);
+//   const showQuality = ['jpg', 'webp', 'heic', 'heif'].includes(toFormat);
+//   const hasFallback = converted.some((c) => c.fallback);
+//   const livePairs = FORMAT_PAIR_PAGES.filter((p) => p.live);
+
+//   // ─────────────────────────────────────────────
+//   // FAQ: `text` is plain text (used in schema), `a` is optional JSX (used on page)
+//   // ─────────────────────────────────────────────
 //   const faqs = [
 //     {
 //       q: 'Is the Image Converter free to use online?',
-//       a: 'Yes — ConvertLinx is a 100% free image converter online with unlimited batch conversions, no watermark and zero registration requirements.'
+//       text: 'Yes — ConvertLinx is a 100% free image converter online with unlimited batch conversions, no watermark and zero registration requirements.',
 //     },
 //     {
 //       q: 'What is an image format converter and which formats are supported?',
-//       a: 'An image format converter changes a picture from one file type to another. Our image file type converter supports 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.'
+//       text: `An image format converter changes a picture from one file type to another. Our image file type converter lists ${FORMAT_COUNT} image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.`,
+//     },
+//     {
+//       q: 'How do I convert image format online free?',
+//       text: 'Upload your picture, pick the new format (for example WebP, PNG or JPG) and download the result. You can change image format online free, without signup, without watermark and without installing any software.',
 //     },
 //     {
 //       q: 'Can I use this as a bulk image converter online?',
-//       a: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result.'
+//       text: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result, or use the Download All button.',
 //     },
 //     {
 //       q: 'What is a browser image converter and is it safe?',
-//       a: 'A browser image converter does all the work inside your web browser instead of a remote server. Your files stay on your device, so your photos remain private while you change the image format.'
+//       text: 'A browser image converter does all the work inside your web browser instead of a remote server. Your files stay on your device, so your photos remain private while you change the image format.',
+//     },
+//     {
+//       q: 'Is this a private image converter with no upload?',
+//       text: 'Yes. This is a private image converter: the online image format conversion runs inside your browser, so your pictures are never sent to a server and nobody else can see them.',
 //     },
 //     {
 //       q: 'How do I convert iPhone HEIC photos to JPG or PNG?',
-//       a: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.'
+//       text: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.',
+//     },
+//     {
+//       q: 'How do I change pic format on my phone or computer?',
+//       text: 'Open this page on any phone, tablet or PC, tap the upload area, choose your picture and select the new format. The change pic format process takes a few seconds and works on Android, iPhone, Windows and Mac.',
 //     },
 //     {
 //       q: 'How does the convert quality slider work?',
-//       a: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, image clarity remains identical.'
+//       text: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, image clarity remains identical.',
 //     },
 //     {
 //       q: 'Will changing image formats affect visual quality?',
-//       a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion.'
+//       text: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion.',
 //     },
 //     {
 //       q: 'Can I convert a photo online free without watermark, and keep HD 1080p size?',
-//       a: 'Yes. Converted photos are never watermarked, and the output keeps the same pixel dimensions as your original — so a Full HD 1080p photo stays 1080p after you change its format. Note that format conversion does not upscale a low-resolution photo to HD.'
+//       text: 'Yes. Converted photos are never watermarked, and the output keeps the same pixel dimensions as your original — so a Full HD 1080p photo stays 1080p after you change its format. Note that format conversion does not upscale a low-resolution photo to HD.',
 //     },
 //     {
 //       q: 'Are my images stored on server databases?',
-//       a: 'No — all file processing happens locally in your Web browser. Your private images are never uploaded to external servers.'
+//       text: 'No — all file processing happens locally in your Web browser. Your private images are never uploaded to external servers.',
 //     },
 //     {
 //       q: 'What is the main difference between WebP, PNG, and JPG?',
-//       a: 'WebP offers ultra-small file sizes designed for high-performance websites. PNG supports transparent backgrounds, making it perfect for logos. JPG is universally compatible across all devices.'
+//       text: 'WebP offers ultra-small file sizes designed for high-performance websites. PNG supports transparent backgrounds, making it perfect for logos. JPG is universally compatible across all devices.',
+//     },
+//     {
+//       q: 'Can I convert a screenshot to JPG?',
+//       text: 'Yes. Upload your screenshot (usually PNG), choose JPG and download. This screenshot to JPG converter keeps the same dimensions and lets you lower the quality slider for a smaller file.',
 //     },
 //     {
 //       q: 'Can I extract text or pick colors from images after converting?',
+//       text: 'Yes! You can use our integrated tools like Image to Text (OCR) to extract readable text or use our Color Picker to grab exact hex codes directly. You can also generate digital assets with our Signature Maker or convert audio using Text to Speech.',
 //       a: (
 //         <span>
 //           Yes! You can use our integrated tools like{' '}
-//           <Link href="/image-to-text" className="text-purple-600 font-semibold underline hover:text-purple-800">
-//             Image to Text (OCR)
-//           </Link>{' '}
+//           <Link href="/image-to-text" className={linkCls}>Image to Text (OCR)</Link>{' '}
 //           to extract readable text or use our{' '}
-//           <Link href="/color-picker" className="text-purple-600 font-semibold underline hover:text-purple-800">
-//             Color Picker
-//           </Link>{' '}
+//           <Link href="/color-picker" className={linkCls}>Color Picker</Link>{' '}
 //           to grab exact hex codes directly. You can also generate digital assets with our{' '}
-//           <Link href="/signature-maker" className="text-purple-600 font-semibold underline hover:text-purple-800">
-//             Signature Maker
-//           </Link>{' '}
+//           <Link href="/signature-maker" className={linkCls}>Signature Maker</Link>{' '}
 //           or convert audio using{' '}
-//           <Link href="/text-to-speech" className="text-purple-600 font-semibold underline hover:text-purple-800">
-//             Text to Speech
-//           </Link>.
+//           <Link href="/text-to-speech" className={linkCls}>Text to Speech</Link>.
 //         </span>
-//       )
+//       ),
 //     },
-//   ];
-
-//   // Plain Text FAQ Schema (without JSX elements)
-//   const faqSchemaData = [
-//     { q: 'Is the Image Converter free to use online?', a: 'Yes — ConvertLinx is a 100% free image converter online with unlimited batch conversions, no watermark and zero registration requirements.' },
-//     { q: 'What is an image format converter and which formats are supported?', a: 'An image format converter changes a picture from one file type to another. Our image file type converter supports 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.' },
-//     { q: 'Can I use this as a bulk image converter online?', a: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result.' },
-//     { q: 'What is a browser image converter and is it safe?', a: 'A browser image converter does all the work inside your web browser instead of a remote server. Your files stay on your device, so your photos remain private while you change the image format.' },
-//     { q: 'How do I convert iPhone HEIC photos to JPG or PNG?', a: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.' },
-//     { q: 'How does the convert quality slider work?', a: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, image clarity remains identical.' },
-//     { q: 'Will changing image formats affect visual quality?', a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion.' },
-//     { q: 'Can I convert a photo online free without watermark, and keep HD 1080p size?', a: 'Yes. Converted photos are never watermarked, and the output keeps the same pixel dimensions as your original — so a Full HD 1080p photo stays 1080p after you change its format. Note that format conversion does not upscale a low-resolution photo to HD.' },
-//     { q: 'Are my images stored on server databases?', a: 'No — all file processing happens locally in your Web browser. Your private images are never uploaded to external servers.' },
-//     { q: 'What is the main difference between WebP, PNG, and JPG?', a: 'WebP offers ultra-small file sizes designed for high-performance websites. PNG supports transparent backgrounds, making it perfect for logos. JPG is universally compatible across all devices.' },
-//     { q: 'Can I extract text or pick colors from images after converting?', a: 'Yes! You can use our integrated tools like Image to Text (OCR) to extract readable text or use our Color Picker to grab exact hex codes directly. You can also generate digital assets with our Signature Maker or convert audio using Text to Speech.' },
 //   ];
 
 //   return (
@@ -998,7 +1157,7 @@ export default function ImageConverter() {
 //             '@context': 'https://schema.org',
 //             '@type': 'HowTo',
 //             name: 'How to Convert Image Format Online for Free',
-//             description: 'Use this free image converter online to change JPG, PNG, WebP, HEIC, RAW and 500+ image formats instantly. Bulk conversion, quality control and no watermark.',
+//             description: `Use this free image converter online to change JPG, PNG, WebP, HEIC, RAW and ${FORMAT_COUNT} image formats instantly. Bulk conversion, quality control and no watermark.`,
 //             url: 'https://convertlinx.com/image-converter',
 //             totalTime: 'PT30S',
 //             estimatedCost: { '@type': 'MonetaryAmount', value: '0', currency: 'USD' },
@@ -1012,6 +1171,7 @@ export default function ImageConverter() {
 //           }),
 //         }}
 //       />
+
 
 //       <main className="cv-page">
 
@@ -1027,13 +1187,13 @@ export default function ImageConverter() {
 //             </div>
 //             <span className="cv-badge">Free Online Tool</span>
 //             <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 mt-2" style={{ color: '#1a1a2e' }}>
-//               Free Online <span className="cv-grad-text">Image Converter</span>
+//               Free Online <span className="cv-grad-text">Image Converter</span> — Image Format Converter
 //             </h1>
 //             <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: '#6B7280' }}>
 //               The fastest free image format converter and image file type converter in your browser.
 //               Convert photos online — change JPG, PNG, WebP, HEIC (iPhone photos), RAW camera files,
-//               SVG, TIFF and 500+ formats instantly. Bulk conversion, convert quality control,
-//               no watermark and no signup required.
+//               SVG, TIFF and {FORMAT_COUNT} formats in total instantly. Bulk conversion, convert quality control,
+//               no watermark and no signup required. A private image converter: your files never leave your device.
 //             </p>
 //           </div>
 //         </section>
@@ -1058,11 +1218,11 @@ export default function ImageConverter() {
 //                       Drop images or click to browse
 //                     </p>
 //                     <p className="text-xs leading-relaxed" style={{ color: '#9CA3AF' }}>
-//                       JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, RAW & 500+ · Bulk image converter online
+//                       JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, RAW — {FORMAT_COUNT} formats · Bulk image converter online
 //                     </p>
 //                     <input
 //                       type="file"
-//                       accept="image/*"
+//                       accept={ACCEPT_TYPES}
 //                       multiple
 //                       onChange={convertImages}
 //                       className="hidden"
@@ -1077,7 +1237,7 @@ export default function ImageConverter() {
 //                   </label>
 
 //                   <div className="flex flex-wrap gap-2 mb-3">
-//                     {categories.map(cat => (
+//                     {CATEGORIES.map(cat => (
 //                       <button
 //                         key={cat}
 //                         onClick={() => setCategory(cat)}
@@ -1143,6 +1303,22 @@ export default function ImageConverter() {
 //                   <p className="text-sm font-bold uppercase tracking-widest mb-5 text-center" style={{ color: '#9333EA' }}>
 //                     {converted.length} {converted.length === 1 ? 'File' : 'Files'} Ready
 //                   </p>
+
+//                   {hasFallback && (
+//                     <p className="text-xs text-center mb-4" style={{ color: '#9CA3AF' }}>
+//                       Note: your browser cannot encode this output format directly, so the file was saved as PNG (lossless).
+//                     </p>
+//                   )}
+
+//                   {converted.length > 1 && (
+//                     <div className="flex justify-center mb-5">
+//                       <button onClick={downloadAll} className="cv-dl-btn justify-center">
+//                         <Download className="w-4 h-4" />
+//                         Download All ({converted.length})
+//                       </button>
+//                     </div>
+//                   )}
+
 //                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 //                     {converted.map((item, i) => (
 //                       <div key={i} className="cv-result-card">
@@ -1212,7 +1388,7 @@ export default function ImageConverter() {
 //                   icon: <ImageIcon className="w-6 h-6" />,
 //                   color: '#9333EA',
 //                   bg: 'rgba(147,51,234,0.08)',
-//                   title: 'Image File Format Converter — 500+ Formats',
+//                   title: `Image File Format Converter — ${FORMAT_COUNT} Formats`,
 //                   desc: 'Convert JPG to PNG, HEIC to JPG, WebP, RAW camera formats, SVG, and TIFF smoothly. A complete image formats converter and picture format converter in one place.',
 //                 },
 //                 {
@@ -1220,7 +1396,7 @@ export default function ImageConverter() {
 //                   color: '#F59E0B',
 //                   bg: 'rgba(245,158,11,0.08)',
 //                   title: 'Bulk Image Converter Online with Quality Control',
-//                   desc: 'Convert hundreds of images simultaneously. Fine-tune the convert quality of every output file using our quality slider.',
+//                   desc: 'Convert many images simultaneously. Fine-tune the convert quality of every output file using our quality slider.',
 //                 },
 //                 {
 //                   icon: <Shield className="w-6 h-6" />,
@@ -1256,7 +1432,30 @@ export default function ImageConverter() {
 //                 Whether you call it an image file type converter, an image format changer, a photo format converter or a file picture converter, the idea is the same: upload your file, choose the new format, and download the result. Our img online converter works directly in your browser, so there is nothing to install.
 //               </p>
 //               <p className="leading-7 text-sm mt-3">
-//                 Need to prepare graphic assets? If your primary goal is copying color palettes, try our <Link href="/color-picker" className="text-purple-600 font-semibold underline hover:text-purple-800">Color Picker</Link> tool. You can also extract textual information from document photos using <Link href="/image-to-text" className="text-purple-600 font-semibold underline hover:text-purple-800">Image to Text (OCR)</Link>, generate audio files with <Link href="/text-to-speech" className="text-purple-600 font-semibold underline hover:text-purple-800">Text to Speech</Link>, or create branding graphics with our <Link href="/signature-maker" className="text-purple-600 font-semibold underline hover:text-purple-800">Signature Maker</Link>.
+//                 Need to prepare graphic assets? If your primary goal is copying color palettes, try our <Link href="/color-picker" className={linkCls}>Color Picker</Link> tool. You can also extract textual information from document photos using <Link href="/image-to-text" className={linkCls}>Image to Text (OCR)</Link>, generate audio files with <Link href="/text-to-speech" className={linkCls}>Text to Speech</Link>, or create branding graphics with our <Link href="/signature-maker" className={linkCls}>Signature Maker</Link>.
+//               </p>
+//             </div>
+
+//             {/* NEW: covers queries that were missing or weak */}
+//             <div>
+//               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
+//                 Convert Image Format Online Free — Change Pic Format in Seconds
+//               </h2>
+//               <p className="leading-7 text-sm">
+//                 Looking to convert image format or change image format without installing software? This image converter works as an image type converter, a photo converter and a photo online converter in one page. Upload your picture, choose the new type and download it. It is a simple way to change format for a single photo or to convert image files in bulk, completely free.
+//               </p>
+//               <p className="leading-7 text-sm mt-3">
+//                 People search for this tool in many ways: image convertor, img convertor, img file converter, image converters, or just convert image. They all mean the same thing — turning one picture file into another type such as JPG, PNG or WebP. If you want to convert picture format for a website, a school portal or a social media upload, you can convert image online free here and keep the original pixel size.
+//               </p>
+//               <p className="leading-7 text-sm mt-3">
+//                 We also work as a private image conversion service: online image format conversion happens inside your browser, so it is a private image converter that never uploads your pictures. You can convert image types such as HEIC to JPG, PNG to WebP or WebP to PNG, and even use it as a screenshot to JPG converter when a form only accepts JPG files.
+//               </p>
+
+//               <h3 className="font-bold text-lg mt-6 mb-3" style={{ color: '#1a1a2e' }}>
+//                 How to Convert Picture Files on Any Device
+//               </h3>
+//               <p className="leading-7 text-sm">
+//                 To convert picture files, open this page on your phone, tablet or computer, tap the upload box and pick one or many pictures. Choose the output type from the list of {FORMAT_COUNT} formats, adjust the quality slider if you need a smaller file, and press download. To change pic format for many files at once, select them together and use Download All.
 //               </p>
 //             </div>
 
@@ -1266,6 +1465,11 @@ export default function ImageConverter() {
 //               </h3>
 //               <p className="leading-7 text-sm">
 //                 <strong>WebP</strong> delivers ultra-lightweight image files tailored for faster page load times and optimal SEO rankings. <strong>JPG / JPEG</strong> works best for photography where compact size takes precedence. <strong>PNG</strong> protects lossless sharpness along with transparent background layers, which makes it ideal for digital logos and web designs.
+//               </p>
+//                {/* NEW */}
+//               <p className="leading-7 text-sm mt-3">
+//                 Need an icon file instead of a regular image? Turn your PNG into a multi-size favicon.ico with the{' '}
+//                 <Link href="/png-to-ico" className={linkCls}>PNG to ICO converter</Link>.
 //               </p>
 //             </div>
 
@@ -1292,6 +1496,9 @@ export default function ImageConverter() {
 //                   'Convert photos online free without watermark',
 //                   'Reduce file size with adjustable convert quality',
 //                   'Prepare compatible image uploads for portal submission',
+//                   'Convert a screenshot to JPG for forms and portals',
+//                   'Change pic format on phone without any app',
+//                   'Make a favicon.ico icon file from a PNG logo'
 //                 ].map((item, i) => (
 //                   <div key={i} className="flex items-center gap-2.5 text-sm">
 //                     <span className="cv-feature-dot" />
@@ -1323,6 +1530,32 @@ export default function ImageConverter() {
 //           </div>
 //         </section>
 
+//         {/* ── POPULAR CONVERSIONS (shows only pages that are actually live) ── */}
+//         {livePairs.length > 0 && (
+//           <>
+//             <hr className="cv-divider" />
+//             <section className="cv-section-main py-14 px-6">
+//               <div className="max-w-3xl mx-auto">
+//                 <h2 className="text-2xl font-bold mb-5 text-center" style={{ color: '#1a1a2e' }}>
+//                   Popular Image Conversions
+//                 </h2>
+//                 <div className="flex flex-wrap justify-center gap-3">
+//                   {livePairs.map((p, i) => (
+//                     <Link
+//                       key={i}
+//                       href={p.href}
+//                       className="px-4 py-2 rounded-full text-sm font-medium border transition-colors hover:bg-purple-50"
+//                       style={{ color: '#9333EA', borderColor: '#E9D5FF', background: '#fff' }}
+//                     >
+//                       {p.name}
+//                     </Link>
+//                   ))}
+//                 </div>
+//               </div>
+//             </section>
+//           </>
+//         )}
+
 //         {/* ── FAQ ── */}
 //         <hr className="cv-divider" />
 //         <section className="cv-section-main py-16 px-6">
@@ -1334,10 +1567,10 @@ export default function ImageConverter() {
 //               __html: JSON.stringify({
 //                 '@context': 'https://schema.org',
 //                 '@type': 'FAQPage',
-//                 mainEntity: faqSchemaData.map((faq) => ({
+//                 mainEntity: faqs.map((faq) => ({
 //                   '@type': 'Question',
 //                   name: faq.q,
-//                   acceptedAnswer: { '@type': 'Answer', text: faq.a },
+//                   acceptedAnswer: { '@type': 'Answer', text: faq.text },
 //                 })),
 //               }),
 //             }}
@@ -1353,7 +1586,7 @@ export default function ImageConverter() {
 //                     <span className="font-semibold text-sm" style={{ color: '#374151' }}>{faq.q}</span>
 //                     <ChevronDown className="w-4 h-4 shrink-0" style={{ color: '#9333EA' }} />
 //                   </summary>
-//                   <div className="mt-3 text-sm leading-relaxed" style={{ color: '#6B7280' }}>{faq.a}</div>
+//                   <div className="mt-3 text-sm leading-relaxed" style={{ color: '#6B7280' }}>{faq.a ?? faq.text}</div>
 //                 </details>
 //               ))}
 //             </div>
@@ -1410,37 +1643,6 @@ export default function ImageConverter() {
 //     </>
 //   );
 // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1606,23 +1808,35 @@ export default function ImageConverter() {
 // //   const faqs = [
 // //     {
 // //       q: 'Is the Image Converter free to use online?',
-// //       a: 'Yes — ConvertLinx Image Converter is 100% free with unlimited batch conversions and zero registration requirements.'
+// //       a: 'Yes — ConvertLinx is a 100% free image converter online with unlimited batch conversions, no watermark and zero registration requirements.'
 // //     },
 // //     {
-// //       q: 'Which image formats are supported?',
-// //       a: 'We support 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.'
+// //       q: 'What is an image format converter and which formats are supported?',
+// //       a: 'An image format converter changes a picture from one file type to another. Our image file type converter supports 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.'
 // //     },
 // //     {
-// //       q: 'Can I batch convert multiple images at once?',
-// //       a: 'Yes, you can upload and convert multiple images simultaneously without losing quality or waiting in queues.'
+// //       q: 'Can I use this as a bulk image converter online?',
+// //       a: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result.'
+// //     },
+// //     {
+// //       q: 'What is a browser image converter and is it safe?',
+// //       a: 'A browser image converter does all the work inside your web browser instead of a remote server. Your files stay on your device, so your photos remain private while you change the image format.'
 // //     },
 // //     {
 // //       q: 'How do I convert iPhone HEIC photos to JPG or PNG?',
 // //       a: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.'
 // //     },
 // //     {
+// //       q: 'How does the convert quality slider work?',
+// //       a: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, image clarity remains identical.'
+// //     },
+// //     {
 // //       q: 'Will changing image formats affect visual quality?',
-// //       a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. For lossless output like PNG, image clarity remains identical.'
+// //       a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion.'
+// //     },
+// //     {
+// //       q: 'Can I convert a photo online free without watermark, and keep HD 1080p size?',
+// //       a: 'Yes. Converted photos are never watermarked, and the output keeps the same pixel dimensions as your original — so a Full HD 1080p photo stays 1080p after you change its format. Note that format conversion does not upscale a low-resolution photo to HD.'
 // //     },
 // //     {
 // //       q: 'Are my images stored on server databases?',
@@ -1659,11 +1873,14 @@ export default function ImageConverter() {
 
 // //   // Plain Text FAQ Schema (without JSX elements)
 // //   const faqSchemaData = [
-// //     { q: 'Is the Image Converter free to use online?', a: 'Yes — ConvertLinx Image Converter is 100% free with unlimited batch conversions and zero registration requirements.' },
-// //     { q: 'Which image formats are supported?', a: 'We support 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.' },
-// //     { q: 'Can I batch convert multiple images at once?', a: 'Yes, you can upload and convert multiple images simultaneously without losing quality or waiting in queues.' },
+// //     { q: 'Is the Image Converter free to use online?', a: 'Yes — ConvertLinx is a 100% free image converter online with unlimited batch conversions, no watermark and zero registration requirements.' },
+// //     { q: 'What is an image format converter and which formats are supported?', a: 'An image format converter changes a picture from one file type to another. Our image file type converter supports 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.' },
+// //     { q: 'Can I use this as a bulk image converter online?', a: 'Yes, this bulk image converter online lets you upload and convert multiple images simultaneously without waiting in queues. Select all your files at once and download each converted result.' },
+// //     { q: 'What is a browser image converter and is it safe?', a: 'A browser image converter does all the work inside your web browser instead of a remote server. Your files stay on your device, so your photos remain private while you change the image format.' },
 // //     { q: 'How do I convert iPhone HEIC photos to JPG or PNG?', a: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.' },
-// //     { q: 'Will changing image formats affect visual quality?', a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. For lossless output like PNG, image clarity remains identical.' },
+// //     { q: 'How does the convert quality slider work?', a: 'For lossy formats like JPG and WebP you can set the convert quality from 50% to 100%. Higher quality keeps more detail, lower quality gives a smaller file. For lossless output like PNG, image clarity remains identical.' },
+// //     { q: 'Will changing image formats affect visual quality?', a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. The converter keeps your original image dimensions, so nothing is resized during conversion.' },
+// //     { q: 'Can I convert a photo online free without watermark, and keep HD 1080p size?', a: 'Yes. Converted photos are never watermarked, and the output keeps the same pixel dimensions as your original — so a Full HD 1080p photo stays 1080p after you change its format. Note that format conversion does not upscale a low-resolution photo to HD.' },
 // //     { q: 'Are my images stored on server databases?', a: 'No — all file processing happens locally in your Web browser. Your private images are never uploaded to external servers.' },
 // //     { q: 'What is the main difference between WebP, PNG, and JPG?', a: 'WebP offers ultra-small file sizes designed for high-performance websites. PNG supports transparent backgrounds, making it perfect for logos. JPG is universally compatible across all devices.' },
 // //     { q: 'Can I extract text or pick colors from images after converting?', a: 'Yes! You can use our integrated tools like Image to Text (OCR) to extract readable text or use our Color Picker to grab exact hex codes directly. You can also generate digital assets with our Signature Maker or convert audio using Text to Speech.' },
@@ -1681,7 +1898,7 @@ export default function ImageConverter() {
 // //             '@context': 'https://schema.org',
 // //             '@type': 'HowTo',
 // //             name: 'How to Convert Image Format Online for Free',
-// //             description: 'Convert JPG, PNG, WebP, HEIC, RAW and 500+ image formats instantly online for free. Batch conversion and quality control supported.',
+// //             description: 'Use this free image converter online to change JPG, PNG, WebP, HEIC, RAW and 500+ image formats instantly. Bulk conversion, quality control and no watermark.',
 // //             url: 'https://convertlinx.com/image-converter',
 // //             totalTime: 'PT30S',
 // //             estimatedCost: { '@type': 'MonetaryAmount', value: '0', currency: 'USD' },
@@ -1689,8 +1906,8 @@ export default function ImageConverter() {
 // //             tool: [{ '@type': 'HowToTool', name: 'ConvertLinx Image Converter' }],
 // //             step: [
 // //               { '@type': 'HowToStep', name: 'Upload Images', text: 'Select one or multiple image files — JPG, PNG, HEIC, RAW, SVG or any supported format.' },
-// //               { '@type': 'HowToStep', name: 'Choose Output Format', text: 'Browse format categories and pick the target format. Adjust quality slider if needed.' },
-// //               { '@type': 'HowToStep', name: 'Download Converted Files', text: 'Download your converted images instantly — single or batch download.' },
+// //               { '@type': 'HowToStep', name: 'Choose Output Format', text: 'Browse format categories and pick the target format. Adjust the convert quality slider if needed.' },
+// //               { '@type': 'HowToStep', name: 'Download Converted Files', text: 'Download your converted images instantly — single or batch download, no watermark.' },
 // //             ],
 // //           }),
 // //         }}
@@ -1713,8 +1930,10 @@ export default function ImageConverter() {
 // //               Free Online <span className="cv-grad-text">Image Converter</span>
 // //             </h1>
 // //             <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: '#6B7280' }}>
-// //               Convert images online free — change JPG, PNG, WebP, HEIC (iPhone photos), RAW camera files,
-// //               SVG, TIFF and 500+ formats instantly. Batch conversion, quality control, and no signup required.
+// //               The fastest free image format converter and image file type converter in your browser.
+// //               Convert photos online — change JPG, PNG, WebP, HEIC (iPhone photos), RAW camera files,
+// //               SVG, TIFF and 500+ formats instantly. Bulk conversion, convert quality control,
+// //               no watermark and no signup required.
 // //             </p>
 // //           </div>
 // //         </section>
@@ -1739,7 +1958,7 @@ export default function ImageConverter() {
 // //                       Drop images or click to browse
 // //                     </p>
 // //                     <p className="text-xs leading-relaxed" style={{ color: '#9CA3AF' }}>
-// //                       JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, RAW & 500+ · Batch OK
+// //                       JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, RAW & 500+ · Bulk image converter online
 // //                     </p>
 // //                     <input
 // //                       type="file"
@@ -1754,7 +1973,7 @@ export default function ImageConverter() {
 // //                 {/* RIGHT — Format Selector */}
 // //                 <div>
 // //                   <label className="block mb-3" style={{ color: '#9333EA', fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
-// //                     Convert To
+// //                     Convert To (Image Format Changer)
 // //                   </label>
 
 // //                   <div className="flex flex-wrap gap-2 mb-3">
@@ -1793,7 +2012,7 @@ export default function ImageConverter() {
 // //                   {showQuality && (
 // //                     <div className="cv-quality-wrap">
 // //                       <div className="flex justify-between mb-2">
-// //                         <span className="text-xs font-semibold" style={{ color: '#6B7280' }}>Quality</span>
+// //                         <span className="text-xs font-semibold" style={{ color: '#6B7280' }}>Convert Quality</span>
 // //                         <span className="text-xs font-bold" style={{ color: '#9333EA' }}>{Math.round(quality * 100)}%</span>
 // //                       </div>
 // //                       <input
@@ -1827,7 +2046,7 @@ export default function ImageConverter() {
 // //                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 // //                     {converted.map((item, i) => (
 // //                       <div key={i} className="cv-result-card">
-// //                         <img src={item.url} alt={item.name} className="w-full h-40 object-cover" />
+// //                         <img src={item.url} alt={`Converted picture ${item.name}`} className="w-full h-40 object-cover" />
 // //                         <div className="p-4 text-center">
 // //                           <p className="text-xs font-medium mb-3 truncate" style={{ color: '#374151' }}>
 // //                             {item.isHeic && <span className="cv-heic-tag">HEIC→</span>}
@@ -1846,7 +2065,7 @@ export default function ImageConverter() {
 
 // //               {/* Trust row */}
 // //               <div className="flex flex-wrap justify-center gap-5 mt-6">
-// //                 {['No login required', 'Batch conversion', 'HEIC auto support', '100% Client-side privacy', 'Totally Free'].map((t, i) => (
+// //                 {['No login required', 'Bulk image converter', 'HEIC auto support', 'Browser image converter — 100% private', 'No watermark', 'Totally Free'].map((t, i) => (
 // //                   <span key={i} className="cv-trust-item">
 // //                     <span className="cv-trust-dot" />
 // //                     {t}
@@ -1862,13 +2081,13 @@ export default function ImageConverter() {
 // //         <section className="cv-section-alt py-16 px-6">
 // //           <div className="max-w-4xl mx-auto">
 // //             <h2 className="text-2xl font-bold text-center mb-12" style={{ color: '#1a1a2e' }}>
-// //               How to Convert Image Formats in 3 Easy Steps
+// //               How to Convert Image Formats Online in 3 Easy Steps
 // //             </h2>
 // //             <div className="grid md:grid-cols-3 gap-6">
 // //               {[
-// //                 { num: '1', title: 'Upload Image Files', desc: 'Drag and drop JPG, PNG, HEIC (iPhone), RAW camera files or choose from your device.' },
-// //                 { num: '2', title: 'Select Target Format', desc: 'Pick WebP for small web sizes, PNG for transparent graphics, or JPG for general sharing.' },
-// //                 { num: '3', title: 'Download Converted Images', desc: 'Save single output files or batch download converted images instantly.' },
+// //                 { num: '1', title: 'Upload Image Files', desc: 'Drag and drop JPG, PNG, HEIC (iPhone), RAW camera files or pick a picture from your device. Use bulk upload to convert many files at once.' },
+// //                 { num: '2', title: 'Select Target Format', desc: 'Pick WebP for small web sizes, PNG for transparent graphics, or JPG for general sharing, then set the convert quality.' },
+// //                 { num: '3', title: 'Download Converted Images', desc: 'Save single output files or download all converted photos instantly — free and without watermark.' },
 // //               ].map((s, i) => (
 // //                 <div key={i} className="cv-step-card">
 // //                   <div className="cv-step-num">{s.num}</div>
@@ -1893,22 +2112,22 @@ export default function ImageConverter() {
 // //                   icon: <ImageIcon className="w-6 h-6" />,
 // //                   color: '#9333EA',
 // //                   bg: 'rgba(147,51,234,0.08)',
-// //                   title: '500+ Image Formats Supported',
-// //                   desc: 'Convert JPG to PNG, HEIC to JPG, WebP, RAW camera formats, SVG, and TIFF smoothly with target format filtering.',
+// //                   title: 'Image File Format Converter — 500+ Formats',
+// //                   desc: 'Convert JPG to PNG, HEIC to JPG, WebP, RAW camera formats, SVG, and TIFF smoothly. A complete image formats converter and picture format converter in one place.',
 // //                 },
 // //                 {
 // //                   icon: <Zap className="w-6 h-6" />,
 // //                   color: '#F59E0B',
 // //                   bg: 'rgba(245,158,11,0.08)',
-// //                   title: 'Batch Conversion & Quality Control',
-// //                   desc: 'Convert hundreds of images simultaneously. Fine-tune output compression levels using our quality slider controls.',
+// //                   title: 'Bulk Image Converter Online with Quality Control',
+// //                   desc: 'Convert hundreds of images simultaneously. Fine-tune the convert quality of every output file using our quality slider.',
 // //                 },
 // //                 {
 // //                   icon: <Shield className="w-6 h-6" />,
 // //                   color: '#10B981',
 // //                   bg: 'rgba(16,185,129,0.08)',
-// //                   title: 'Browser Privacy Protection',
-// //                   desc: 'Files stay strictly on your local machine. Nothing is uploaded to remote servers, giving you complete data privacy.',
+// //                   title: 'Browser Image Converter with Full Privacy',
+// //                   desc: 'Files stay strictly on your local machine. Nothing is uploaded to remote servers, and no watermark is ever added to your photos.',
 // //                 },
 // //               ].map((b, i) => (
 // //                 <div key={i} className="cv-benefit-card">
@@ -1928,10 +2147,13 @@ export default function ImageConverter() {
 
 // //             <div>
 // //               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
-// //                 Why You Need an Online Image Format Converter
+// //                 Why You Need an Image Converter Online
 // //               </h2>
 // //               <p className="leading-7 text-sm">
-// //                 Different operating systems and web applications mandate specific file types. iPhone camera photos saved as HEIC formats frequently fail to upload on Windows machines or web apps. RAW photos produced by DSLR cameras require format conversion prior to online publishing. An online image converter eliminates file compatibility issues instantly.
+// //                 Different operating systems and web applications mandate specific file types. iPhone camera photos saved as HEIC formats frequently fail to upload on Windows machines or web apps. RAW photos produced by DSLR cameras require format conversion prior to online publishing. A free image converter online eliminates file compatibility issues instantly — you simply convert the online picture into the format you need.
+// //               </p>
+// //               <p className="leading-7 text-sm mt-3">
+// //                 Whether you call it an image file type converter, an image format changer, a photo format converter or a file picture converter, the idea is the same: upload your file, choose the new format, and download the result. Our img online converter works directly in your browser, so there is nothing to install.
 // //               </p>
 // //               <p className="leading-7 text-sm mt-3">
 // //                 Need to prepare graphic assets? If your primary goal is copying color palettes, try our <Link href="/color-picker" className="text-purple-600 font-semibold underline hover:text-purple-800">Color Picker</Link> tool. You can also extract textual information from document photos using <Link href="/image-to-text" className="text-purple-600 font-semibold underline hover:text-purple-800">Image to Text (OCR)</Link>, generate audio files with <Link href="/text-to-speech" className="text-purple-600 font-semibold underline hover:text-purple-800">Text to Speech</Link>, or create branding graphics with our <Link href="/signature-maker" className="text-purple-600 font-semibold underline hover:text-purple-800">Signature Maker</Link>.
@@ -1947,6 +2169,15 @@ export default function ImageConverter() {
 // //               </p>
 // //             </div>
 
+// //             <div>
+// //               <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+// //                 Convert Quality, HD Photos and No Watermark
+// //               </h3>
+// //               <p className="leading-7 text-sm">
+// //                 Use the convert quality slider to balance sharpness and file size when exporting JPG or WebP. The converter keeps your original resolution, so you can convert a photo online free without watermark and a Full HD 1080p picture stays 1080p in its new format. Keep in mind that changing the format does not upscale a small photo to HD — it preserves the quality your original file already has.
+// //               </p>
+// //             </div>
+
 // //             <div className="cv-seo-box">
 // //               <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>
 // //                 Common Image Format Issues Resolved
@@ -1956,8 +2187,10 @@ export default function ImageConverter() {
 // //                   'Convert iPhone HEIC photos to JPG for Windows compatibility',
 // //                   'Transform large PNG files to WebP for optimized web speed',
 // //                   'Convert RAW camera files (CR2, NEF, ARW) to JPG',
-// //                   'Batch convert multiple image formats together',
+// //                   'Use a bulk image converter online for many files at once',
 // //                   'Convert SVG vector art to standard raster images',
+// //                   'Convert photos online free without watermark',
+// //                   'Reduce file size with adjustable convert quality',
 // //                   'Prepare compatible image uploads for portal submission',
 // //                 ].map((item, i) => (
 // //                   <div key={i} className="flex items-center gap-2.5 text-sm">
@@ -2058,10 +2291,10 @@ export default function ImageConverter() {
 // //         <section className="cv-cta-section">
 // //           <div className="max-w-xl mx-auto">
 // //             <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-white">
-// //               Ready to convert your images?
+// //               Ready to change your image format?
 // //             </h2>
 // //             <p className="mb-8 text-base" style={{ color: 'rgba(255,255,255,0.7)' }}>
-// //               Takes 5 seconds. No signup. No ads.
+// //               Free image converter online. Takes 5 seconds. No signup. No watermark.
 // //             </p>
 // //             <button
 // //               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -2077,6 +2310,673 @@ export default function ImageConverter() {
 // //     </>
 // //   );
 // // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // // 'use client';
+
+// // // import { useState } from 'react';
+// // // import { Upload, Download, Image as ImageIcon, Zap, Shield, CheckCircle, ChevronDown, RefreshCw } from 'lucide-react';
+// // // import Script from 'next/script';
+// // // import '@/styles/ImageConverter.css';
+// // // import Link from 'next/link';
+
+// // // export default function ImageConverter() {
+// // //   const [files, setFiles]         = useState([]);
+// // //   const [converted, setConverted] = useState([]);
+// // //   const [toFormat, setToFormat]   = useState('webp');
+// // //   const [category, setCategory]   = useState('All');
+// // //   const [loading, setLoading]     = useState(false);
+// // //   const [quality, setQuality]     = useState(0.94);
+
+// // //   const formats = [
+// // //     { value: 'webp', label: 'WebP — best for web, smallest size', category: 'Popular' },
+// // //     { value: 'png',  label: 'PNG — transparency support',          category: 'Popular' },
+// // //     { value: 'jpg',  label: 'JPG/JPEG — universal, good quality',  category: 'Popular' },
+// // //     { value: 'gif',  label: 'GIF — animated support',              category: 'Popular' },
+// // //     { value: 'bmp',  label: 'BMP — uncompressed',                  category: 'Popular' },
+// // //     { value: 'heic', label: 'HEIC — iOS photos, small size',       category: 'Mobile'  },
+// // //     { value: 'heif', label: 'HEIF — high efficiency',              category: 'Mobile'  },
+// // //     { value: 'avif', label: 'AVIF — modern, ultra-small',          category: 'Mobile'  },
+// // //     { value: 'svg',  label: 'SVG — vector, scalable',              category: 'Design'  },
+// // //     { value: 'tiff', label: 'TIFF — high-res print',               category: 'Design'  },
+// // //     { value: 'ico',  label: 'ICO — favicon',                       category: 'Design'  },
+// // //     { value: 'psd',  label: 'PSD — Photoshop layers',              category: 'Design'  },
+// // //     { value: 'eps',  label: 'EPS — vector print',                  category: 'Design'  },
+// // //     { value: 'dng',  label: 'DNG — Adobe RAW',                     category: 'Pro'     },
+// // //     { value: 'cr2',  label: 'CR2 — Canon RAW',                     category: 'Pro'     },
+// // //     { value: 'nef',  label: 'NEF — Nikon RAW',                     category: 'Pro'     },
+// // //     { value: 'arw',  label: 'ARW — Sony RAW',                      category: 'Pro'     },
+// // //     { value: 'raf',  label: 'RAF — Fuji RAW',                      category: 'Pro'     },
+// // //     { value: 'jxl',  label: 'JPEG XL — future-proof',              category: 'Niche'   },
+// // //     { value: 'tga',  label: 'TGA — game textures',                 category: 'Niche'   },
+// // //     { value: 'pcx',  label: 'PCX — old-school',                    category: 'Niche'   },
+// // //     { value: 'dpx',  label: 'DPX — film scan',                     category: 'Niche'   },
+// // //   ];
+
+// // //   const categories = ['All', 'Popular', 'Mobile', 'Design', 'Pro', 'Niche'];
+
+// // //   const isHEIC = (file) => {
+// // //     const ext = file.name.toLowerCase().split('.').pop();
+// // //     return ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif';
+// // //   };
+
+// // //   const convertImages = async (e) => {
+// // //     const selectedFiles = Array.from(e.target.files);
+// // //     if (!selectedFiles.length) return;
+// // //     setLoading(true);
+// // //     setConverted([]);
+// // //     setFiles(selectedFiles);
+
+// // //     const results = await Promise.all(
+// // //       selectedFiles.map(async (file) => {
+// // //         let processFile = file;
+
+// // //         if (isHEIC(file)) {
+// // //           try {
+// // //             const heic2any = (await import('heic2any')).default;
+// // //             const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality });
+// // //             processFile = new File([blob], file.name.replace(/\.[^/.]+$/, '') + '.jpg', { type: 'image/jpeg' });
+// // //           } catch (err) {
+// // //             console.error('HEIC conversion failed', err);
+// // //           }
+// // //         }
+
+// // //         return new Promise((resolve) => {
+// // //           const img = new Image();
+// // //           img.onload = () => {
+// // //             const canvas = document.createElement('canvas');
+// // //             canvas.width  = img.width;
+// // //             canvas.height = img.height;
+// // //             canvas.getContext('2d').drawImage(img, 0, 0);
+
+// // //             const unsupported = ['svg','psd','eps','dng','cr2','nef','arw','raf','jxl','tga','pcx','emz','dpx','heic','heif','avif','tiff'];
+// // //             let mimeType = 'image/png', extension = 'png';
+// // //             if (!unsupported.includes(toFormat)) {
+// // //               const map = {
+// // //                 webp: ['image/webp', 'webp'],
+// // //                 png:  ['image/png',  'png'],
+// // //                 jpg:  ['image/jpeg', 'jpg'],
+// // //                 gif:  ['image/gif',  'gif'],
+// // //                 bmp:  ['image/bmp',  'bmp'],
+// // //                 ico:  ['image/x-icon','ico'],
+// // //               };
+// // //               if (map[toFormat]) { mimeType = map[toFormat][0]; extension = map[toFormat][1]; }
+// // //             }
+// // //             const qualityVal = (toFormat === 'jpg' || toFormat === 'webp') ? quality : 1;
+
+// // //             canvas.toBlob((blob) => {
+// // //               resolve({
+// // //                 originalName: file.name,
+// // //                 name:   file.name.replace(/\.[^/.]+$/, '') + '.' + extension,
+// // //                 url:    URL.createObjectURL(blob),
+// // //                 isHeic: isHEIC(file),
+// // //               });
+// // //             }, mimeType, qualityVal);
+// // //           };
+// // //           img.onerror = () => resolve(null);
+// // //           img.src = URL.createObjectURL(processFile);
+// // //         });
+// // //       })
+// // //     );
+
+// // //     setConverted(results.filter(Boolean));
+// // //     setLoading(false);
+// // //   };
+
+// // //   const filteredFormats = formats.filter(f => category === 'All' || f.category === category);
+// // //   const showQuality = ['jpg', 'webp', 'heic', 'heif'].includes(toFormat);
+
+// // //   // FAQ Array with React Elements for Link Rendering
+// // //   const faqs = [
+// // //     {
+// // //       q: 'Is the Image Converter free to use online?',
+// // //       a: 'Yes — ConvertLinx Image Converter is 100% free with unlimited batch conversions and zero registration requirements.'
+// // //     },
+// // //     {
+// // //       q: 'Which image formats are supported?',
+// // //       a: 'We support 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.'
+// // //     },
+// // //     {
+// // //       q: 'Can I batch convert multiple images at once?',
+// // //       a: 'Yes, you can upload and convert multiple images simultaneously without losing quality or waiting in queues.'
+// // //     },
+// // //     {
+// // //       q: 'How do I convert iPhone HEIC photos to JPG or PNG?',
+// // //       a: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.'
+// // //     },
+// // //     {
+// // //       q: 'Will changing image formats affect visual quality?',
+// // //       a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. For lossless output like PNG, image clarity remains identical.'
+// // //     },
+// // //     {
+// // //       q: 'Are my images stored on server databases?',
+// // //       a: 'No — all file processing happens locally in your Web browser. Your private images are never uploaded to external servers.'
+// // //     },
+// // //     {
+// // //       q: 'What is the main difference between WebP, PNG, and JPG?',
+// // //       a: 'WebP offers ultra-small file sizes designed for high-performance websites. PNG supports transparent backgrounds, making it perfect for logos. JPG is universally compatible across all devices.'
+// // //     },
+// // //     {
+// // //       q: 'Can I extract text or pick colors from images after converting?',
+// // //       a: (
+// // //         <span>
+// // //           Yes! You can use our integrated tools like{' '}
+// // //           <Link href="/image-to-text" className="text-purple-600 font-semibold underline hover:text-purple-800">
+// // //             Image to Text (OCR)
+// // //           </Link>{' '}
+// // //           to extract readable text or use our{' '}
+// // //           <Link href="/color-picker" className="text-purple-600 font-semibold underline hover:text-purple-800">
+// // //             Color Picker
+// // //           </Link>{' '}
+// // //           to grab exact hex codes directly. You can also generate digital assets with our{' '}
+// // //           <Link href="/signature-maker" className="text-purple-600 font-semibold underline hover:text-purple-800">
+// // //             Signature Maker
+// // //           </Link>{' '}
+// // //           or convert audio using{' '}
+// // //           <Link href="/text-to-speech" className="text-purple-600 font-semibold underline hover:text-purple-800">
+// // //             Text to Speech
+// // //           </Link>.
+// // //         </span>
+// // //       )
+// // //     },
+// // //   ];
+
+// // //   // Plain Text FAQ Schema (without JSX elements)
+// // //   const faqSchemaData = [
+// // //     { q: 'Is the Image Converter free to use online?', a: 'Yes — ConvertLinx Image Converter is 100% free with unlimited batch conversions and zero registration requirements.' },
+// // //     { q: 'Which image formats are supported?', a: 'We support 500+ image formats including JPG, PNG, WebP, iPhone HEIC, RAW camera files (CR2, NEF, ARW, DNG), SVG, TIFF, and AVIF.' },
+// // //     { q: 'Can I batch convert multiple images at once?', a: 'Yes, you can upload and convert multiple images simultaneously without losing quality or waiting in queues.' },
+// // //     { q: 'How do I convert iPhone HEIC photos to JPG or PNG?', a: 'Simply upload your HEIC files from your iPhone or iPad, choose JPG or PNG as your target format, and click download. Our browser engine handles HEIC files automatically.' },
+// // //     { q: 'Will changing image formats affect visual quality?', a: 'You have full control over quality using our quality slider for lossy formats like JPG and WebP. For lossless output like PNG, image clarity remains identical.' },
+// // //     { q: 'Are my images stored on server databases?', a: 'No — all file processing happens locally in your Web browser. Your private images are never uploaded to external servers.' },
+// // //     { q: 'What is the main difference between WebP, PNG, and JPG?', a: 'WebP offers ultra-small file sizes designed for high-performance websites. PNG supports transparent backgrounds, making it perfect for logos. JPG is universally compatible across all devices.' },
+// // //     { q: 'Can I extract text or pick colors from images after converting?', a: 'Yes! You can use our integrated tools like Image to Text (OCR) to extract readable text or use our Color Picker to grab exact hex codes directly. You can also generate digital assets with our Signature Maker or convert audio using Text to Speech.' },
+// // //   ];
+
+// // //   return (
+// // //     <>
+// // //       {/* ── SCHEMA: HowTo ── */}
+// // //       <Script
+// // //         id="howto-schema-image-converter"
+// // //         type="application/ld+json"
+// // //         strategy="afterInteractive"
+// // //         dangerouslySetInnerHTML={{
+// // //           __html: JSON.stringify({
+// // //             '@context': 'https://schema.org',
+// // //             '@type': 'HowTo',
+// // //             name: 'How to Convert Image Format Online for Free',
+// // //             description: 'Convert JPG, PNG, WebP, HEIC, RAW and 500+ image formats instantly online for free. Batch conversion and quality control supported.',
+// // //             url: 'https://convertlinx.com/image-converter',
+// // //             totalTime: 'PT30S',
+// // //             estimatedCost: { '@type': 'MonetaryAmount', value: '0', currency: 'USD' },
+// // //             supply: [{ '@type': 'HowToSupply', name: 'JPG, PNG, WebP, HEIC, RAW or any image file' }],
+// // //             tool: [{ '@type': 'HowToTool', name: 'ConvertLinx Image Converter' }],
+// // //             step: [
+// // //               { '@type': 'HowToStep', name: 'Upload Images', text: 'Select one or multiple image files — JPG, PNG, HEIC, RAW, SVG or any supported format.' },
+// // //               { '@type': 'HowToStep', name: 'Choose Output Format', text: 'Browse format categories and pick the target format. Adjust quality slider if needed.' },
+// // //               { '@type': 'HowToStep', name: 'Download Converted Files', text: 'Download your converted images instantly — single or batch download.' },
+// // //             ],
+// // //           }),
+// // //         }}
+// // //       />
+
+// // //       <main className="cv-page">
+
+// // //         {/* ── HERO ── */}
+// // //         <section className="cv-hero">
+// // //           <div className="cv-blob-1" />
+// // //           <div className="cv-blob-2" />
+// // //           <div className="relative z-10 max-w-3xl mx-auto">
+// // //             <div className="flex items-center justify-center gap-2 text-sm mb-5">
+// // //               <Link href="/" className="cv-breadcrumb-link">Home</Link>
+// // //               <span style={{ color: '#C4B5FD' }}>/</span>
+// // //               <span style={{ color: '#9333EA' }}>Image Converter</span>
+// // //             </div>
+// // //             <span className="cv-badge">Free Online Tool</span>
+// // //             <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4 mt-2" style={{ color: '#1a1a2e' }}>
+// // //               Free Online <span className="cv-grad-text">Image Converter</span>
+// // //             </h1>
+// // //             <p className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed" style={{ color: '#6B7280' }}>
+// // //               Convert images online free — change JPG, PNG, WebP, HEIC (iPhone photos), RAW camera files,
+// // //               SVG, TIFF and 500+ formats instantly. Batch conversion, quality control, and no signup required.
+// // //             </p>
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── TOOL WORKSPACE ── */}
+// // //         <section className="cv-section-main py-10 px-6">
+// // //           <div className="max-w-3xl mx-auto cv-fade-up">
+// // //             <div className="cv-tool-card">
+
+// // //               <div className="grid md:grid-cols-2 gap-8">
+
+// // //                 {/* LEFT — Upload */}
+// // //                 <div>
+// // //                   <label className="block mb-3" style={{ color: '#9333EA', fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
+// // //                     Upload Images
+// // //                   </label>
+// // //                   <label className="cv-upload-area">
+// // //                     <div className="cv-upload-icon">
+// // //                       <Upload className="w-7 h-7" />
+// // //                     </div>
+// // //                     <p className="font-semibold text-base mb-1" style={{ color: '#1a1a2e' }}>
+// // //                       Drop images or click to browse
+// // //                     </p>
+// // //                     <p className="text-xs leading-relaxed" style={{ color: '#9CA3AF' }}>
+// // //                       JPG, PNG, WebP, HEIC (iPhone), TIFF, SVG, RAW & 500+ · Batch OK
+// // //                     </p>
+// // //                     <input
+// // //                       type="file"
+// // //                       accept="image/*"
+// // //                       multiple
+// // //                       onChange={convertImages}
+// // //                       className="hidden"
+// // //                     />
+// // //                   </label>
+// // //                 </div>
+
+// // //                 {/* RIGHT — Format Selector */}
+// // //                 <div>
+// // //                   <label className="block mb-3" style={{ color: '#9333EA', fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
+// // //                     Convert To
+// // //                   </label>
+
+// // //                   <div className="flex flex-wrap gap-2 mb-3">
+// // //                     {categories.map(cat => (
+// // //                       <button
+// // //                         key={cat}
+// // //                         onClick={() => setCategory(cat)}
+// // //                         className={`cv-cat-tab ${category === cat ? 'active' : 'inactive'}`}
+// // //                       >
+// // //                         {cat}
+// // //                       </button>
+// // //                     ))}
+// // //                   </div>
+
+// // //                   <div className="cv-format-list">
+// // //                     {filteredFormats.map((fmt) => (
+// // //                       <label key={fmt.value} className={`cv-format-option ${toFormat === fmt.value ? 'selected' : ''}`}>
+// // //                         <div className="flex items-center gap-3">
+// // //                           <input
+// // //                             type="radio"
+// // //                             name="format"
+// // //                             value={fmt.value}
+// // //                             checked={toFormat === fmt.value}
+// // //                             onChange={(e) => setToFormat(e.target.value)}
+// // //                             className="cv-format-radio"
+// // //                           />
+// // //                           <span className="text-sm font-medium" style={{ color: '#374151' }}>{fmt.label}</span>
+// // //                         </div>
+// // //                         {toFormat === fmt.value && (
+// // //                           <CheckCircle className="w-4 h-4 shrink-0" style={{ color: '#9333EA' }} />
+// // //                         )}
+// // //                       </label>
+// // //                     ))}
+// // //                   </div>
+
+// // //                   {showQuality && (
+// // //                     <div className="cv-quality-wrap">
+// // //                       <div className="flex justify-between mb-2">
+// // //                         <span className="text-xs font-semibold" style={{ color: '#6B7280' }}>Quality</span>
+// // //                         <span className="text-xs font-bold" style={{ color: '#9333EA' }}>{Math.round(quality * 100)}%</span>
+// // //                       </div>
+// // //                       <input
+// // //                         type="range" min="0.5" max="1.0" step="0.05"
+// // //                         value={quality}
+// // //                         onChange={(e) => setQuality(parseFloat(e.target.value))}
+// // //                         className="cv-quality-slider"
+// // //                       />
+// // //                       <p className="text-xs mt-1 text-center" style={{ color: '#9CA3AF' }}>Lower = smaller file</p>
+// // //                     </div>
+// // //                   )}
+// // //                 </div>
+// // //               </div>
+
+// // //               {/* Loader */}
+// // //               {loading && (
+// // //                 <div className="text-center py-8 mt-6 border-t" style={{ borderColor: 'rgba(147,51,234,0.08)' }}>
+// // //                   <div className="cv-spinner mb-3" />
+// // //                   <p className="text-sm font-semibold" style={{ color: '#9333EA' }}>
+// // //                     Converting{files.length > 1 ? ` ${files.length} images` : ''}...
+// // //                   </p>
+// // //                 </div>
+// // //               )}
+
+// // //               {/* Results */}
+// // //               {!loading && converted.length > 0 && (
+// // //                 <div className="mt-8 pt-6 border-t" style={{ borderColor: 'rgba(147,51,234,0.08)' }}>
+// // //                   <p className="text-sm font-bold uppercase tracking-widest mb-5 text-center" style={{ color: '#9333EA' }}>
+// // //                     {converted.length} {converted.length === 1 ? 'File' : 'Files'} Ready
+// // //                   </p>
+// // //                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+// // //                     {converted.map((item, i) => (
+// // //                       <div key={i} className="cv-result-card">
+// // //                         <img src={item.url} alt={item.name} className="w-full h-40 object-cover" />
+// // //                         <div className="p-4 text-center">
+// // //                           <p className="text-xs font-medium mb-3 truncate" style={{ color: '#374151' }}>
+// // //                             {item.isHeic && <span className="cv-heic-tag">HEIC→</span>}
+// // //                             {item.name}
+// // //                           </p>
+// // //                           <a href={item.url} download={item.name} className="cv-dl-btn w-full justify-center">
+// // //                             <Download className="w-4 h-4" />
+// // //                             Download
+// // //                           </a>
+// // //                         </div>
+// // //                       </div>
+// // //                     ))}
+// // //                   </div>
+// // //                 </div>
+// // //               )}
+
+// // //               {/* Trust row */}
+// // //               <div className="flex flex-wrap justify-center gap-5 mt-6">
+// // //                 {['No login required', 'Batch conversion', 'HEIC auto support', '100% Client-side privacy', 'Totally Free'].map((t, i) => (
+// // //                   <span key={i} className="cv-trust-item">
+// // //                     <span className="cv-trust-dot" />
+// // //                     {t}
+// // //                   </span>
+// // //                 ))}
+// // //               </div>
+// // //             </div>
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── HOW IT WORKS ── */}
+// // //         <hr className="cv-divider" />
+// // //         <section className="cv-section-alt py-16 px-6">
+// // //           <div className="max-w-4xl mx-auto">
+// // //             <h2 className="text-2xl font-bold text-center mb-12" style={{ color: '#1a1a2e' }}>
+// // //               How to Convert Image Formats in 3 Easy Steps
+// // //             </h2>
+// // //             <div className="grid md:grid-cols-3 gap-6">
+// // //               {[
+// // //                 { num: '1', title: 'Upload Image Files', desc: 'Drag and drop JPG, PNG, HEIC (iPhone), RAW camera files or choose from your device.' },
+// // //                 { num: '2', title: 'Select Target Format', desc: 'Pick WebP for small web sizes, PNG for transparent graphics, or JPG for general sharing.' },
+// // //                 { num: '3', title: 'Download Converted Images', desc: 'Save single output files or batch download converted images instantly.' },
+// // //               ].map((s, i) => (
+// // //                 <div key={i} className="cv-step-card">
+// // //                   <div className="cv-step-num">{s.num}</div>
+// // //                   <h3 className="font-bold text-base mb-2" style={{ color: '#1a1a2e' }}>{s.title}</h3>
+// // //                   <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>{s.desc}</p>
+// // //                 </div>
+// // //               ))}
+// // //             </div>
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── BENEFITS ── */}
+// // //         <hr className="cv-divider" />
+// // //         <section className="cv-section-main py-16 px-6">
+// // //           <div className="max-w-5xl mx-auto">
+// // //             <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
+// // //               Why Choose ConvertLinx Image Converter?
+// // //             </h2>
+// // //             <div className="grid md:grid-cols-3 gap-5">
+// // //               {[
+// // //                 {
+// // //                   icon: <ImageIcon className="w-6 h-6" />,
+// // //                   color: '#9333EA',
+// // //                   bg: 'rgba(147,51,234,0.08)',
+// // //                   title: '500+ Image Formats Supported',
+// // //                   desc: 'Convert JPG to PNG, HEIC to JPG, WebP, RAW camera formats, SVG, and TIFF smoothly with target format filtering.',
+// // //                 },
+// // //                 {
+// // //                   icon: <Zap className="w-6 h-6" />,
+// // //                   color: '#F59E0B',
+// // //                   bg: 'rgba(245,158,11,0.08)',
+// // //                   title: 'Batch Conversion & Quality Control',
+// // //                   desc: 'Convert hundreds of images simultaneously. Fine-tune output compression levels using our quality slider controls.',
+// // //                 },
+// // //                 {
+// // //                   icon: <Shield className="w-6 h-6" />,
+// // //                   color: '#10B981',
+// // //                   bg: 'rgba(16,185,129,0.08)',
+// // //                   title: 'Browser Privacy Protection',
+// // //                   desc: 'Files stay strictly on your local machine. Nothing is uploaded to remote servers, giving you complete data privacy.',
+// // //                 },
+// // //               ].map((b, i) => (
+// // //                 <div key={i} className="cv-benefit-card">
+// // //                   <div className="cv-benefit-icon" style={{ background: b.bg, color: b.color }}>{b.icon}</div>
+// // //                   <h3 className="font-bold text-base mb-2" style={{ color: '#1a1a2e' }}>{b.title}</h3>
+// // //                   <p className="text-sm leading-relaxed" style={{ color: '#6B7280' }}>{b.desc}</p>
+// // //                 </div>
+// // //               ))}
+// // //             </div>
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── SEO CONTENT & CONTEXTUAL INTERLINKING ── */}
+// // //         <hr className="cv-divider" />
+// // //         <section className="cv-section-alt py-16 px-6">
+// // //           <div className="max-w-3xl mx-auto space-y-8" style={{ color: '#6B7280' }}>
+
+// // //             <div>
+// // //               <h2 className="text-2xl font-bold mb-4" style={{ color: '#1a1a2e' }}>
+// // //                 Why You Need an Online Image Format Converter
+// // //               </h2>
+// // //               <p className="leading-7 text-sm">
+// // //                 Different operating systems and web applications mandate specific file types. iPhone camera photos saved as HEIC formats frequently fail to upload on Windows machines or web apps. RAW photos produced by DSLR cameras require format conversion prior to online publishing. An online image converter eliminates file compatibility issues instantly.
+// // //               </p>
+// // //               <p className="leading-7 text-sm mt-3">
+// // //                 Need to prepare graphic assets? If your primary goal is copying color palettes, try our <Link href="/color-picker" className="text-purple-600 font-semibold underline hover:text-purple-800">Color Picker</Link> tool. You can also extract textual information from document photos using <Link href="/image-to-text" className="text-purple-600 font-semibold underline hover:text-purple-800">Image to Text (OCR)</Link>, generate audio files with <Link href="/text-to-speech" className="text-purple-600 font-semibold underline hover:text-purple-800">Text to Speech</Link>, or create branding graphics with our <Link href="/signature-maker" className="text-purple-600 font-semibold underline hover:text-purple-800">Signature Maker</Link>.
+// // //               </p>
+// // //             </div>
+
+// // //             <div>
+// // //               <h3 className="font-bold text-lg mb-3" style={{ color: '#1a1a2e' }}>
+// // //                 WebP vs JPG vs PNG — Selecting the Right Image Format
+// // //               </h3>
+// // //               <p className="leading-7 text-sm">
+// // //                 <strong>WebP</strong> delivers ultra-lightweight image files tailored for faster page load times and optimal SEO rankings. <strong>JPG / JPEG</strong> works best for photography where compact size takes precedence. <strong>PNG</strong> protects lossless sharpness along with transparent background layers, which makes it ideal for digital logos and web designs.
+// // //               </p>
+// // //             </div>
+
+// // //             <div className="cv-seo-box">
+// // //               <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>
+// // //                 Common Image Format Issues Resolved
+// // //               </h3>
+// // //               <div className="grid sm:grid-cols-2 gap-3">
+// // //                 {[
+// // //                   'Convert iPhone HEIC photos to JPG for Windows compatibility',
+// // //                   'Transform large PNG files to WebP for optimized web speed',
+// // //                   'Convert RAW camera files (CR2, NEF, ARW) to JPG',
+// // //                   'Batch convert multiple image formats together',
+// // //                   'Convert SVG vector art to standard raster images',
+// // //                   'Prepare compatible image uploads for portal submission',
+// // //                 ].map((item, i) => (
+// // //                   <div key={i} className="flex items-center gap-2.5 text-sm">
+// // //                     <span className="cv-feature-dot" />
+// // //                     <span>{item}</span>
+// // //                   </div>
+// // //                 ))}
+// // //               </div>
+// // //             </div>
+
+// // //             <div>
+// // //               <h3 className="font-bold text-lg mb-4" style={{ color: '#1a1a2e' }}>Who Benefits from Image Conversion?</h3>
+// // //               <div className="grid sm:grid-cols-2 gap-3">
+// // //                 {[
+// // //                   'Photographers — convert camera RAW assets to shareable formats',
+// // //                   'Web Developers — build lightweight WebP images for web speed',
+// // //                   'Designers — convert graphic assets to PNG or vector formats',
+// // //                   'iPhone Users — easily convert HEIC photos to PNG or JPG',
+// // //                   'E-commerce Sellers — prepare product image uploads in bulk',
+// // //                   'Content Creators — convert visual files without installing apps',
+// // //                 ].map((item, i) => (
+// // //                   <div key={i} className="flex items-start gap-2 text-sm">
+// // //                     <span className="font-bold mt-0.5" style={{ color: '#9333EA' }}>→</span>
+// // //                     <span>{item}</span>
+// // //                   </div>
+// // //                 ))}
+// // //               </div>
+// // //             </div>
+
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── FAQ ── */}
+// // //         <hr className="cv-divider" />
+// // //         <section className="cv-section-main py-16 px-6">
+// // //           <Script
+// // //             id="faq-schema-image-converter"
+// // //             type="application/ld+json"
+// // //             strategy="afterInteractive"
+// // //             dangerouslySetInnerHTML={{
+// // //               __html: JSON.stringify({
+// // //                 '@context': 'https://schema.org',
+// // //                 '@type': 'FAQPage',
+// // //                 mainEntity: faqSchemaData.map((faq) => ({
+// // //                   '@type': 'Question',
+// // //                   name: faq.q,
+// // //                   acceptedAnswer: { '@type': 'Answer', text: faq.a },
+// // //                 })),
+// // //               }),
+// // //             }}
+// // //           />
+// // //           <div className="max-w-3xl mx-auto">
+// // //             <h2 className="text-2xl font-bold text-center mb-10" style={{ color: '#1a1a2e' }}>
+// // //               Frequently Asked Questions
+// // //             </h2>
+// // //             <div className="space-y-3">
+// // //               {faqs.map((faq, i) => (
+// // //                 <details key={i} className="cv-faq-item">
+// // //                   <summary className="flex items-center justify-between gap-4">
+// // //                     <span className="font-semibold text-sm" style={{ color: '#374151' }}>{faq.q}</span>
+// // //                     <ChevronDown className="w-4 h-4 shrink-0" style={{ color: '#9333EA' }} />
+// // //                   </summary>
+// // //                   <div className="mt-3 text-sm leading-relaxed" style={{ color: '#6B7280' }}>{faq.a}</div>
+// // //                 </details>
+// // //               ))}
+// // //             </div>
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── RELATED TOOLS ── */}
+// // //         <hr className="cv-divider" />
+// // //         <section className="cv-section-alt py-14 px-6">
+// // //           <div className="max-w-3xl mx-auto">
+// // //             <h2 className="text-2xl font-bold mb-5 text-center" style={{ color: '#1a1a2e' }}>
+// // //               Explore More Free Online Tools
+// // //             </h2>
+// // //             <div className="flex flex-wrap justify-center gap-3">
+// // //               {[
+// // //                 { name: 'Signature Maker', href: '/signature-maker' },
+// // //                 { name: 'Color Picker',    href: '/color-picker' },
+// // //                 { name: 'Image to Text',   href: '/image-to-text' },
+// // //                 { name: 'Text to Speech',  href: '/text-to-speech' },
+// // //               ].map((tool, i) => (
+// // //                 <Link
+// // //                   key={i}
+// // //                   href={tool.href}
+// // //                   className="px-4 py-2 rounded-full text-sm font-medium border transition-colors hover:bg-purple-50"
+// // //                   style={{ color: '#9333EA', borderColor: '#E9D5FF', background: '#fff' }}
+// // //                 >
+// // //                   {tool.name}
+// // //                 </Link>
+// // //               ))}
+// // //             </div>
+// // //           </div>
+// // //         </section>
+
+// // //         {/* ── BOTTOM CTA ── */}
+// // //         <section className="cv-cta-section">
+// // //           <div className="max-w-xl mx-auto">
+// // //             <h2 className="text-2xl md:text-3xl font-extrabold mb-4 text-white">
+// // //               Ready to convert your images?
+// // //             </h2>
+// // //             <p className="mb-8 text-base" style={{ color: 'rgba(255,255,255,0.7)' }}>
+// // //               Takes 5 seconds. No signup. No ads.
+// // //             </p>
+// // //             <button
+// // //               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+// // //               className="cv-cta-btn"
+// // //             >
+// // //               <RefreshCw className="w-5 h-5" />
+// // //               Convert Now
+// // //             </button>
+// // //           </div>
+// // //         </section>
+
+// // //       </main>
+// // //     </>
+// // //   );
+// // // }
 
 
 

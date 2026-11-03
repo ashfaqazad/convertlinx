@@ -8,12 +8,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint ."
-    },
+  },
   "dependencies": {
+    "@jsquash/avif": "^2.1.1",
+    "@jsquash/jxl": "^1.3.0",
+    "@jsquash/webp": "^1.5.0",
     "@tailwindcss/postcss": "^4.1.12",
+    "ag-psd": "^34.1.0",
     "browser-image-compression": "^2.0.2",
     "convert-units": "^2.3.4",
     "generate-password": "^1.7.1",
+    "gifenc": "^1.0.3",
     "heic2any": "^0.0.4",
     "jspdf": "^3.0.4",
     "jspdf-autotable": "^5.0.2",
@@ -25,7 +30,8 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "tailwindcss": "^4.1.12",
-    "tesseract.js": "^6.0.1"
+    "tesseract.js": "^6.0.1",
+    "utif": "^3.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.0.0",
