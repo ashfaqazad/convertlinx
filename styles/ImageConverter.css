@@ -76,31 +76,56 @@
   box-shadow: 0 4px 6px -1px rgba(168,85,247,0.06),
               0 20px 60px -10px rgba(168,85,247,0.08);
 }
+@media (max-width: 640px) {
+  .cv-tool-card { padding: 18px; border-radius: 20px; }
+}
+
+/* Upload on top (full width), format picker underneath (full width) */
+.cv-tool-card > .grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+}
 
 /* ── UPLOAD AREA ── */
 .cv-upload-area {
-  border: 2px dashed #DDD6FE;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 170px;
+  border: 2px dashed #C4B5FD;
   background: #FAF5FF;
   border-radius: 16px;
-  padding: 40px 24px;
+  padding: 28px 20px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.25s ease;
-  display: block;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 .cv-upload-area:hover {
   border-color: #9333EA;
-  background: rgba(147,51,234,0.04);
+  background: rgba(147,51,234,0.06);
+}
+/* The real file input covers the whole box (invisible) so that clicking
+   AND dragging & dropping files onto the box both work. */
+.cv-upload-area input[type='file'] {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 .cv-upload-icon {
-  width: 56px; height: 56px;
-  border-radius: 16px;
+  width: 48px; height: 48px;
+  border-radius: 14px;
   background: rgba(147,51,234,0.1);
   color: #9333EA;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin: 0 auto 12px;
 }
 
 /* ── CATEGORY TABS ── */
@@ -129,41 +154,41 @@
   color: #9333EA;
 }
 
-/* ── FORMAT LIST ── */
+/* ── FORMAT LIST ── (all formats visible, no inner scrolling) */
 .cv-format-list {
-  max-height: 320px;
-  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   border: 1.5px solid #E0DCFF;
   border-radius: 14px;
   padding: 10px;
   background: #F8F7FF;
-  scrollbar-width: thin;
-  scrollbar-color: #DDD6FE transparent;
 }
-.cv-format-list::-webkit-scrollbar { width: 4px; }
-.cv-format-list::-webkit-scrollbar-track { background: transparent; }
-.cv-format-list::-webkit-scrollbar-thumb { background: #DDD6FE; border-radius: 4px; }
+@media (max-width: 560px) {
+  .cv-format-list { grid-template-columns: minmax(0, 1fr); }
+}
 
 .cv-format-option {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1.5px solid transparent;
+  border: 1.5px solid #EEEAFE;
   background: #ffffff;
   cursor: pointer;
-  margin-bottom: 6px;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
-.cv-format-option:last-child { margin-bottom: 0; }
+.cv-format-option > div { gap: 10px; min-width: 0; }
+.cv-format-option span { font-size: 13px; line-height: 1.35; }
 .cv-format-option:hover {
-  border-color: rgba(147,51,234,0.2);
+  border-color: rgba(147,51,234,0.3);
   background: #FAF5FF;
 }
 .cv-format-option.selected {
   border-color: #9333EA;
-  background: rgba(147,51,234,0.05);
+  background: rgba(147,51,234,0.06);
 }
 .cv-format-radio {
   width: 16px; height: 16px;
@@ -217,17 +242,58 @@
 
 /* ── RESULT CARDS ── */
 .cv-result-card {
+  display: flex;
+  flex-direction: column;
   background: #ffffff;
   border: 1.5px solid rgba(147,51,234,0.1);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(147,51,234,0.05);
-  transition: all 0.3s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
 .cv-result-card:hover {
   border-color: rgba(147,51,234,0.22);
   box-shadow: 0 8px 24px rgba(147,51,234,0.1);
-  transform: translateY(-2px);
+}
+/* Results grid: 2 cards per row on desktop (wider), 1 per row on phones */
+.cv-tool-card div:has(> .cv-result-card) {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+/* Whole picture is shown (not cropped); checkerboard makes transparency visible */
+.cv-result-card > img,
+.cv-result-card > div:first-child {
+  width: 100%;
+  height: 280px;
+}
+.cv-result-card > img {
+  object-fit: contain;
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #EFEDF7 25%, transparent 25%, transparent 75%, #EFEDF7 75%),
+    linear-gradient(45deg, #EFEDF7 25%, transparent 25%, transparent 75%, #EFEDF7 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+.cv-result-card > div:last-child { flex: 1; display: flex; flex-direction: column; }
+.cv-result-card .cv-dl-btn { margin-top: auto; }
+/* A single converted file: show it centered instead of in a tiny grid slot */
+.cv-result-card:only-child {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: 520px;
+}
+.cv-result-card:only-child > img,
+.cv-result-card:only-child > div:first-child {
+  height: 360px;
+}
+@media (max-width: 640px) {
+  .cv-result-card > img,
+  .cv-result-card > div:first-child,
+  .cv-result-card:only-child > img,
+  .cv-result-card:only-child > div:first-child { height: 240px; }
 }
 .cv-heic-tag {
   font-size: 11px;
