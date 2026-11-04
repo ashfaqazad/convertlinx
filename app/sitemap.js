@@ -25,6 +25,9 @@ export default function sitemap() {
     "/image-to-text",
     "/scan-to-text",
     "/screenshot-to-text",
+    "/urdu-ocr",
+    "/arabic-ocr",
+    "/scanned-pdf-to-text",
 
     "/heic-to-jpg",
     "/add-watermark",

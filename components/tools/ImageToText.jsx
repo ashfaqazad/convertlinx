@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Tesseract from 'tesseract.js';
-import { Upload, Copy, FileText, Zap, Shield, CheckCircle, ChevronDown, Download, Camera } from 'lucide-react';
+import { Upload, Copy, FileText, Zap, Shield, CheckCircle, ChevronDown, Download, Camera, AlertCircle } from 'lucide-react';
 import Script from 'next/script';
 import Link from 'next/link';
 import '@/styles/ImageToText.css';
@@ -26,125 +26,277 @@ const LANGUAGES = [
 ];
 const RTL_LANGS = ['urd', 'urd+eng', 'ara'];
 
+// Upload limits
+const MAX_FILES     = 10;
+const MAX_IMAGE_MB  = 20;
+const MAX_PDF_MB    = 50;
+const MAX_PDF_PAGES = 20;
+const MAX_SIDE      = 3500;   // larger images are scaled down before OCR
+
+// Google Analytics event (no file names or content are sent)
+const track = (event, params = {}) => {
+  try { if (typeof window !== 'undefined' && window.gtag) window.gtag('event', event, { tool: 'image_to_text', ...params }); } catch {}
+};
+
 export default function ImageToText({ seo }) {
-  const [image,    setImage]    = useState(null);
+  const [images,   setImages]   = useState([]);   // [{ name, url }] previews
   const [text,     setText]     = useState('');
+  const [noText,   setNoText]   = useState(false);
+  const [error,    setError]    = useState('');
   const [loading,  setLoading]  = useState(false);
   const [progress, setProgress] = useState(0);
   const [status,   setStatus]   = useState('Extracting text...');
   const [copied,   setCopied]   = useState(false);
   const [lang,     setLang]     = useState(seo?.defaultLang || 'eng');
   const [enhance,  setEnhance]  = useState(false);
-  const [lastFile, setLastFile] = useState(null);
+  const [lastFiles, setLastFiles] = useState([]);
 
   const isRTL = RTL_LANGS.includes(lang);
+  const hasResult = !loading && (text || noText);
 
-  // NEW: optional pre-processing (upscale small images + grayscale + contrast)
-  const prepareImage = (file) =>
-    new Promise((resolve) => {
-      if (!enhance) return resolve(file);
-      const url = URL.createObjectURL(file);
-      const img = new Image();
-      img.onload = () => {
-        try {
-          const scale = Math.min(3, Math.max(1, 1600 / Math.max(img.width, 1)));
-          let w = Math.round(img.width * scale);
-          let h = Math.round(img.height * scale);
-          if (w * h > 25000000) { w = img.width; h = img.height; }
-          const canvas = document.createElement('canvas');
-          canvas.width = w;
-          canvas.height = h;
-          const ctx = canvas.getContext('2d');
-          ctx.imageSmoothingQuality = 'high';
-          ctx.drawImage(img, 0, 0, w, h);
-          const data = ctx.getImageData(0, 0, w, h);
-          const px = data.data;
-          for (let i = 0; i < px.length; i += 4) {
-            const g = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
-            const c = Math.max(0, Math.min(255, (g - 128) * 1.3 + 128));
-            px[i] = px[i + 1] = px[i + 2] = c;
-          }
-          ctx.putImageData(data, 0, 0);
-          URL.revokeObjectURL(url);
-          resolve(canvas);
-        } catch (err) {
-          URL.revokeObjectURL(url);
-          resolve(file);
-        }
-      };
-      img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
-      img.src = url;
-    });
+  // Pre-processing: fix phone EXIF rotation, cap very large images, and
+  // (when "Enhance" is on) upscale small images + grayscale + contrast.
+  // Tesseract binarises (thresholds) internally, so we don't threshold here.
+  const prepareImage = async (blob) => {
+    let img;
+    try {
+      img = await createImageBitmap(blob, { imageOrientation: 'from-image' });
+    } catch {
+      img = await new Promise((resolve, reject) => {
+        const url = URL.createObjectURL(blob);
+        const el = new Image();
+        el.onload = () => { URL.revokeObjectURL(url); resolve(el); };
+        el.onerror = () => { URL.revokeObjectURL(url); reject(new Error('decode')); };
+        el.src = url;
+      });
+    }
+    const long = Math.max(img.width, img.height, 1);
+    let scale = Math.min(1, MAX_SIDE / long);
+    if (enhance) scale = Math.max(scale, Math.min(3, 1600 / Math.max(img.width, 1)));
+    let w = Math.round(img.width * scale);
+    let h = Math.round(img.height * scale);
+    if (w * h > 25000000) { const k = Math.sqrt(25000000 / (w * h)); w = Math.round(w * k); h = Math.round(h * k); }
 
-  const doOCR = async (file, langOverride) => {
-    if (!file) return;
-    const runLang = langOverride || lang;
-    setLoading(true);
+    const canvas = document.createElement('canvas');
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff';            // transparent PNGs → white, not black
+    ctx.fillRect(0, 0, w, h);
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(img, 0, 0, w, h);
+    if (img.close) img.close();
+
+    if (enhance) {
+      const data = ctx.getImageData(0, 0, w, h);
+      const px = data.data;
+      for (let i = 0; i < px.length; i += 4) {
+        const g = 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2];
+        const c = Math.max(0, Math.min(255, (g - 128) * 1.3 + 128));
+        px[i] = px[i + 1] = px[i + 2] = c;
+      }
+      ctx.putImageData(data, 0, 0);
+    }
+    return canvas;
+  };
+
+  // Render each page of a (scanned) PDF to an image blob.
+  const pdfToImages = async (file) => {
+    const pdfjs = await import('pdfjs-dist');
+    pdfjs.GlobalWorkerOptions.workerSrc =
+      `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+    const pdf = await pdfjs.getDocument({ data: await file.arrayBuffer() }).promise;
+    const pages = Math.min(pdf.numPages, MAX_PDF_PAGES);
+    const out = [];
+    for (let p = 1; p <= pages; p++) {
+      setStatus(`Reading PDF page ${p} of ${pages}...`);
+      const page = await pdf.getPage(p);
+      const base = page.getViewport({ scale: 1 });
+      const viewport = page.getViewport({ scale: Math.min(3, 2000 / base.width) });
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(viewport.width);
+      canvas.height = Math.round(viewport.height);
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+      const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'));
+      out.push({ name: `${file.name} – page ${p}`, blob });
+    }
+    return { pages: out, truncated: pdf.numPages > MAX_PDF_PAGES, total: pdf.numPages };
+  };
+
+  const isPdf = (f) => f.type === 'application/pdf' || /\.pdf$/i.test(f.name || '');
+
+  const resetResult = () => {
+    images.forEach((i) => URL.revokeObjectURL(i.url));
+    setImages([]);
     setText('');
+    setNoText(false);
+    setError('');
+  };
+
+  const doOCR = async (fileList, langOverride) => {
+    if (loading) return;
+    const files = Array.from(fileList || []);
+    if (!files.length) return;
+    const runLang = langOverride || lang;
+
+    // ── Validate before doing any work ──
+    const problems = [];
+    let valid = files.filter((f) => {
+      const pdf = isPdf(f);
+      if (!pdf && !(f.type || '').startsWith('image/')) {
+        problems.push(`"${f.name || 'file'}" is not an image or PDF`);
+        return false;
+      }
+      if (f.size > (pdf ? MAX_PDF_MB : MAX_IMAGE_MB) * 1024 * 1024) {
+        problems.push(`"${f.name || 'file'}" is larger than ${pdf ? MAX_PDF_MB : MAX_IMAGE_MB} MB`);
+        return false;
+      }
+      return true;
+    });
+    if (valid.length > MAX_FILES) {
+      problems.push(`Only the first ${MAX_FILES} files are processed`);
+      valid = valid.slice(0, MAX_FILES);
+    }
+
+    resetResult();
+    if (!valid.length) {
+      setError(`${problems.join('. ')}. Please upload a JPG, PNG, WebP or other image, or a PDF.`);
+      track('ocr_invalid_file', { file_count: files.length });
+      return;
+    }
+
+    setLoading(true);
     setProgress(0);
-    setStatus('Preparing image...');
-    setLastFile(file);
-    if (image) URL.revokeObjectURL(image);
-    setImage(URL.createObjectURL(file));
+    setStatus('Preparing...');
+    setLastFiles(valid);
+    const sourceType = valid.some(isPdf) ? (valid.every(isPdf) ? 'pdf' : 'mixed') : 'image';
+    track('ocr_upload', { lang: runLang, file_count: valid.length, source_type: sourceType });
 
-    const source = await prepareImage(file);
-
-    Tesseract.recognize(source, runLang, {
-      logger: (m) => {
-        if (m.status === 'recognizing text') {
-          setStatus('Extracting text...');
-          setProgress(Math.round(m.progress * 100));
-        } else if (typeof m.status === 'string' && m.status.includes('language')) {
-          setStatus('Loading language data (first time can take a little longer)...');
+    let worker;
+    let previews = [];
+    try {
+      // Expand PDFs into page images
+      const sources = [];
+      for (const f of valid) {
+        if (isPdf(f)) {
+          try {
+            const { pages, truncated, total } = await pdfToImages(f);
+            if (!pages.length) problems.push(`"${f.name}" has no pages`);
+            if (truncated) problems.push(`"${f.name}" has ${total} pages — only the first ${MAX_PDF_PAGES} were read`);
+            sources.push(...pages);
+          } catch {
+            problems.push(`"${f.name}" could not be opened as a PDF (it may be damaged or password-protected)`);
+          }
+        } else {
+          sources.push({ name: f.name || 'pasted image', blob: f });
         }
-      },
-    })
-      .then(({ data: { text } }) => {
-        setText(text.trim() || 'No text found. Try a clearer image with visible text.');
-      })
-      .catch(() => {
-        setText('Something went wrong. Try a sharper image with clear text.');
-      })
-      .finally(() => setLoading(false));
+      }
+      if (!sources.length) throw new Error('nothing to read');
+
+      previews = sources.map((s) => ({ name: s.name, url: URL.createObjectURL(s.blob) }));
+      setImages(previews);
+
+      const firstTime = runLang !== 'eng';
+      let current = 0;
+      worker = await Tesseract.createWorker(runLang, 1, {
+        logger: (m) => {
+          if (m.status === 'recognizing text') {
+            setStatus(sources.length > 1 ? `Extracting text (${current + 1} of ${sources.length})...` : 'Extracting text...');
+            setProgress(Math.round(((current + m.progress) / sources.length) * 100));
+          } else if (m.status === 'loading language traineddata') {
+            setStatus(firstTime
+              ? 'Downloading language data — first time only, this can take a little while...'
+              : 'Loading language data...');
+            setProgress(Math.round((m.progress || 0) * 100));
+          }
+        },
+      });
+
+      const parts = [];
+      let failed = 0;
+      for (current = 0; current < sources.length; current++) {
+        const s = sources[current];
+        try {
+          const canvas = await prepareImage(s.blob);
+          const { data } = await worker.recognize(canvas);
+          parts.push({ name: s.name, text: (data.text || '').trim() });
+        } catch {
+          failed++;
+          problems.push(`"${s.name}" could not be read (the image may be damaged)`);
+          parts.push({ name: s.name, text: '' });
+        }
+      }
+
+      if (failed === sources.length) throw new Error('all failed');
+
+      const found = parts.filter((p) => p.text);
+      const combined = sources.length === 1
+        ? found.map((p) => p.text).join('')
+        : found.map((p) => `--- ${p.name} ---\n${p.text}`).join('\n\n');
+
+      setText(combined);
+      setNoText(!combined);
+      if (problems.length) setError(problems.join('. ') + '.');
+      track(combined ? 'ocr_success' : 'ocr_no_text', { lang: runLang, file_count: sources.length, source_type: sourceType });
+    } catch {
+      previews.forEach((i) => URL.revokeObjectURL(i.url));
+      setImages([]);
+      setText('');
+      setNoText(false);
+      setError((problems.length ? problems.join('. ') + '. ' : '') +
+        'Something went wrong while reading your file. Try a sharper image with clear text.');
+      track('ocr_error', { lang: runLang, source_type: sourceType });
+    } finally {
+      if (worker) worker.terminate().catch(() => {});
+      setLoading(false);
+    }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) doOCR(file);
+    doOCR(e.dataTransfer.files);
   };
 
-  // NEW: paste a screenshot with Ctrl+V / Cmd+V
+  const onPick = (e) => {
+    doOCR(e.target.files);
+    e.target.value = '';   // allow picking the same file again
+  };
+
+  // Paste a screenshot with Ctrl+V / Cmd+V
   useEffect(() => {
     const onPaste = (e) => {
       const items = e.clipboardData?.items;
       if (!items) return;
+      const files = [];
       for (const item of items) {
-        if (item.type && item.type.startsWith('image/')) {
+        if (item.kind === 'file') {
           const f = item.getAsFile();
-          if (f) { e.preventDefault(); doOCR(f); break; }
+          if (f) files.push(f);
         }
       }
+      if (files.length) { e.preventDefault(); doOCR(files); }
     };
     window.addEventListener('paste', onPaste);
     return () => window.removeEventListener('paste', onPaste);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lang, enhance, image]);
+  }, [lang, enhance, images, loading]);
 
-  // NEW: changing language after an upload re-scans the same image
+  // Changing language after an upload re-scans the same files
   const changeLang = (e) => {
     const next = e.target.value;
     setLang(next);
-    if (lastFile) doOCR(lastFile, next);
+    if (lastFiles.length) doOCR(lastFiles, next);
   };
 
   const copyText = () => {
+    if (!text) return;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const downloadTxt = () => {
+    if (!text) return;
     const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -163,7 +315,7 @@ export default function ImageToText({ seo }) {
     },
     {
       q: 'Which image formats are supported?',
-      a: 'JPG, PNG, WebP, and other common image formats are supported. If you have HEIC photos from an iPhone, convert them first using our HEIC to JPG converter.'
+      a: 'JPG, PNG, WebP, and other common image formats are supported, plus scanned PDF files. You can upload up to 10 files at once. If you have HEIC photos from an iPhone, convert them first using our HEIC to JPG converter.'
     },
     {
       q: 'How accurate is the OCR?',
@@ -187,7 +339,7 @@ export default function ImageToText({ seo }) {
     },
     {
       q: 'Can I extract text from a scanned PDF page?',
-      a: 'Yes — export your scanned PDF page as an image or take a screenshot, then upload it here. You can also tweak casing on extracted text with our Case Converter.'
+      a: 'Yes — upload the scanned PDF directly. Each page (up to 20) is read in your browser and the text is shown page by page. You can also tweak casing on extracted text with our Case Converter.'
     },
     {
       // UPDATED: the old answer said "English only", which is no longer true now that a language menu exists
@@ -295,7 +447,7 @@ export default function ImageToText({ seo }) {
                 'Use it as an image to text converter, photo to text converter or online text scanner: upload a picture, scan text online, then copy the result or download it as a TXT file.'}
             </p>
             <div className="flex flex-wrap justify-center gap-2 mt-5">
-              {['No upload needed', 'JPG · PNG · WebP', 'Screenshots & scans', 'Unlimited OCR', '100% private'].map((t, i) => (
+              {['No upload needed', 'JPG · PNG · WebP · PDF', 'Screenshots & scans', 'Unlimited OCR', '100% private'].map((t, i) => (
                 <span key={i} className="it-badge px-3 py-1 rounded-full text-xs">{t}</span>
               ))}
             </div>
@@ -342,29 +494,38 @@ export default function ImageToText({ seo }) {
                 </p>
               )}
 
+              {/* Error banner */}
+              {error && !loading && (
+                <div role="alert" className="flex items-start gap-2 mb-4 text-sm"
+                  style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#B91C1C', borderRadius: '12px', padding: '10px 14px' }}>
+                  <AlertCircle className="w-5 h-5 shrink-0" style={{ marginTop: '1px' }} />
+                  <span>{error}</span>
+                </div>
+              )}
+
               {/* Upload Area */}
-              {!image && !loading && (
+              {!hasResult && !loading && (
                 <>
                   <label className="block mb-2"
                     style={{ color: '#0891B2', fontSize: '11px', fontWeight: 700, letterSpacing: '0.09em', textTransform: 'uppercase' }}>
-                    Upload Image
+                    Upload Images or PDF
                   </label>
                   <label className="it-upload-area" onDrop={handleDrop} onDragOver={(e) => e.preventDefault()}>
                     <div className="it-upload-icon">
                       <Upload className="w-8 h-8" />
                     </div>
                     <p className="font-semibold text-base mb-1" style={{ color: '#1a1a2e' }}>
-                      Drop image here or click to upload
+                      Drop images or a PDF here, or click to upload
                     </p>
                     <p className="text-xs leading-relaxed" style={{ color: '#9CA3AF' }}>
-                      JPG, PNG, WebP · Screenshots, scans, photos with text
+                      JPG, PNG, WebP · Scanned PDF · Up to {MAX_FILES} files at once
                     </p>
                     <p className="text-xs leading-relaxed mt-1 hidden md:block" style={{ color: '#9CA3AF' }}>
                       Tip: take a screenshot and press Ctrl+V to paste it here
                     </p>
                     <input
-                      type="file" accept="image/*"
-                      onChange={(e) => { const f = e.target.files?.[0]; if (f) doOCR(f); }}
+                      type="file" accept="image/*,application/pdf,.pdf" multiple
+                      onChange={onPick}
                       className="hidden"
                     />
                   </label>
@@ -375,7 +536,7 @@ export default function ImageToText({ seo }) {
                     <Camera className="w-5 h-5" /> Take photo
                     <input
                       type="file" accept="image/*" capture="environment"
-                      onChange={(e) => { const f = e.target.files?.[0]; if (f) doOCR(f); }}
+                      onChange={onPick}
                       className="hidden"
                     />
                   </label>
@@ -394,27 +555,28 @@ export default function ImageToText({ seo }) {
                 </div>
               )}
 
-              {/* Result — Image + Text side by side */}
-              {!loading && text && (
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="it-image-card">
-                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#9CA3AF' }}>
-                      Your Image
-                    </p>
-                    <img src={image} alt="Uploaded" className="w-full rounded-xl object-cover" />
-                    <label className="block mt-4 text-center text-xs font-semibold cursor-pointer" style={{ color: '#0891B2' }}>
-                      <input
-                        type="file" accept="image/*"
-                        onChange={(e) => { const f = e.target.files?.[0]; if (f) doOCR(f); }}
-                        className="hidden"
-                      />
-                      ↺ Try another image
-                    </label>
-                  </div>
+              {/* Result — extracted text first, source image below for comparison */}
+              {hasResult && (
+                <div className="flex flex-col gap-5">
                   <div className="it-text-card">
-                    <p className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: '#0891B2' }}>
-                      Extracted Text
-                    </p>
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <p className="text-xs font-bold uppercase tracking-widest whitespace-nowrap" style={{ color: '#0891B2' }}>
+                        Extracted Text
+                      </p>
+                      {text && (
+                        <span className="text-xs" style={{ color: '#9CA3AF' }}>
+                          {text.trim().split(/\s+/).filter(Boolean).length} words<span className="hidden sm:inline"> · {text.length} characters</span>
+                        </span>
+                      )}
+                    </div>
+                    {noText ? (
+                      <div className="it-textarea flex flex-col items-center justify-center text-center gap-2" style={{ color: '#6B7280' }}>
+                        <p className="font-semibold" style={{ color: '#1a1a2e' }}>No text found</p>
+                        <p className="text-xs leading-relaxed">
+                          We couldn&apos;t find readable text. Try a sharper, well-lit image, pick the right language, or tick &ldquo;Enhance image&rdquo;.
+                        </p>
+                      </div>
+                    ) : (
                     <textarea
                       value={text}
                       onChange={(e) => setText(e.target.value)}
@@ -423,15 +585,51 @@ export default function ImageToText({ seo }) {
                       dir={isRTL ? 'rtl' : 'ltr'}
                       style={isRTL ? { textAlign: 'right', lineHeight: 1.9, fontSize: '16px' } : undefined}
                     />
-                    <button onClick={copyText} className={`it-copy-btn ${copied ? 'copied' : ''}`}>
-                      {copied
-                        ? <><CheckCircle className="w-5 h-5" /> Copied!</>
-                        : <><Copy className="w-5 h-5" /> Copy to Clipboard</>
-                      }
-                    </button>
-                    <button onClick={downloadTxt} className="it-copy-btn" style={{ marginTop: '10px' }}>
-                      <Download className="w-5 h-5" /> Download TXT
-                    </button>
+                    )}
+                    <p className="text-xs mt-2 mb-4" style={{ color: '#9CA3AF' }}>
+                      You can edit the text above before copying or downloading.
+                    </p>
+                    <div className="it-actions flex flex-col sm:flex-row gap-3">
+                      <button onClick={copyText} disabled={!text} className={`it-copy-btn ${copied ? 'copied' : ''}`}
+                        style={!text ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}>
+                        {copied
+                          ? <><CheckCircle className="w-5 h-5" /> Copied!</>
+                          : <><Copy className="w-5 h-5" /> Copy to Clipboard</>
+                        }
+                      </button>
+                      <button onClick={downloadTxt} disabled={!text} className="it-secondary-btn"
+                        style={!text ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}>
+                        <Download className="w-5 h-5" /> Download TXT
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="it-image-card">
+                    <div className="flex items-center justify-between gap-3 mb-3">
+                      <p className="text-xs font-bold uppercase tracking-widest whitespace-nowrap" style={{ color: '#9CA3AF' }}>
+                        {images.length > 1 ? `Your Images (${images.length})` : 'Your Image'}
+                      </p>
+                      <label className="it-another-btn">
+                        <input
+                          type="file" accept="image/*,application/pdf,.pdf" multiple
+                          onChange={onPick}
+                          className="hidden"
+                        />
+                        <Upload className="w-4 h-4" /> Try another file
+                      </label>
+                    </div>
+                    {images.length === 1 ? (
+                      <div className="it-preview-box">
+                        <img src={images[0].url} alt="Uploaded" />
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-3 md:grid-cols-5 gap-2" style={{ maxHeight: '360px', overflowY: 'auto' }}>
+                        {images.map((im, i) => (
+                          <img key={i} src={im.url} alt={im.name} title={im.name}
+                            className="w-full rounded-lg object-cover" style={{ aspectRatio: '3 / 4', border: '1px solid #E5E7EB', background: '#fff' }} />
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
