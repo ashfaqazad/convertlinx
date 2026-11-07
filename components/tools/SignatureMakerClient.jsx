@@ -1796,16 +1796,23 @@ export default function SignatureMaker() {
               </h3>
               <p className="leading-7 text-sm">
                 Want to use your signature, initials or a personal logo as your
-                website icon? Save it as a PNG here, then convert it with the{" "}
+                website icon? Save it as a PNG here, then convert it with our{" "}
+                <NextLink href="/png-to-ico" className={linkClass}>
+                  PNG to ICO Converter
+                </NextLink>{" "}
+                to create a favicon file for your site, free and online.
+              </p>
+              <p className="leading-7 text-xs mt-2" style={{ color: "#9CA3AF" }}>
+                Another free option is{" "}
                 <a
                   href="https://freeconverto.com/png-to-ico/"
                   target="_blank"
                   rel="noopener"
-                  className={linkClass}
+                  className="underline"
                 >
-                  PNG to ICO Converter by FreeConverto
-                </a>{" "}
-                to create a favicon file for your site, free and online.
+                  FreeConverto
+                </a>
+                .
               </p>
             </div>
 
