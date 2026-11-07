@@ -2435,6 +2435,8 @@ const blogs = [
   slug: "best-free-pdf-tools-online",
   title: "5 Best Free Online PDF Tools in 2026",
   date: "Oct 11, 2026",
+  description:
+    "Looking for a free PDF tool with no signup and no watermark? We compared the top 5 online PDF tools for converting, compressing and protecting PDFs in 2026.",
 
   content: `
   <div class="blog-wrap space-y-6">
@@ -2694,6 +2696,8 @@ const blogs = [
   slug: "best-free-image-converter-utility-tools",
   title: "5 Best Free Online Image Converter & Utility Tools in 2026",
   date: "Oct 11, 2026",
+  description:
+    "Need to convert HEIC, WebP, PNG or JPG without signup or watermarks? We compared the 5 best free image converter and utility tools for 2026, including ConvertLinx.",
 
   content: `
   <div class="blog-wrap space-y-6">
@@ -3120,7 +3124,7 @@ export async function generateMetadata({ params }) {
   if (!blog) return notFound();
 
   return {
-    title: blog.title + " | ConvertLinx Blog",
+    title: blog.title,
     description: blog.description,
     keywords: blog.keywords,
     alternates: {
