@@ -45,11 +45,13 @@ const ACCEPT_TYPES = 'image/*,.heic,.heif,.avif,.tif,.tiff,.svg,.psd,.jxl,.tga,.
 // Set live: true ONLY after you actually publish that page, otherwise it would be a 404 link.
 // ─────────────────────────────────────────────
 const FORMAT_PAIR_PAGES = [
-  { name: 'HEIC to JPG',  href: '/heic-to-jpg',  live: false },
+  { name: 'HEIC to JPG',  href: '/heic-to-jpg',  live: true },
   { name: 'WebP to PNG',  href: '/webp-to-png',  live: false },
   { name: 'PNG to WebP',  href: '/png-to-webp',  live: false },
   { name: 'JPG to PNG',   href: '/jpg-to-png',   live: false },
-  { name: 'PNG to JPG',   href: '/png-to-jpg',   live: false },
+  { name: 'PNG to JPG',   href: '/png-to-jpg',   live: true },
+  { name: 'JFIF to JPG',  href: '/jfif-to-jpg',  live: true },
+  { name: 'PNG to ICO',   href: '/png-to-ico',   live: true },
   { name: 'CMS to PNG',   href: '/cms-to-png',   live: false },
   { name: 'Screenshot to JPG', href: '/screenshot-to-jpg', live: false },
   { name: 'Image to PDF', href: '/image-to-pdf', live: false },
@@ -634,13 +636,13 @@ export default function ImageConverter() {
                 Convert Image Format Online Free — Change Pic Format in Seconds
               </h2>
               <p className="leading-7 text-sm">
-                Looking to convert image format or change image format without installing software? This image converter works as an image type converter, a photo converter and a photo online converter in one page. Upload your picture, choose the new type and download it. It is a simple way to change format for a single photo or to convert image files in bulk, completely free.
+                Need to change an image format without installing software? This image type converter works right on the page: upload your picture, choose the new format and download it. Use it for a single photo or convert image files in bulk, completely free.
               </p>
               <p className="leading-7 text-sm mt-3">
-                People search for this tool in many ways: image convertor, img convertor, img file converter, image converters, or just convert image. They all mean the same thing — turning one picture file into another type such as JPG, PNG or WebP. If you want to convert picture format for a website, a school portal or a social media upload, you can convert image online free here and keep the original pixel size.
+                It is useful when a website, school portal or social media upload only accepts certain file types. Your picture keeps its original pixel size, so only the format changes.
               </p>
               <p className="leading-7 text-sm mt-3">
-                We also work as a private image conversion service: online image format conversion happens inside your browser, so it is a private image converter that never uploads your pictures. You can convert image types such as HEIC to JPG, PNG to WebP or WebP to PNG, and even use it as a screenshot to JPG converter when a form only accepts JPG files.
+                Conversion happens inside your browser, so your pictures are never uploaded. You can change HEIC to JPG, PNG to WebP or WebP to PNG, and even turn a screenshot into a JPG when a form only accepts JPG files.
               </p>
 
               <h3 className="font-bold text-lg mt-6 mb-3" style={{ color: '#1a1a2e' }}>
