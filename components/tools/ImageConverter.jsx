@@ -642,7 +642,12 @@ export default function ImageConverter() {
                 It is useful when a website, school portal or social media upload only accepts certain file types. Your picture keeps its original pixel size, so only the format changes.
               </p>
               <p className="leading-7 text-sm mt-3">
-                Conversion happens inside your browser, so your pictures are never uploaded. You can change HEIC to JPG, PNG to WebP or WebP to PNG, and even turn a screenshot into a JPG when a form only accepts JPG files.
+                Conversion happens inside your browser, so your pictures are never uploaded. You can change HEIC to JPG, PNG to WebP or WebP to PNG, and even turn a screenshot into a JPG when a form only accepts JPG files. For one common job, try our dedicated{' '}
+                <Link href="/heic-to-jpg" className={linkCls}>HEIC to JPG converter</Link>,{' '}
+                <Link href="/png-to-jpg" className={linkCls}>PNG to JPG converter</Link> or{' '}
+                <Link href="/jfif-to-jpg" className={linkCls}>JFIF to JPG converter</Link>.
+                If the new file is still too large, shrink it with the{' '}
+                <Link href="/image-compressor" className={linkCls}>Image Compressor</Link>.
               </p>
 
               <h3 className="font-bold text-lg mt-6 mb-3" style={{ color: '#1a1a2e' }}>
