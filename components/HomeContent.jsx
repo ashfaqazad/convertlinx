@@ -23,6 +23,7 @@ import {
   Palette,
   Music,
   Video,
+  Clapperboard,
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
@@ -656,6 +657,15 @@ export default function HomeContent() {
       link: "/mp4-to-mp3",
       icon: <Video className="w-7 h-7" />,
       accent: "#7C3AED",
+      tag: "New",
+      cat: "convert",
+    },
+    {
+      title: "Video Compressor",
+      desc: "Reduce video size online with 3 quality presets. Compress MP4, MOV, WebM and MKV without uploading.",
+      link: "/video-compressor",
+      icon: <Clapperboard className="w-7 h-7" />,
+      accent: "#0891B2",
       tag: "New",
       cat: "convert",
     },

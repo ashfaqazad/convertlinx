@@ -40,6 +40,7 @@ import {
   Eraser,
   Music,
   Video,
+  Clapperboard,
 } from "lucide-react";
 
 // ─────────────────────────────────────────
@@ -93,6 +94,7 @@ const textTools = [
       { href: "/text-to-speech",    icon: Volume2,  color: "#6366F1", label: "Text to Speech"     },
       { href: "/audio-converter",   icon: Music,    color: "#E11D48", label: "Audio Converter"    },
       { href: "/mp4-to-mp3",        icon: Video,    color: "#7C3AED", label: "MP4 to MP3"         },
+      { href: "/video-compressor",  icon: Clapperboard, color: "#0891B2", label: "Video Compressor" },
     ],
   },
 ];

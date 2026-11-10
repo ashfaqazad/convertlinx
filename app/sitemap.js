@@ -18,6 +18,7 @@ const LAST_MODIFIED = {
   "/add-watermark": "2026-10-08",
   "/audio-converter": "2026-11-10",
   "/mp4-to-mp3": "2026-11-10",
+  "/video-compressor": "2026-11-10",
   "/rotate-flip-image": "2026-10-10",
   "/word-counter": "2026-10-17",
   "/case-converter": "2026-10-08",
@@ -108,6 +109,7 @@ export default function sitemap() {
     "/add-watermark",
     "/audio-converter",
     "/mp4-to-mp3",
+    "/video-compressor",
     "/rotate-flip-image",
 
     // Writing / Text Tools

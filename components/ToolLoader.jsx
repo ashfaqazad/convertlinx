@@ -38,6 +38,7 @@ const toolMap = {
   'background-remover':              dynamic(() => import('@/components/tools/BackgroundRemover')),
   'audio-converter':              dynamic(() => import('@/components/tools/Audioconverter')),
   'mp4-to-mp3':              dynamic(() => import('@/components/tools/Mp4tomp3')),
+  'video-compressor':        dynamic(() => import('@/components/tools/VideoCompressor')),
 
 }
 

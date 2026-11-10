@@ -43,6 +43,7 @@ const BASE_TOOLS = new Set([
   "background-remover",
   "audio-converter",
   "mp4-to-mp3",
+  "video-compressor",
   
 ]);
 
