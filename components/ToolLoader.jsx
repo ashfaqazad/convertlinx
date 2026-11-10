@@ -36,6 +36,8 @@ const toolMap = {
   'png-to-jpg':              dynamic(() => import('@/components/tools/PngToJpg')),
   'color-palette-generator':              dynamic(() => import('@/components/tools/ColorPaletteGenerator')),
   'background-remover':              dynamic(() => import('@/components/tools/BackgroundRemover')),
+  'audio-converter':              dynamic(() => import('@/components/tools/Audioconverter')),
+  'mp4-to-mp3':              dynamic(() => import('@/components/tools/Mp4tomp3')),
 
 }
 

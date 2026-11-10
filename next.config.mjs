@@ -1,6 +1,14 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // The in-browser TTS engine (Piper/Emscripten) mentions Node's fs/path in code paths that
+  // never run in the browser. Point them at an empty module so the client bundle builds.
+  turbopack: {
+    resolveAlias: {
+      fs: { browser: "./lib/empty-module.cjs" },
+      path: { browser: "./lib/empty-module.cjs" },
+    },
+  },
   async redirects() {
     return [
       // Legacy /tools/:slug URLs ko new slug URLs par redirect karo

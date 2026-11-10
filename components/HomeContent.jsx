@@ -21,7 +21,8 @@ import {
   Search,
   Eraser,
   Palette,
-
+  Music,
+  Video,
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
@@ -149,9 +150,13 @@ const seoParagraphs = [
     ["/signature-maker", "Signature Maker"],
     ", ",
     ["/text-to-pdf", "Text to PDF"],
-    " creator, and natural ",
+    " creator, natural ",
     ["/text-to-speech", "Text to Speech"],
-    " converter.",
+    " converter, ",
+    ["/audio-converter", "Audio Converter"],
+    ", and ",
+    ["/mp4-to-mp3", "MP4 to MP3"],
+    " extractor.",
   ],
   [
     "Easily process images right inside your browser with zero server uploads. Shrink file sizes using ",
@@ -284,8 +289,12 @@ const faqItems = [
       ["/signature-maker", "Signature Maker"],
       ", convert notes with ",
       ["/text-to-pdf", "Text to PDF"],
-      ", and create audio using ",
+      ", create audio using ",
       ["/text-to-speech", "Text to Speech"],
+      ", convert audio files with ",
+      ["/audio-converter", "Audio Converter"],
+      ", and extract audio from videos using ",
+      ["/mp4-to-mp3", "MP4 to MP3"],
       ".",
     ],
   },
@@ -631,6 +640,24 @@ export default function HomeContent() {
       accent: "#8B5CF6",
       tag: "Design",
       cat: "utility",
+    },
+    {
+      title: "Audio Converter",
+      desc: "Convert audio between MP3, WAV, OGG, M4A and AAC in your browser. Batch, private, no upload.",
+      link: "/audio-converter",
+      icon: <Music className="w-7 h-7" />,
+      accent: "#E11D48",
+      tag: "New",
+      cat: "convert",
+    },
+    {
+      title: "MP4 to MP3",
+      desc: "Extract MP3 audio from MP4, MOV, MKV and WebM videos with your choice of bitrate.",
+      link: "/mp4-to-mp3",
+      icon: <Video className="w-7 h-7" />,
+      accent: "#7C3AED",
+      tag: "New",
+      cat: "convert",
     },
 
   ];

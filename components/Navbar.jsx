@@ -38,7 +38,8 @@ import {
   Palette,
   Scissors,
   Eraser,
-
+  Music,
+  Video,
 } from "lucide-react";
 
 // ─────────────────────────────────────────
@@ -90,6 +91,8 @@ const textTools = [
       { href: "/signature-maker",   icon: PenTool,  color: "#F97316", label: "Signature Maker"    },
       { href: "/text-to-pdf",       icon: FileText, color: "#D946EF", label: "Text to PDF"        },
       { href: "/text-to-speech",    icon: Volume2,  color: "#6366F1", label: "Text to Speech"     },
+      { href: "/audio-converter",   icon: Music,    color: "#E11D48", label: "Audio Converter"    },
+      { href: "/mp4-to-mp3",        icon: Video,    color: "#7C3AED", label: "MP4 to MP3"         },
     ],
   },
 ];

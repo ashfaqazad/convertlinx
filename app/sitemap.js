@@ -16,6 +16,8 @@ const LAST_MODIFIED = {
   "/scanned-pdf-to-text": "2026-11-04",
   "/heic-to-jpg": "2026-10-08",
   "/add-watermark": "2026-10-08",
+  "/audio-converter": "2026-11-10",
+  "/mp4-to-mp3": "2026-11-10",
   "/rotate-flip-image": "2026-10-10",
   "/word-counter": "2026-10-17",
   "/case-converter": "2026-10-08",
@@ -104,6 +106,8 @@ export default function sitemap() {
 
     "/heic-to-jpg",
     "/add-watermark",
+    "/audio-converter",
+    "/mp4-to-mp3",
     "/rotate-flip-image",
 
     // Writing / Text Tools

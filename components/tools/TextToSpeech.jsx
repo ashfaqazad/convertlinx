@@ -15,6 +15,7 @@ import {
 import Script from "next/script";
 import "@/styles/TextToSpeech.css";
 import Link from "next/link";
+import TtsFileExport from "@/components/tools/TtsFileExport";
 
 // ── CONSTANTS ──
 const CHAR_LIMIT = 5000;
@@ -227,27 +228,30 @@ export default function TextToSpeech() {
       q: "Can I download the audio as an MP3?",
       a: (
         <span>
-          The Web Speech API does not support direct audio file export in most
-          browsers. If you are working with documents or notes, you can convert
-          your source material into PDF files using our{" "}
+          Yes. Type your text, choose a voice and a format in the &quot;Create &amp;
+          download audio file&quot; section, and click Create. You can save the
+          result as MP3, WAV, OGG, M4A, AAC, FLAC or MP4. If you need to change
+          the file afterwards, our{" "}
           <Link
-            href="/text-to-pdf"
+            href="/audio-converter"
             className="text-amber-600 underline font-semibold"
           >
-            Text to PDF
+            Audio Converter
           </Link>{" "}
-          tool instead.
+          can convert it to other formats.
         </span>
       ),
       aText:
-        "The Web Speech API does not support direct audio file export in most browsers. If you are working with documents or notes, you can convert your source material into PDF files using our Text to PDF tool instead.",
+        "Yes. Type your text, choose a voice and a format in the Create & download audio file section, and click Create. You can save the result as MP3, WAV, OGG, M4A, AAC, FLAC or MP4. If you need to change the file afterwards, our Audio Converter can convert it to other formats.",
     },
     {
       q: "Is my text stored or sent anywhere?",
       a: (
         <span>
-          No — all processing happens entirely in your browser using the
-          built-in Web Speech API. Your text is never sent to any server,
+          No — your text is turned into speech inside your browser, either with
+          the built-in Web Speech API or with a neural voice that runs on your
+          device. Only the voice model file is downloaded (once), and your text
+          is never sent to any server,
           including text extracted from images via our{" "}
           <Link
             href="/image-to-text"
@@ -259,7 +263,7 @@ export default function TextToSpeech() {
         </span>
       ),
       aText:
-        "No — all processing happens entirely in your browser using the built-in Web Speech API. Your text is never sent to any server, including text extracted from images via our Image to Text (OCR) tool. Complete privacy is guaranteed.",
+        "No — your text is turned into speech inside your browser, either with the built-in Web Speech API or with a neural voice that runs on your device. Only the voice model file is downloaded (once), and your text is never sent to any server, including text extracted from images via our Image to Text (OCR) tool. Complete privacy is guaranteed.",
     },
   ];
 
@@ -311,7 +315,7 @@ export default function TextToSpeech() {
             "@type": "HowTo",
             name: "How to Convert Text to Speech Online for Free",
             description:
-              "Type or paste any text and instantly hear it spoken aloud using the free ConvertLinx Text to Speech tool — no signup, no install.",
+              "Type or paste any text, hear it spoken aloud, and download it as an MP3, WAV, OGG, M4A, AAC, FLAC or MP4 audio file using the free ConvertLinx Text to Speech tool — no signup, no install.",
             url: "https://convertlinx.com/text-to-speech",
             totalTime: "PT10S",
             estimatedCost: {
@@ -365,9 +369,9 @@ export default function TextToSpeech() {
               Converter
             </h1>
             <p className="tts-hero-sub">
-              Type or paste any text and hear it spoken aloud instantly — right
-              in your browser. Choose from multiple voices, adjust speed and
-              pitch, no signup required.
+              Type or paste any text, hear it spoken, and download it as an MP3,
+              WAV, OGG, M4A, AAC, FLAC or MP4 voice file — right in your
+              browser. Pick from 100+ voices, no signup required.
             </p>
           </div>
         </section>
@@ -612,12 +616,14 @@ export default function TextToSpeech() {
                 </div>
               )}
 
+              <TtsFileExport text={text} speed={rate} volume={volume} />
+
               <div className="tts-trust-strip">
                 {[
                   "No sign-up",
                   "100% browser-based",
-                  "Works offline",
-                  "Nothing stored",
+                  "Download MP3, WAV & more",
+                  "Nothing uploaded",
                   "100% free",
                 ].map((t, i) => (
                   <span key={i} className="tts-trust-item">

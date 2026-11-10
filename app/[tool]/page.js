@@ -41,6 +41,8 @@ const BASE_TOOLS = new Set([
   "jfif-to-jpg",
   "color-palette-generator",
   "background-remover",
+  "audio-converter",
+  "mp4-to-mp3",
   
 ]);
 
