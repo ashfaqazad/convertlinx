@@ -1,7 +1,119 @@
-"use client";
-
-import { ShieldCheck, Zap, Globe } from "lucide-react";
+import Link from "next/link";
 import Script from "next/script";
+import {
+  ArrowRight,
+  AudioLines,
+  Check,
+  Code2,
+  FileText,
+  Image as ImageIcon,
+  Laptop,
+  Lock,
+  Mail,
+  Server,
+  Smartphone,
+  Wrench,
+  Zap,
+} from "lucide-react";
+
+const chips = [
+  "Image Converter",
+  "Background Remover",
+  "QR Code Generator",
+  "Image to Text",
+  "Audio Converter",
+  "MP4 to MP3",
+  "Video Compressor",
+  "Signature Maker",
+  "JSON Formatter",
+  "Text to PDF",
+  "Password Generator",
+  "Favicon Generator",
+];
+
+const categories = [
+  {
+    icon: ImageIcon,
+    title: "Images",
+    tone: "bg-indigo-50 text-indigo-600",
+    links: [
+      { label: "Image Converter", href: "/image-converter" },
+      { label: "Background Remover", href: "/background-remover" },
+      { label: "Image Compressor", href: "/image-compressor" },
+      { label: "Image Resizer", href: "/image-resizer" },
+    ],
+  },
+  {
+    icon: FileText,
+    title: "Text & documents",
+    tone: "bg-violet-50 text-violet-600",
+    links: [
+      { label: "Image to Text (OCR)", href: "/image-to-text" },
+      { label: "Text to PDF", href: "/text-to-pdf" },
+      { label: "Text to Speech", href: "/text-to-speech" },
+      { label: "Word Counter", href: "/word-counter" },
+    ],
+  },
+  {
+    icon: AudioLines,
+    title: "Audio & video",
+    tone: "bg-rose-50 text-rose-600",
+    links: [
+      { label: "Audio Converter", href: "/audio-converter" },
+      { label: "MP4 to MP3", href: "/mp4-to-mp3" },
+      { label: "Video Compressor", href: "/video-compressor" },
+    ],
+  },
+  {
+    icon: Code2,
+    title: "Developers",
+    tone: "bg-sky-50 text-sky-600",
+    links: [
+      { label: "JSON Formatter", href: "/json-formatter" },
+      { label: "Base64 Tool", href: "/base64-tool" },
+      { label: "Regex Tester", href: "/regex-tester" },
+    ],
+  },
+  {
+    icon: Lock,
+    title: "Everyday",
+    tone: "bg-emerald-50 text-emerald-600",
+    links: [
+      { label: "QR Code Generator", href: "/qr-generator" },
+      { label: "Password Generator", href: "/password-gen" },
+      { label: "Signature Maker", href: "/signature-maker" },
+    ],
+  },
+  {
+    icon: Wrench,
+    title: "Web & SEO",
+    tone: "bg-amber-50 text-amber-600",
+    links: [
+      { label: "Favicon Generator", href: "/favicon-generator" },
+      { label: "Meta Tag Generator", href: "/metatag-generator" },
+      { label: "OG Preview Checker", href: "/og-preview-checker" },
+    ],
+  },
+];
+
+const timeline = [
+  {
+    title: "The problem",
+    text: "Quick jobs like a QR code, an image conversion or a compressed file kept running into sign-up walls, heavy ads and slow pages.",
+  },
+  {
+    title: "The decision",
+    text: "Build the tool that should have existed: one clean place for practical utilities that respect your time.",
+  },
+  {
+    title: "The approach",
+    text: "Add a tool only when people genuinely need it. Keep each one simple, fast and honest about how it works.",
+  },
+  {
+    title: "Today",
+    text: "A growing library of 35+ free tools, improved continuously and shaped by feedback from the people who use them.",
+  },
+];
 
 export default function About() {
   const jsonLd = {
@@ -9,7 +121,7 @@ export default function About() {
     "@type": "AboutPage",
     name: "About ConvertLinx",
     description:
-      "Learn about ConvertLinx — a fast, clean collection of free online utility tools built for simplicity and privacy.",
+      "ConvertLinx is a free collection of fast, privacy-minded online tools for images, documents, audio, video and everyday tasks.",
     url: "https://convertlinx.com/about",
     publisher: {
       "@type": "Organization",
@@ -20,387 +132,291 @@ export default function About() {
 
   return (
     <>
-      {/* SEO Schema */}
       <Script
         id="aboutpage-jsonld"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <main className="max-w-4xl mx-auto py-8 px-4 bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
-        
-        {/* Hero Section */}
-        <section className="text-center mb-12 bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4 text-indigo-900">
-            About <strong>ConvertLinx</strong>
-          </h1>
+      <main className="bg-white text-slate-600">
+        {/* ───────── Hero ───────── */}
+        <section className="relative isolate overflow-hidden">
+          {/* grid + glow */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 [background-image:linear-gradient(to_right,rgba(100,116,139,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(100,116,139,0.10)_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -top-40 left-1/2 -z-10 h-[420px] w-[760px] -translate-x-1/2 rounded-full bg-indigo-300/30 blur-[110px]"
+          />
 
-          <div className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed text-left space-y-4">
-            
-            <p>
-              ConvertLinx started with a simple frustration.
-            </p>
+          <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 sm:pt-28">
+            <div className="max-w-3xl">
+              <p className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-medium text-slate-600 shadow-sm">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                Free online tools · No sign-up
+              </p>
 
-            <p>
-              I kept needing small tools — generate a QR code, convert an image,
-              compress a file, extract text — and every time I searched, I ran
-              into the same problems.
-            </p>
+              <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-slate-900 sm:text-6xl">
+                Small tools.
+                <br />
+                <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-sky-600 bg-clip-text text-transparent">
+                  Zero friction.
+                </span>
+              </h1>
 
-            <ul className="list-none space-y-1 ml-4">
-              <li>→ “Sign up to download”</li>
-              <li>→ aggressive ads everywhere</li>
-              <li>→ confusing layouts</li>
-              <li>→ slow tools for simple tasks</li>
-            </ul>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600">
+                ConvertLinx is where you convert, compress, extract and create
+                without creating an account first. Fast pages, honest tools
+                and your files kept as private as possible.
+              </p>
 
-            <p>
-              So instead of complaining about it, I built what I wished existed.
-              A clean hub of practical tools that just work.
-            </p>
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Link
+                  href="/"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700"
+                >
+                  Browse all tools
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                >
+                  Talk to us
+                </Link>
+              </div>
+            </div>
+          </div>
 
-            <p>
-              No unnecessary friction. No complicated dashboards.
-              Just open the site, use the tool, and move on with your day.
-            </p>
-
-            <p className="text-gray-600 italic">
-              Built solo. Maintained carefully. Designed to respect your time.
-            </p>
-
+          {/* chip strip */}
+          <div className="border-y border-slate-100 bg-slate-50/70">
+            <div className="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 py-5">
+              {chips.map((c) => (
+                <span
+                  key={c}
+                  className="rounded-full border border-slate-200 bg-white px-3 py-1 text-xs text-slate-600"
+                >
+                  {c}
+                </span>
+              ))}
+              <span className="rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700">
+                + many more
+              </span>
+            </div>
           </div>
         </section>
 
-        {/* Mission Section */}
-        <section className="mb-12 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl shadow-lg border border-indigo-100 p-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-6">
-            Why This Exists
-          </h2>
-
-          <div className="text-gray-700 max-w-3xl mx-auto text-base leading-relaxed space-y-4">
-            <p>
-              The internet has amazing tools — but too many of them are bloated,
-              slow, or designed to trap users into subscriptions.
+        {/* ───────── Bento ───────── */}
+        <section className="mx-auto max-w-6xl px-4 py-24">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Built around how you actually work
+            </h2>
+            <p className="mt-3 text-slate-600">
+              Four ideas shape every tool on the site.
             </p>
+          </div>
 
-            <p>
-              ConvertLinx exists to do the opposite.
-            </p>
+          <div className="mt-10 grid gap-4 md:grid-cols-6">
+            {/* Privacy (large) */}
+            <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-white p-8 shadow-sm md:col-span-4">
+              <div
+                aria-hidden="true"
+                className="absolute -right-10 -top-10 h-48 w-48 rounded-full bg-emerald-200/40 blur-3xl"
+              />
+              <h3 className="relative text-2xl font-semibold text-slate-900">
+                Your files can stay on your device
+              </h3>
+              <p className="relative mt-3 max-w-xl leading-relaxed text-slate-600">
+                Many tools run entirely inside your browser, so your photos and
+                files are not uploaded to our servers. If a tool does need
+                server processing, we say so clearly on that page.
+              </p>
 
-            <p>
-              Whether you’re:
-              <br />
-              → a student converting notes  
-              → a freelancer compressing images  
-              → a business owner generating a QR code  
-              → or someone just fixing a quick file issue  
-            </p>
+              <div className="relative mt-8 grid gap-3 sm:grid-cols-2">
+                <div className="rounded-2xl border border-emerald-200 bg-white p-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-emerald-700">
+                    <Laptop className="h-4 w-4" />
+                    In your browser
+                  </div>
+                  <p className="mt-2 text-sm text-slate-600">
+                    File stays with you. Result is created locally.
+                  </p>
+                </div>
+                <div className="rounded-2xl border border-slate-200 bg-white p-4">
+                  <div className="flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <Server className="h-4 w-4" />
+                    Only when required
+                  </div>
+                  <p className="mt-2 text-sm text-slate-600">
+                    Clearly disclosed on the tool page.
+                  </p>
+                </div>
+              </div>
+            </div>
 
-            <p>
-              The experience should be fast, clean, and frustration-free.
-            </p>
+            {/* Free */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:col-span-2">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <Check className="h-5 w-5" />
+              </span>
+              <h3 className="mt-5 text-xl font-semibold text-slate-900">
+                Free, for real
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                No sign-up, no trial timers and no watermark on your results.
+              </p>
+            </div>
 
-            <p className="text-gray-600">
-              Simple tools. Real utility. No drama.
-            </p>
+            {/* Fast */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:col-span-2">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <Zap className="h-5 w-5" />
+              </span>
+              <h3 className="mt-5 text-xl font-semibold text-slate-900">
+                Fast by default
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                Light pages and short workflows, so small jobs stay small.
+              </p>
+            </div>
+
+            {/* Any device */}
+            <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:col-span-2">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                <Smartphone className="h-5 w-5" />
+              </span>
+              <h3 className="mt-5 text-xl font-semibold text-slate-900">
+                Works on any device
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                Phone, tablet or laptop. Open the page and start.
+              </p>
+            </div>
+
+            {/* Clean */}
+            <div className="rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-violet-50 p-8 shadow-sm md:col-span-2">
+              <h3 className="text-xl font-semibold text-slate-900">
+                Clean and honest
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                No clutter between you and the download button. What a tool
+                does is exactly what the page says it does.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Feature Cards */}
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        {/* ───────── Story timeline ───────── */}
+        <section className="border-y border-slate-100 bg-slate-50/70">
+          <div className="mx-auto grid max-w-6xl gap-12 px-4 py-24 lg:grid-cols-5">
+            <div className="lg:col-span-2">
+              <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600">
+                Our story
+              </p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+                Made by someone who needed these tools
+              </h2>
+              <p className="mt-4 leading-relaxed text-slate-600">
+                ConvertLinx is built and maintained by an independent
+                developer. Every decision comes from using these tools in real
+                life, not from a growth dashboard.
+              </p>
+            </div>
 
-          {/* Free */}
-          <div className="group bg-white rounded-2xl p-8 shadow-lg border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-2">
-            <Globe className="w-16 h-16 mx-auto text-indigo-700 mb-4 p-3 rounded-xl bg-indigo-50 group-hover:scale-110 transition" />
-            <h3 className="text-xl text-center font-bold mb-3 text-gray-900 group-hover:text-indigo-600 transition">
-              Truly <strong>Free</strong>
-            </h3>
-            <p className="text-gray-600 text-center text-sm leading-relaxed">
-              No fake trials. No credit card traps.
-              <br />
-              Just open the tool and use it.
-            </p>
-          </div>
-
-          {/* Fast */}
-          <div className="group bg-white rounded-2xl p-8 shadow-lg border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-2">
-            <Zap className="w-16 h-16 mx-auto text-amber-600 mb-4 p-3 rounded-xl bg-amber-50 group-hover:scale-110 transition" />
-            <h3 className="text-xl text-center font-bold mb-3 text-gray-900 group-hover:text-amber-600 transition">
-              Built for <strong>Speed</strong>
-            </h3>
-            <p className="text-gray-600 text-center text-sm leading-relaxed">
-              Small tasks shouldn’t take minutes.
-              <br />
-              Tools are optimized to feel instant.
-            </p>
-          </div>
-
-          {/* Privacy */}
-          <div className="group bg-white rounded-2xl p-8 shadow-lg border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-2">
-            <ShieldCheck className="w-16 h-16 mx-auto text-emerald-600 mb-4 p-3 rounded-xl bg-emerald-50 group-hover:scale-110 transition" />
-            <h3 className="text-xl text-center font-bold mb-3 text-gray-900 group-hover:text-emerald-600 transition">
-              Privacy <strong>Matters</strong>
-            </h3>
-            <p className="text-gray-600 text-center text-sm leading-relaxed">
-              Many tools run directly in your browser.
-              <br />
-              If server processing is required, it’s clearly stated.
-            </p>
-          </div>
-
-        </section>
-
-        {/* Story Section */}
-        <section className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-6 text-indigo-900">
-            How It’s Growing
-          </h2>
-
-          <div className="text-gray-700 max-w-3xl mx-auto text-base leading-relaxed text-left space-y-4">
-
-            <p>
-              What started as a few simple tools is slowly becoming a growing hub.
-            </p>
-
-            <p>
-              Each tool is added based on real-world need — not trends.
-              If something saves time for even a few people every day,
-              it’s worth building.
-            </p>
-
-            <p>
-              I continuously improve performance, simplify interfaces,
-              and remove unnecessary friction.
-            </p>
-
-            <p className="text-gray-600 italic">
-              Have an idea or found something that can be improved?
-              Email <strong>support@ConvertLinx.com</strong> — I read everything.
-            </p>
-
+            <ol className="relative space-y-8 border-l border-slate-200 pl-8 lg:col-span-3">
+              {timeline.map((t) => (
+                <li key={t.title} className="relative">
+                  <span className="absolute -left-[39px] top-1.5 h-3 w-3 rounded-full border-2 border-indigo-500 bg-white" />
+                  <h3 className="text-lg font-semibold text-slate-900">
+                    {t.title}
+                  </h3>
+                  <p className="mt-1.5 leading-relaxed text-slate-600">
+                    {t.text}
+                  </p>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
+        {/* ───────── Tools directory ───────── */}
+        <section className="mx-auto max-w-6xl px-4 py-24">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              What you can do here
+            </h2>
+            <p className="mt-3 text-slate-600">
+              A few of the most-used tools, by category.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.map(({ icon: Icon, title, tone, links }) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-200 hover:shadow-md"
+              >
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`inline-flex h-9 w-9 items-center justify-center rounded-lg ${tone}`}
+                  >
+                    <Icon className="h-4 w-4" />
+                  </span>
+                  <h3 className="font-semibold text-slate-900">{title}</h3>
+                </div>
+                <ul className="mt-4 space-y-1.5">
+                  {links.map((l) => (
+                    <li key={l.href}>
+                      <Link
+                        href={l.href}
+                        className="group flex items-center justify-between rounded-lg px-2 py-1.5 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-indigo-700"
+                      >
+                        {l.label}
+                        <ArrowRight className="h-3.5 w-3.5 -translate-x-1 opacity-0 transition group-hover:translate-x-0 group-hover:opacity-100" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ───────── CTA ───────── */}
+        <section className="mx-auto max-w-6xl px-4 pb-24">
+          <div className="relative overflow-hidden rounded-3xl border border-indigo-100 bg-gradient-to-br from-indigo-50 via-white to-violet-50 p-10 text-center shadow-sm sm:p-14">
+            <div
+              aria-hidden="true"
+              className="absolute left-1/2 top-0 h-40 w-96 -translate-x-1/2 rounded-full bg-indigo-200/50 blur-3xl"
+            />
+            <h2 className="relative text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+              Missing a tool? Found a bug?
+            </h2>
+            <p className="relative mx-auto mt-4 max-w-xl text-slate-600">
+              New tools are added based on real needs. Tell us what would save
+              you time. Every message gets read.
+            </p>
+            <div className="relative mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/contact"
+                className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition hover:bg-indigo-700"
+              >
+                <Mail className="h-4 w-4" />
+                Contact us
+              </Link>
+              <a
+                href="mailto:support@convertlinx.com"
+                className="text-sm font-medium text-slate-600 underline-offset-4 hover:text-indigo-700 hover:underline"
+              >
+                support@convertlinx.com
+              </a>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// "use client";
-
-// import { ShieldCheck, Zap, Globe } from "lucide-react";
-// import Script from "next/script";
-
-// export default function About() {
-//   const jsonLd = {
-//     "@context": "https://schema.org",
-//     "@type": "AboutPage",
-//     name: "About PDF Linx",
-//     description:
-//       "Learn about PDF Linx — a privacy-first collection of free PDF and utility tools built for speed and simplicity.",
-//     url: "https://pdflinx.com/about",
-//     publisher: {
-//       "@type": "Organization",
-//       name: "PDF Linx",
-//       url: "https://pdflinx.com",
-//     },
-//   };
-
-//   return (
-//     <>
-//       {/* SEO Schema (JSON-LD) */}
-//       <Script
-//         id="aboutpage-jsonld"
-//         type="application/ld+json"
-//         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-//       />
-
-//       <main className="max-w-4xl mx-auto py-8 px-4 bg-gradient-to-br from-slate-50 via-white to-indigo-50/30">
-//         {/* Hero Section */}
-//         <section className="text-center mb-12 bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
-//           <h1 className="text-3xl md:text-4xl font-bold mb-4 text-indigo-900">
-//             About <strong>PDF Linx</strong>
-//           </h1>
-
-//           <div className="text-gray-700 text-base md:text-lg max-w-3xl mx-auto leading-relaxed text-left space-y-3">
-//             <p>
-//               I built PDF Linx in <strong>October 2023</strong> after wasting way
-//               too much time trying to convert a simple scanned receipt.
-//               I tested multiple “free” converters — and they all came with the
-//               same annoying problems.
-//             </p>
-
-//             <p>You know the type:</p>
-//             <ul className="list-none space-y-1 ml-4">
-//               <li>→ “Sign up to download your file” (why?)</li>
-//               <li>→ tiny file limits</li>
-//               <li>→ popups and distractions</li>
-//               <li>→ slow processing for basic tasks</li>
-//             </ul>
-
-//             <p>
-//               So I spent the weekend building something that just works —
-//               simple, fast, and focused. Many tools run directly in your browser
-//               to keep things private and quick.
-//             </p>
-
-//             <p>
-//               I posted it on Reddit in November and it got surprising traction.
-//               A friend used it for a thesis (merging a bunch of PDFs), and then
-//               more people started sharing it.
-//             </p>
-
-//             <p>
-//               Today, there’s a small but growing community — especially across
-//               Pakistan, India, and Bangladesh (shoutout to the desi dev community 🙏).
-//             </p>
-
-//             <p className="text-gray-600 italic">
-//               Built solo. Maintained continuously. Privacy-first by default.
-//             </p>
-//           </div>
-//         </section>
-
-//         {/* Mission Section */}
-//         <section className="mb-12 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl shadow-lg border border-indigo-100 p-8">
-//           <h2 className="text-2xl md:text-3xl font-bold text-center text-indigo-900 mb-6">
-//             Why This Exists
-//           </h2>
-
-//           <div className="text-gray-700 max-w-3xl mx-auto text-base leading-relaxed space-y-3">
-//             <p>
-//               I’m not trying to build the next billion-dollar startup. I just got
-//               tired of clunky tools that charge monthly subscriptions for basic
-//               PDF operations.
-//             </p>
-
-//             <p>
-//               The goal is simple: <strong>don’t waste people’s time</strong>.
-//             </p>
-
-//             <p>
-//               Whether you’re a student submitting assignments at 2 AM, a freelancer
-//               dealing with client files, or someone making a QR code for a café menu —
-//               these tools should just work. Fast. Simple. Minimal friction.
-//             </p>
-
-//             <p className="text-gray-600">
-//               And yes — I keep the site clean. No spammy popups. No weird tricks.
-//             </p>
-//           </div>
-//         </section>
-
-//         {/* Feature Cards */}
-//         <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-//           {/* Card 1 */}
-//           <div className="group bg-white rounded-2xl p-8 shadow-lg border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-2">
-//             <Globe className="w-16 h-16 mx-auto text-indigo-700 mb-4 p-3 rounded-xl bg-indigo-50 group-hover:scale-110 transition" />
-//             <h3 className="text-xl text-center font-bold mb-3 text-gray-900 group-hover:text-indigo-600 transition">
-//               Actually <strong>Free</strong>
-//             </h3>
-//             <p className="text-gray-600 text-center text-sm leading-relaxed">
-//               No “free trial” traps. No account required. No credit card.
-//               <br />
-//               <br />
-//               Use it on phone, laptop, tablet — just open the site and go.
-//             </p>
-//           </div>
-
-//           {/* Card 2 */}
-//           <div className="group bg-white rounded-2xl p-8 shadow-lg border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-2">
-//             <Zap className="w-16 h-16 mx-auto text-amber-600 mb-4 p-3 rounded-xl bg-amber-50 group-hover:scale-110 transition" />
-//             <h3 className="text-xl text-center font-bold mb-3 text-gray-900 group-hover:text-amber-600 transition">
-//               Fast, <strong>Always</strong>
-//             </h3>
-//             <p className="text-gray-600 text-center text-sm leading-relaxed">
-//               Most tools finish quickly — because waiting for simple tasks is painful.
-//               <br />
-//               <br />
-//               Merging PDFs, compressing files, converting formats — built to be snappy.
-//             </p>
-//           </div>
-
-//           {/* Card 3 */}
-//           <div className="group bg-white rounded-2xl p-8 shadow-lg border border-gray-100 transition-all hover:shadow-xl hover:-translate-y-2">
-//             <ShieldCheck className="w-16 h-16 mx-auto text-emerald-600 mb-4 p-3 rounded-xl bg-emerald-50 group-hover:scale-110 transition" />
-//             <h3 className="text-xl text-center font-bold mb-3 text-gray-900 group-hover:text-emerald-600 transition">
-//               Your Files Stay <strong>Yours</strong>
-//             </h3>
-//             <p className="text-gray-600 text-center text-sm leading-relaxed">
-//               Many tools run directly in your browser — so your files aren’t sent
-//               to random servers for processing.
-//               <br />
-//               <br />
-//               If a tool requires server processing, it’s clearly disclosed in the tool page.
-//             </p>
-//           </div>
-//         </section>
-
-//         {/* Story Section */}
-//         <section className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8 text-center">
-//           <h2 className="text-2xl md:text-3xl font-bold mb-6 text-indigo-900">
-//             How We Got <strong>Here</strong>
-//           </h2>
-
-//           <div className="text-gray-700 max-w-3xl mx-auto text-base leading-relaxed text-left space-y-3">
-//             <p>
-//               Started as a weekend project in <strong>October 2023</strong>. Just
-//               me, building what I wished existed.
-//             </p>
-
-//             <p>
-//               The first version had just a few essentials:{" "}
-//               <strong>PDF to Word</strong>, <strong>Merge PDF</strong>, and{" "}
-//               <strong>Compress PDF</strong>.
-//             </p>
-
-//             <p>
-//               Then people started requesting more:
-//               <br />
-//               → QR Code Generator (added)
-//               <br />
-//               → Password Generator (added)
-//               <br />
-//               → Image Compression (added)
-//             </p>
-
-//             <p>
-//               Now there are <strong>22 tools</strong> and I still ship updates
-//               based on feedback.
-//             </p>
-
-//             <p className="text-gray-600 italic">
-//               Got an idea or found a bug? Email{" "}
-//               <strong>support@pdflinx.com</strong>. I read everything.
-//             </p>
-//           </div>
-//         </section>
-//       </main>
-//     </>
-//   );
-// }
-
