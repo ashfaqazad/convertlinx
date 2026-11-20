@@ -52,6 +52,7 @@ const LAST_MODIFIED = {
   "/blog/rotate-flip-image-online-free": "2025-12-21",
   "/blog/best-free-image-converter-utility-tools": "2026-11-06",
   "/blog/image-converter": "2026-10-18",
+  "/blog/remove-bg-alternative-free": "2026-11-20",
   "/blog/free-online-word-counter-tool": "2025-12-14",
   "/blog/text-case-converter-uppercase-lowercase": "2025-12-15",
   "/blog/lorem-ipsum-generator-free-placeholder-text": "2025-12-18",
@@ -170,6 +171,7 @@ export default function sitemap() {
     "/blog/rotate-flip-image-online-free",
     "/blog/best-free-image-converter-utility-tools",
     "/blog/image-converter",
+    "/blog/remove-bg-alternative-free",
 
     // Writing / Text Tools
     "/blog/free-online-word-counter-tool",

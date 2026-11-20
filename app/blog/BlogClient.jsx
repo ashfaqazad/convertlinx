@@ -221,6 +221,14 @@ const blogs = [
     slug: "image-converter",
     category: "Image Tools",
   },
+  {
+    title: "remove.bg Alternative: Free, No-Upload BG Remover",
+    description:
+      "remove.bg's standalone website closes on 1 Dec 2026. Here is a free remove.bg alternative that removes image backgrounds in your browser, no signup, no watermark.",
+    date: "2026-11-20",
+    slug: "remove-bg-alternative-free",
+    category: "Image Tools",
+  },
 ];
 
 // Newest first

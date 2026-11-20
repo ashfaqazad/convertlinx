@@ -343,6 +343,22 @@ export default function BackgroundRemover() {
       text: "Photos where the subject is clearly separated from the background, with good lighting and sharp focus, give the cleanest cutouts. Very busy backgrounds or subjects with the same color as the background can leave rough edges.",
     },
     {
+      q: "Is there a free remove.bg alternative?",
+      text: "Yes. This tool is a free remove.bg alternative: no signup, no watermark, and your photos are processed in your browser. The remove.bg FAQ says its standalone website closes on 1 December 2026 and the feature moves into Canva.",
+      a: (
+        <span>
+          Yes. This tool is a free remove.bg alternative: no signup, no
+          watermark, and your photos are processed in your browser. The remove.bg
+          FAQ says its standalone website closes on 1 December 2026 and the
+          feature moves into Canva.{" "}
+          <Link href="/blog/remove-bg-alternative-free" className={linkCls}>
+            Read the full remove.bg alternative guide
+          </Link>
+          .
+        </span>
+      ),
+    },
+    {
       q: "Can I reduce the size of the PNG or convert it afterwards?",
       text: "Yes. Transparent PNG files can be large, so you can convert them to WebP or compress them with our other tools after removing the background.",
       a: (
