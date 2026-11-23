@@ -41,6 +41,8 @@ import {
   Music,
   Video,
   Clapperboard,
+  Menu,
+  X,
 } from "lucide-react";
 
 // ─────────────────────────────────────────
@@ -138,7 +140,7 @@ const pdfTools = [
 
 function ToolLink({ href, icon: Icon, color, label, external, onClose }) {
   const cls =
-    "flex items-center gap-2.5 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-all duration-150 group cursor-pointer";
+    "flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-slate-900/[0.04] transition-all duration-150 group cursor-pointer";
 
   const inner = (
     <>
@@ -190,7 +192,11 @@ function DesktopDropdown({ label, accentFrom, accentTo, open, onOpen, onClose, o
       <button
         type="button"
         onClick={onClick}
-        className="flex items-center gap-1.5 text-[14px] text-gray-700 hover:text-indigo-600 font-semibold transition-colors duration-150"
+        className={`flex items-center gap-1 rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors duration-150 ${
+          open
+            ? "bg-slate-900/5 text-slate-900"
+            : "text-slate-600 hover:bg-slate-900/5 hover:text-slate-900"
+        }`}
         aria-haspopup="menu"
         aria-expanded={open}
       >
@@ -201,19 +207,21 @@ function DesktopDropdown({ label, accentFrom, accentTo, open, onOpen, onClose, o
         />
       </button>
 
+      {/* Invisible bridge keeps the menu open while the pointer crosses the gap */}
       <div
-        className={`absolute top-[calc(100%+14px)] left-1/2 -translate-x-1/2
-          bg-white rounded-2xl shadow-2xl border border-gray-100
-          transition-all duration-200 origin-top
-          ${open ? "opacity-100 visible scale-100" : "opacity-0 invisible scale-95"}`}
+        className={`absolute left-1/2 top-full -translate-x-1/2 pt-3 transition-all duration-200 origin-top ${
+          open ? "visible scale-100 opacity-100" : "invisible scale-95 opacity-0"
+        }`}
         style={{ width }}
       >
-        {/* Accent bar */}
-        <div
-          className="h-[3px] rounded-t-2xl"
-          style={{ background: `linear-gradient(to right, ${accentFrom}, ${accentTo})` }}
-        />
-        {children}
+        <div className="max-h-[calc(100vh-110px)] overflow-y-auto rounded-2xl border border-white/70 bg-white/[0.97] shadow-[0_20px_50px_-12px_rgba(15,23,42,0.25)] ring-1 ring-slate-900/5 backdrop-blur-xl">
+          {/* Accent bar */}
+          <div
+            className="h-[3px]"
+            style={{ background: `linear-gradient(to right, ${accentFrom}, ${accentTo})` }}
+          />
+          {children}
+        </div>
       </div>
     </div>
   );
@@ -273,12 +281,43 @@ function MobileToolLink({ href, icon: Icon, color, label, external, onClose }) {
 }
 
 // ─────────────────────────────────────────
+// LOGO MARK — two arrows = "convert"
+// ─────────────────────────────────────────
+
+function LogoMark({ className = "h-9 w-9" }) {
+  return (
+    <svg
+      viewBox="0 0 36 36"
+      className={className}
+      role="img"
+      aria-label="ConvertLinx logo"
+    >
+      <defs>
+        <linearGradient id="clx-logo-bg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#6366F1" />
+          <stop offset="1" stopColor="#8B5CF6" />
+        </linearGradient>
+      </defs>
+      <rect width="36" height="36" rx="10" fill="url(#clx-logo-bg)" />
+      <rect x="0.5" y="0.5" width="35" height="35" rx="9.5" fill="none" stroke="#fff" strokeOpacity="0.25" />
+      {/* top arrow → */}
+      <path d="M9 14h15" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M20 9.5 25.5 14 20 18.5" fill="none" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+      {/* bottom arrow ← (softer) */}
+      <path d="M27 23H12" stroke="#fff" strokeOpacity="0.8" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M16 18.5 10.5 23 16 27.5" fill="none" stroke="#fff" strokeOpacity="0.8" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+// ─────────────────────────────────────────
 // MAIN NAVBAR
 // ─────────────────────────────────────────
 
 export default function Navbar() {
   const [open, setOpen]             = useState(null); // "text" | "image" | "pdf" | null
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled]     = useState(false);
   const pathname = usePathname();
   const navRef   = useRef(null);
 
@@ -295,24 +334,51 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const toggle = (key) => setOpen((prev) => (prev === key ? null : key));
 
+  const topLink = (href) =>
+    `rounded-full px-3.5 py-2 text-[14px] font-medium transition-colors duration-150 ${
+      pathname === href
+        ? "bg-indigo-50 text-indigo-700"
+        : "text-slate-600 hover:bg-slate-900/5 hover:text-slate-900"
+    }`;
+
+  const mobileLink = (href) =>
+    `block rounded-xl px-3 py-2.5 text-[14px] font-semibold transition-colors ${
+      pathname === href ? "bg-indigo-50 text-indigo-700" : "text-slate-800 hover:bg-slate-900/5"
+    }`;
+
   return (
-    <nav ref={navRef} className="bg-white border-b border-gray-100 sticky top-0 z-50 shadow-sm">
+    <nav
+      ref={navRef}
+      className={`sticky top-0 z-50 border-b backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 ${
+        scrolled
+          ? "border-slate-200/70 bg-white/70 shadow-[0_1px_20px_-8px_rgba(15,23,42,0.18)]"
+          : "border-transparent bg-white/40"
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center h-16">
 
           {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <span className="text-xl font-extrabold tracking-tight" style={{ color: "#1a1a2e" }}>
-              Convert<span style={{ color: "#6366F1" }}>Linx</span>
+          <Link href="/" className="flex items-center gap-2.5">
+            <LogoMark className="h-9 w-9 drop-shadow-[0_4px_10px_rgba(99,102,241,0.35)]" />
+            <span className="text-xl font-extrabold tracking-tight text-slate-900">
+              Convert<span className="text-indigo-500">Linx</span>
             </span>
           </Link>
 
           {/* ── DESKTOP NAV ── */}
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-1">
 
-            <Link href="/" className="text-[14px] text-gray-700 hover:text-indigo-600 font-semibold transition-colors duration-150">
+            <Link href="/" className={topLink("/")}>
               Home
             </Link>
 
@@ -324,13 +390,13 @@ export default function Navbar() {
               onOpen={() => setOpen("text")}
               onClose={() => setOpen(null)}
               onClick={() => toggle("text")}
-              width={580}
+              width={780}
             >
-              <div className="p-5">
+              <div className="p-4">
                 {textTools.map((section) => (
                   <div key={section.group}>
                     <SectionLabel>{section.group}</SectionLabel>
-                    <div className="grid grid-cols-3 gap-0.5">
+                    <div className="grid grid-cols-4 gap-0.5">
                       {section.tools.map((t) => (
                         <ToolLink key={t.href} {...t} onClose={() => setOpen(null)} />
                       ))}
@@ -384,13 +450,20 @@ export default function Navbar() {
               </div>
             </DesktopDropdown>
 
-            <Link href="/blog" className="text-[14px] text-gray-700 hover:text-indigo-600 font-semibold transition-colors duration-150">
+            <Link href="/blog" className={topLink("/blog")}>
               Blog
             </Link>
-            <Link href="/about" className="text-[14px] text-gray-700 hover:text-indigo-600 font-semibold transition-colors duration-150">
+            <Link href="/about" className={topLink("/about")}>
               About
             </Link>
-            <Link href="/contact" className="text-[14px] text-gray-700 hover:text-indigo-600 font-semibold transition-colors duration-150">
+            <Link
+              href="/contact"
+              className={`ml-2 rounded-full px-4 py-2 text-[14px] font-semibold transition ${
+                pathname === "/contact"
+                  ? "bg-indigo-600 text-white shadow-md shadow-indigo-600/25"
+                  : "bg-slate-900 text-white hover:bg-indigo-600 hover:shadow-md hover:shadow-indigo-600/25"
+              }`}
+            >
               Contact
             </Link>
 
@@ -399,23 +472,21 @@ export default function Navbar() {
           {/* Mobile Toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition"
+            className="lg:hidden flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition hover:bg-slate-900/5"
             aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
           >
-            {mobileOpen
-              ? <span className="text-2xl leading-none select-none">×</span>
-              : <span className="text-xl leading-none select-none">☰</span>}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
       {/* ── MOBILE MENU ── */}
       {mobileOpen && (
-        <div className="lg:hidden bg-white border-t border-gray-100 max-h-[80vh] overflow-y-auto">
+        <div className="lg:hidden max-h-[80vh] overflow-y-auto border-t border-slate-200/60 bg-white/90 backdrop-blur-xl">
           <div className="px-4 py-4 space-y-1">
 
-            <Link href="/" onClick={() => setMobileOpen(false)}
-              className="block text-[14px] font-semibold text-gray-800 py-2.5 px-3 rounded-xl hover:bg-gray-50">
+            <Link href="/" onClick={() => setMobileOpen(false)} className={mobileLink("/")}>
               Home
             </Link>
 
@@ -453,16 +524,17 @@ export default function Navbar() {
               ))}
             </MobileGroup>
 
-            <Link href="/blog" onClick={() => setMobileOpen(false)}
-              className="block text-[14px] font-semibold text-gray-800 py-2.5 px-3 rounded-xl hover:bg-gray-50">
+            <Link href="/blog" onClick={() => setMobileOpen(false)} className={mobileLink("/blog")}>
               Blog
             </Link>
-            <Link href="/about" onClick={() => setMobileOpen(false)}
-              className="block text-[14px] font-semibold text-gray-800 py-2.5 px-3 rounded-xl hover:bg-gray-50">
+            <Link href="/about" onClick={() => setMobileOpen(false)} className={mobileLink("/about")}>
               About
             </Link>
-            <Link href="/contact" onClick={() => setMobileOpen(false)}
-              className="block text-[14px] font-semibold text-gray-800 py-2.5 px-3 rounded-xl hover:bg-gray-50">
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="mt-2 block rounded-xl bg-slate-900 px-3 py-3 text-center text-[14px] font-semibold text-white transition hover:bg-indigo-600"
+            >
               Contact
             </Link>
 
@@ -472,7 +544,3 @@ export default function Navbar() {
     </nav>
   );
 }
-
-
-
-
