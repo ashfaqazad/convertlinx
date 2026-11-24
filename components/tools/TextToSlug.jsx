@@ -104,6 +104,9 @@ const PRESETS = [
   { label: 'News Article', text: 'Breaking: Scientists Discover New Species in Amazon Rainforest!' },
 ];
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#D97706' };
+
 export default function TextToSlug() {
   const [input,           setInput]          = useState('');
   const [separator,       setSeparator]      = useState('-');
@@ -482,6 +485,13 @@ export default function TextToSlug() {
                 Google has explicitly recommended using hyphens over underscores in URLs, keeping slugs short
                 and descriptive, and avoiding unnecessary parameters or stop words. Our generator follows all
                 of these best practices automatically.
+              </p>
+              <p className="slug-body-text leading-7 text-sm mt-3">
+                Writing the page title first? Fix its capitalisation with the <Link href="/case-converter" className={linkCls} style={linkStyle}>Case Converter</Link> and
+                check its length with the <Link href="/word-counter" className={linkCls} style={linkStyle}>Word Counter</Link>. Once
+                your slug is ready, add a matching title, description and social tags with the <Link href="/metatag-generator" className={linkCls} style={linkStyle}>Meta Tag Generator</Link>, and
+                use the <Link href="/regex-tester" className={linkCls} style={linkStyle}>Regex Tester</Link> when
+                you need a pattern to bulk-rewrite old URLs.
               </p>
             </div>
 

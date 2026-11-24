@@ -23,6 +23,9 @@ function syntaxColor(json) {
     );
 }
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#059669' };
+
 export default function JsonFormatter() {
   const [input,     setInput]     = useState('');
   const [indent,    setIndent]    = useState(2);
@@ -338,6 +341,12 @@ export default function JsonFormatter() {
                 package.json, environment schemas, database exports, and more. Whether you are
                 debugging a 400 error from an API, reading a deeply nested config, or comparing
                 two JSON payloads, a formatter makes the job faster and less error-prone.
+              </p>
+              <p className="jf-body-text leading-7 text-sm mt-3">
+                JSON often carries encoded values, so decode them with the <Link href="/base64-tool" className={linkCls} style={linkStyle}>Base64 Tool</Link>. To
+                pull specific fields or validate formats inside a payload, try the <Link href="/regex-tester" className={linkCls} style={linkStyle}>Regex Tester</Link>. The <Link href="/case-converter" className={linkCls} style={linkStyle}>Case Converter</Link> can
+                switch keys to camelCase or snake_case, and the <Link href="/word-counter" className={linkCls} style={linkStyle}>Word Counter</Link> counts
+                characters in a long string.
               </p>
             </div>
 

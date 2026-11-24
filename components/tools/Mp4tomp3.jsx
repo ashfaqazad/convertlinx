@@ -124,7 +124,9 @@ const seoUse = [
   " tool, which saves MP3 files too.",
 ];
 const seoLimit = [
-  "Because everything happens inside your browser, large videos use a lot of memory. This tool accepts videos up to " + MAX_FILE_MB + " MB, and up to " + MAX_FILES + " videos at a time. For best results on phones, convert one video at a time and keep the tab open until it finishes.",
+  "Because everything happens inside your browser, large videos use a lot of memory. This tool accepts videos up to " + MAX_FILE_MB + " MB, and up to " + MAX_FILES + " videos at a time. For best results on phones, convert one video at a time and keep the tab open until it finishes. If a video is too large to process, shrink it first with our ",
+  lk("Video Compressor", "/video-compressor"),
+  ".",
 ];
 
 const faqs = [

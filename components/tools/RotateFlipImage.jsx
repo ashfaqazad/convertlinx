@@ -7,6 +7,9 @@ import NextImage from 'next/image';
 import '@/styles/RotateFlipImage.css';
 import Link from 'next/link';
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#0369A1' };
+
 export default function RotateFlipImage() {
   const [image,     setImage]     = useState(null);   // original dataURL
   const [fileName,  setFileName]  = useState('');
@@ -343,6 +346,13 @@ export default function RotateFlipImage() {
                 Flipping is equally common — mirroring a logo for a watermark, creating a symmetrical
                 design element, or producing a reflection effect all require a horizontal or vertical flip.
                 Our tool handles both rotate and flip in a single step with no quality loss for PNG images.
+              </p>
+              <p className="rfi-body-text leading-7 text-sm mt-3">
+                Once the orientation is fixed, crop away empty edges with the <Link href="/image-cropper" className={linkCls} style={linkStyle}>Image Cropper</Link>, set
+                exact dimensions with the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>, or
+                reduce the file size with the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link>. Photos
+                from an iPhone that will not open? Convert them first with the <Link href="/heic-to-jpg" className={linkCls} style={linkStyle}>HEIC to JPG</Link> converter.
+                Need text from a sideways scan? Rotate it here, then extract the text with <Link href="/image-to-text" className={linkCls} style={linkStyle}>Image to Text</Link>.
               </p>
             </div>
 

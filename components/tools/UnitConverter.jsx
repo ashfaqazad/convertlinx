@@ -8,7 +8,11 @@ import {
 } from 'lucide-react';
 import Script from 'next/script';
 import '@/styles/UnitConverter.css';  // ← sahi path
+import Link from 'next/link';
 
+
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#6366F1' };
 
 export default function UnitConverter() {
   const [value, setValue] = useState(1);
@@ -343,6 +347,10 @@ export default function UnitConverter() {
               <p className="leading-7 text-sm">
                 Length (meters to feet), weight (kg to lbs), temperature (°C to °F),
                 volume (ml to cups), and area (m² to acres) — all major categories covered.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Preparing images for print or a product page? Convert the physical size here, for
+                example inches to centimetres, then enter the exact dimensions in the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>.
               </p>
             </div>
 

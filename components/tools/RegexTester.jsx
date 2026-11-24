@@ -22,6 +22,9 @@ const QUICK_PATTERNS = [
   { name: 'Hex Color', pattern: '#[0-9A-Fa-f]{6}\\b' },
 ];
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#059669' };
+
 export default function RegexTester() {
   const [pattern, setPattern] = useState('[\\w.+-]+@[\\w-]+\\.[\\w.-]+');
   const [flags, setFlags] = useState({ g: true, i: false, m: false, s: false });
@@ -376,6 +379,13 @@ export default function RegexTester() {
                 Whether you're validating an email field, extracting data from log files, or writing
                 a find-and-replace pattern, a live regex tester saves the time of running your code
                 repeatedly just to check if a pattern behaves the way you expect.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Working with structured data? Format or validate a payload first with the <Link href="/json-formatter" className={linkCls} style={linkStyle}>JSON Formatter</Link>, decode
+                an encoded value with the <Link href="/base64-tool" className={linkCls} style={linkStyle}>Base64 Tool</Link>, or
+                tidy capitalisation with the <Link href="/case-converter" className={linkCls} style={linkStyle}>Case Converter</Link>, then
+                use a regex to extract or replace the parts you need. Cleaning up page URLs? The <Link href="/text-to-slug" className={linkCls} style={linkStyle}>Text to Slug</Link> generator
+                builds a clean slug, and a regex helps you find old patterns to rewrite.
               </p>
             </div>
 

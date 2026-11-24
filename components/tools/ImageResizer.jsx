@@ -50,6 +50,9 @@ const resizeFile = (file, targetW, targetH, mime, quality) =>
     img.src = url;
   });
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#F43F5E' };
+
 export default function ImageResizer() {
   const [files,       setFiles]       = useState([]);
   const [activeTab,   setActiveTab]   = useState('Pixels');
@@ -637,6 +640,13 @@ export default function ImageResizer() {
                 at 1600×900px, and LinkedIn cover photos are 1584×396px. Instead of guessing and
                 reuploading, use the built-in presets to hit the exact dimensions in one click — then
                 download and upload directly with confidence.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Use the <Link href="/image-cropper" className={linkCls} style={linkStyle}>Image Cropper</Link> when
+                you need to change the aspect ratio rather than just the size, and the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link> afterwards
+                to keep the file light. Making a video? Grab its cover image with the <Link href="/youtube-thumbnail" className={linkCls} style={linkStyle}>YouTube Thumbnail</Link> downloader.
+                You can also switch formats with the <Link href="/image-converter" className={linkCls} style={linkStyle}>Image Converter</Link> or
+                cut out a subject with the <Link href="/background-remover" className={linkCls} style={linkStyle}>Background Remover</Link> first. Sizing for print? Convert inches to centimetres with the <Link href="/unit-converter" className={linkCls} style={linkStyle}>Unit Converter</Link> before you enter the dimensions.
               </p>
             </div>
 

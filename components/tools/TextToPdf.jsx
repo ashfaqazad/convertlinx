@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 // import Script from 'next/script';
 import "@/styles/TextToPdf.css";
+import Link from 'next/link';
 
 const SITE = "https://convertlinx.com";
 const PAGE_URL = `${SITE}/text-to-pdf`;
@@ -89,6 +90,9 @@ const faqSchema = {
     acceptedAnswer: { "@type": "Answer", text: f.a },
   })),
 };
+
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#2563EB' };
 
 export default function TextToPDF() {
   const [text, setText] = useState("");
@@ -368,6 +372,13 @@ export default function TextToPDF() {
                 </span>{" "}
                 tool converts plain text into clean, professional PDFs instantly
                 — no signup, no watermark, no limits.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Text stuck inside a photo or scan? Extract it first with <Link href="/image-to-text" className={linkCls} style={linkStyle}>Image to Text</Link>. Before
+                exporting, check the length with the <Link href="/word-counter" className={linkCls} style={linkStyle}>Word Counter</Link>, fix
+                capitalisation with the <Link href="/case-converter" className={linkCls} style={linkStyle}>Case Converter</Link>, or
+                fill a layout with placeholder copy from the <Link href="/lorem-ipsum" className={linkCls} style={linkStyle}>Lorem Ipsum Generator</Link>. Prefer
+                to listen instead? Try <Link href="/text-to-speech" className={linkCls} style={linkStyle}>Text to Speech</Link>.
               </p>
             </div>
             <div>

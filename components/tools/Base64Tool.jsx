@@ -6,6 +6,9 @@ import Script from 'next/script';
 import '@/styles/Base64Tool.css';
 import Link from 'next/link';
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#7C3AED' };
+
 export default function Base64Tool() {
   const [mode,    setMode]    = useState('encode'); // 'encode' | 'decode'
   const [tab,     setTab]     = useState('text');   // 'text' | 'file'
@@ -329,6 +332,12 @@ export default function Base64Tool() {
                 you are using Base64. It is one of the most common encoding formats in modern
                 web development and API design.
               </p>
+              <p className="leading-7 text-sm mt-3">
+                Embedding an image as a data URI? Shrink the file first with the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link> and
+                set exact dimensions with the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link> so
+                the encoded string stays short. Working with API payloads? Tidy them with the <Link href="/json-formatter" className={linkCls} style={linkStyle}>JSON Formatter</Link> or
+                extract the encoded part with the <Link href="/regex-tester" className={linkCls} style={linkStyle}>Regex Tester</Link>.
+              </p>
             </div>
 
             <div>
@@ -342,6 +351,11 @@ export default function Base64Tool() {
                 hand, scrambles data so only someone with the correct key can read it.
                 Never use Base64 to protect sensitive information — use it only for safe
                 data transmission and storage of non-sensitive content.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                If you need a secret that is actually protected, generate a long random one with
+                the <Link href="/password-gen" className={linkCls} style={linkStyle}>Password Generator</Link> instead
+                of encoding it.
               </p>
             </div>
 
