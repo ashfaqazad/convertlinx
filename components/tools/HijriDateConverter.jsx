@@ -1,23 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ArrowRightLeft, Moon, Languages } from "lucide-react";
 import AdjustControl from "./AdjustControl";
-import { ToolHero, ToolSections, CopyButton, Block } from "@/components/ToolSections";
+import { ToolHero, ToolSections, CopyButton } from "@/components/ToolSections";
+import { TOOL_CONTENT } from "@/lib/toolContent";
 import {
   HIJRI_MONTHS, MIN_GREGORIAN, MAX_GREGORIAN, MIN_HIJRI_YEAR, MAX_HIJRI_YEAR,
   gregorianToHijri, hijriToGregorian, formatHijri, formatGregorian,
   isHijriSupported, parseISO, todayISO,
 } from "@/lib/hijri";
-
-const FAQS = [
-  { q: "How do I convert a Hijri date to Gregorian?", a: "Choose Hijri to Gregorian, enter the day, month and year, and the matching Gregorian date and weekday appear instantly." },
-  { q: "Which Islamic calendar does this converter use?", a: "It uses the Umm al-Qura calendar, the official civil calendar of Saudi Arabia, through your browser's built-in calendar support." },
-  { q: "Can the result be wrong by a day?", a: "It can differ by a day from the date announced in your country, because many countries start months by moon sighting. The -1 and +1 adjustment lets you match the local date." },
-  { q: "Why does it say my Hijri date does not exist?", a: "Hijri months have either 29 or 30 days. If you enter the 30th of a month that had 29 days in that year, there is no such date." },
-  { q: "Which years are supported?", a: `Gregorian dates from 1938 to 2076 and Hijri years from ${MIN_HIJRI_YEAR} to ${MAX_HIJRI_YEAR} AH.` },
-];
 
 function convertToHijri(value, adjust) {
   const date = parseISO(value);
@@ -66,7 +58,7 @@ export default function HijriDateConverter({ seo }) {
   const urdu = result?.hijri && `${result.hijri.day} ${HIJRI_MONTHS[result.hijri.month - 1].ur} ${result.hijri.year} ہجری`;
 
   return (
-    <main className="uc-page">
+    <main className="uc-page dc-page dc-hijri">
       <ToolHero crumb="Hijri Date Converter" title="Hijri Date" accent="Converter"
         intro="Convert Gregorian to Hijri and Hijri to Gregorian dates, with Urdu month names." />
 
@@ -123,40 +115,16 @@ export default function HijriDateConverter({ seo }) {
 
       <ToolSections
         benefits={[
-          { icon: ArrowRightLeft, color: "#6366F1", title: "Two-Way Conversion", desc: "Gregorian to Hijri and back again, with the weekday." },
+          { icon: ArrowRightLeft, color: "#B45309", title: "Two-Way Conversion", desc: "Gregorian to Hijri and back again, with the weekday." },
           { icon: Languages, color: "#10B981", title: "Urdu Month Names", desc: "Every result also shows the Hijri date in Urdu." },
           { icon: Moon, color: "#F59E0B", title: "Moon Sighting Control", desc: "Adjust by one day to match your local calendar." },
         ]}
         steps={seo.howItWorks}
         related={[["/today-islamic-date", "Today Islamic Date"], ["/unit-converter", "Unit Converter"], ["/word-counter", "Word Counter"]]}
-        faqs={FAQS}
+        content={TOOL_CONTENT["hijri-date-converter"]}
         ctaTitle="Convert another date"
         ctaText="Free, no signup, and the calculation runs in your browser."
-      >
-        <Block title="Free Islamic date converter">
-          <p>
-            Use this <strong>Islamic date converter</strong> when a form, certificate or invitation needs both
-            calendars. It works as a <strong>Hijri to Gregorian converter</strong> and in the other direction too.
-            If you only want today&apos;s date, see the{" "}
-            <Link href="/today-islamic-date" className="dc-link">today Islamic date</Link> page.
-          </p>
-        </Block>
-        <Block title="How the Hijri calendar works">
-          <p>
-            The Hijri calendar is lunar. It counts from the Prophet&apos;s migration to Madinah in 622 CE and has
-            twelve months of 29 or 30 days. Because the lunar year is shorter than the solar year, occasions such
-            as Ramadan and the two Eids move earlier through the Gregorian calendar each year. For other kinds of
-            conversion, such as length or weight, use the{" "}
-            <Link href="/unit-converter" className="dc-link">unit converter</Link>.
-          </p>
-        </Block>
-        <Block title="Check dates that matter">
-          <p>
-            A calculated date is a good guide for planning, but it is not a moon sighting announcement. For
-            religious duties and legal documents, confirm the date with the relevant authority in your country.
-          </p>
-        </Block>
-      </ToolSections>
+      />
     </main>
   );
 }

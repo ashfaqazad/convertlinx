@@ -1,21 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { CalendarDays, Moon, Languages } from "lucide-react";
 import AdjustControl from "./AdjustControl";
 import { ToolHero, ToolSections, CopyButton, Block } from "@/components/ToolSections";
+import { TOOL_CONTENT } from "@/lib/toolContent";
 import {
   HIJRI_MONTHS, gregorianToHijri, formatHijri, formatGregorian,
   isHijriSupported, parseISO, todayISO,
 } from "@/lib/hijri";
-
-const FAQS = [
-  { q: "What is the Islamic date today?", a: "The large card at the top of this page shows today's Hijri date with the matching Gregorian date, worked out from your device's date using the Umm al-Qura calendar." },
-  { q: "Why is the date in Pakistan sometimes different?", a: "Pakistan begins each Islamic month after local moon sighting, while Umm al-Qura is calculated in advance for Saudi Arabia. The two can differ by a day, so use the -1 or +1 buttons to match the announced date." },
-  { q: "When does a new Islamic day start?", a: "In Islamic practice a new day begins at sunset. This page changes the date at midnight, following your device's calendar, so after Maghrib you may already be in the next Islamic day." },
-  { q: "How many days are in a Hijri year?", a: "A Hijri year has 12 lunar months of 29 or 30 days, 354 or 355 days in total, which is about 11 days shorter than a Gregorian year." },
-];
 
 export default function TodayIslamicDate({ seo, today }) {
   const [iso, setIso] = useState(today);
@@ -36,7 +29,7 @@ export default function TodayIslamicDate({ seo, today }) {
   const month = hijri ? HIJRI_MONTHS[hijri.month - 1] : null;
 
   return (
-    <main className="uc-page">
+    <main className="uc-page dc-page dc-today">
       <ToolHero crumb="Today Islamic Date" title="Today Islamic" accent="Date"
         intro="Today's Hijri date with the Gregorian date and the month name in Urdu and Arabic." />
 
@@ -61,24 +54,16 @@ export default function TodayIslamicDate({ seo, today }) {
 
       <ToolSections
         benefits={[
-          { icon: CalendarDays, color: "#6366F1", title: "Both Calendars", desc: "Hijri and Gregorian dates side by side, with the weekday." },
+          { icon: CalendarDays, color: "#047857", title: "Both Calendars", desc: "Hijri and Gregorian dates side by side, with the weekday." },
           { icon: Languages, color: "#10B981", title: "Urdu and Arabic", desc: "The month name is written in English, Urdu and Arabic." },
           { icon: Moon, color: "#F59E0B", title: "Local Adjustment", desc: "Shift by one day to match the moon sighting where you live." },
         ]}
         steps={seo.howItWorks}
         related={[["/hijri-date-converter", "Hijri Date Converter"], ["/unit-converter", "Unit Converter"], ["/word-counter", "Word Counter"]]}
-        faqs={FAQS}
+        content={TOOL_CONTENT["today-islamic-date"]}
         ctaTitle="Need another date?"
         ctaText="Check today's date again, or convert any other day with the Hijri date converter."
       >
-        <Block title="Today's Hijri date">
-          <p>
-            This page answers one question quickly: what is the <strong>today Islamic date</strong>? To convert a
-            birthday, a document date or an upcoming occasion instead, open the{" "}
-            <Link href="/hijri-date-converter" className="dc-link">Hijri date converter</Link>, which works in both
-            directions.
-          </p>
-        </Block>
         <Block title="Islamic months in Urdu and Arabic">
           <div className="dc-table-wrap">
             <table className="dc-table">

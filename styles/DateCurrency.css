@@ -1,8 +1,43 @@
-/* Extras for the date and currency tools. The page look comes from UnitConverter.css */
+/* Extras for the date and currency tools. The page layout comes from UnitConverter.css;
+   each tool sets its own colours below. */
+.dc-today {
+  --dc-main: #047857; --dc-second: #059669; --dc-rgb: 4, 120, 87;
+  --dc-bg: #ECFDF5; --dc-soft: #F0FDF9; --dc-line: #A7F3D0;
+  --dc-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23047857' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+.dc-hijri {
+  --dc-main: #B45309; --dc-second: #C2660C; --dc-rgb: 180, 83, 9;
+  --dc-bg: #FFFBEB; --dc-soft: #FFFCF2; --dc-line: #FDE68A;
+  --dc-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23B45309' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+.dc-currency {
+  --dc-main: #0369A1; --dc-second: #0284C7; --dc-rgb: 3, 105, 161;
+  --dc-bg: #F0F9FF; --dc-soft: #F5FBFF; --dc-line: #BAE6FD;
+  --dc-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230369A1' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.dc-page.uc-page { background: var(--dc-bg); }
+.dc-page .uc-hero { background: linear-gradient(135deg, var(--dc-bg) 0%, var(--dc-soft) 50%, #fff 100%); }
+.dc-page .uc-blob-1, .dc-page .uc-blob-2 { background: radial-gradient(circle, rgba(var(--dc-rgb), 0.12) 0%, transparent 70%); }
+.dc-page .uc-badge { background: rgba(var(--dc-rgb), 0.08); border-color: rgba(var(--dc-rgb), 0.22); color: var(--dc-main); }
+.dc-page .uc-breadcrumb-link { color: var(--dc-main); }
+.dc-page .uc-grad-text { background: linear-gradient(135deg, var(--dc-main), var(--dc-second)); -webkit-background-clip: text; background-clip: text; }
+.dc-page .uc-tool-card { border-color: rgba(var(--dc-rgb), 0.16); box-shadow: 0 20px 60px -10px rgba(var(--dc-rgb), 0.14); }
+.dc-page .uc-select { background-color: var(--dc-soft); border-color: var(--dc-line); background-image: var(--dc-chevron); }
+.dc-page .uc-select:focus { border-color: var(--dc-main); box-shadow: 0 0 0 4px rgba(var(--dc-rgb), 0.12); background-color: #fff; }
+.dc-page .uc-select-label { color: var(--dc-main); }
+.dc-page .uc-swap-btn { background: rgba(var(--dc-rgb), 0.08); border-color: rgba(var(--dc-rgb), 0.22); color: var(--dc-main); }
+.dc-page .uc-result { background: linear-gradient(135deg, var(--dc-main) 0%, var(--dc-second) 100%); box-shadow: 0 8px 30px rgba(var(--dc-rgb), 0.3); }
+.dc-page .uc-result-empty { background: var(--dc-soft); border-color: var(--dc-line); color: var(--dc-main); }
+.dc-page .uc-section-main { background: var(--dc-bg); }
+.dc-page .uc-divider { border-top-color: rgba(var(--dc-rgb), 0.12); }
+.dc-page .uc-benefit-card, .dc-page .uc-step-card, .dc-page .uc-seo-box, .dc-page .uc-faq-item { border-color: rgba(var(--dc-rgb), 0.14); }
+.dc-page .uc-step-num, .dc-page .uc-feature-dot { background: linear-gradient(135deg, var(--dc-main), var(--dc-second)); }
+.dc-page .uc-cta-section { background: linear-gradient(135deg, var(--dc-main) 0%, var(--dc-second) 100%); }
 .dc-field {
   width: 100%;
-  background: #F8F7FF;
-  border: 1.5px solid #E0DCFF;
+  background: var(--dc-soft);
+  border: 1.5px solid var(--dc-line);
   color: #1a1a2e;
   font-size: 0.95rem;
   font-weight: 600;
@@ -10,7 +45,7 @@
   border-radius: 14px;
   outline: none;
 }
-.dc-field:focus { border-color: #6366F1; background-color: #fff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+.dc-field:focus { border-color: var(--dc-main); background-color: #fff; box-shadow: 0 0 0 4px rgba(var(--dc-rgb), 0.1); }
 
 .dc-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 .dc-tab {
@@ -19,11 +54,11 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
-  border: 1.5px solid rgba(99, 102, 241, 0.2);
+  border: 1.5px solid rgba(var(--dc-rgb), 0.2);
   background: #fff;
-  color: #6366F1;
+  color: var(--dc-main);
 }
-.dc-tab[aria-pressed="true"] { background: linear-gradient(135deg, #6366F1, #8B5CF6); border-color: transparent; color: #fff; }
+.dc-tab[aria-pressed="true"] { background: linear-gradient(135deg, var(--dc-main), var(--dc-second)); border-color: transparent; color: #fff; }
 
 .dc-big { font-size: clamp(2rem, 8vw, 3.25rem); font-weight: 800; line-height: 1.15; color: #fff; }
 .dc-rtl { font-size: 1.5rem; color: rgba(255, 255, 255, 0.92); margin-top: 8px; line-height: 1.9; }
@@ -65,21 +100,21 @@
 
 .dc-table-wrap { overflow-x: auto; }
 .dc-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; background: #fff; }
-.dc-table th, .dc-table td { border: 1px solid #E0DCFF; padding: 10px 14px; text-align: left; }
-.dc-table th { background: #F5F3FF; color: #1a1a2e; }
+.dc-table th, .dc-table td { border: 1px solid var(--dc-line); padding: 10px 14px; text-align: left; }
+.dc-table th { background: var(--dc-bg); color: #1a1a2e; }
 
-.dc-link { color: #6366F1; font-weight: 600; text-decoration: underline; }
+.dc-link { color: var(--dc-main); font-weight: 600; text-decoration: underline; }
 .dc-chip {
   display: inline-flex;
   border-radius: 999px;
-  border: 1px solid #C7D2FE;
-  background: #EEF2FF;
-  color: #4338CA;
+  border: 1px solid var(--dc-line);
+  background: var(--dc-bg);
+  color: var(--dc-main);
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 12px;
 }
-.dc-chip:hover { background: #E0E7FF; }
+.dc-chip:hover { background: #fff; }
 
 .dc-swap-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: end; }
 @media (max-width: 520px) {

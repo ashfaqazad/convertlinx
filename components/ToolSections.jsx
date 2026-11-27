@@ -2,7 +2,7 @@
 
 // Page sections shared by the date and currency tools, in the same order and
 // style as the Unit Converter page.
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Copy, Check } from "lucide-react";
 import "@/styles/UnitConverter.css";
@@ -10,6 +10,33 @@ import "@/styles/DateCurrency.css";
 
 const HEADING = { color: "#1a1a2e" };
 const MUTED = { color: "#6B7280" };
+const ACCENT = { color: "var(--dc-main)" };
+
+// Turns **bold** and [anchor text](/path) inside content strings into elements
+function Rich({ text }) {
+  return text.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(part);
+    if (link) return <Link key={i} href={link[2]} className="dc-link">{link[1]}</Link>;
+    if (part.startsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    return part;
+  });
+}
+
+function ListBox({ title, items }) {
+  return (
+    <div className="uc-seo-box">
+      <h3 className="font-bold text-lg mb-4" style={HEADING}>{title}</h3>
+      <ul className="grid sm:grid-cols-2 gap-3">
+        {items.map((item) => (
+          <li key={item} className="flex items-center gap-2.5">
+            <span className="uc-feature-dot" />
+            <span><Rich text={item} /></span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export function ToolHero({ crumb, title, accent, intro }) {
   return (
@@ -19,8 +46,8 @@ export function ToolHero({ crumb, title, accent, intro }) {
       <div className="relative z-10 max-w-3xl mx-auto">
         <nav aria-label="Breadcrumb" className="flex items-center justify-center gap-2 text-sm mb-6">
           <Link href="/" className="uc-breadcrumb-link">Home</Link>
-          <span style={{ color: "#C4B5FD" }}>/</span>
-          <span style={{ color: "#6366F1" }}>{crumb}</span>
+          <span style={ACCENT}>/</span>
+          <span style={ACCENT}>{crumb}</span>
         </nav>
         <span className="uc-badge mb-5">Free Tool</span>
         <h1 className="text-4xl md:text-5xl font-extrabold leading-tight mb-4 mt-5" style={HEADING}>
@@ -64,7 +91,9 @@ export function Block({ title, children }) {
   );
 }
 
-export function ToolSections({ benefits, steps, related, faqs, ctaTitle, ctaText, children }) {
+export function ToolSections({ benefits, steps, related, content, ctaTitle, ctaText, children }) {
+  const { sections, uses, who, features, faqs } = content;
+
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -118,7 +147,24 @@ export function ToolSections({ benefits, steps, related, faqs, ctaTitle, ctaText
       <hr className="uc-divider" />
       <section className="uc-section-alt py-16 px-6">
         <div className="max-w-3xl mx-auto space-y-8 text-sm leading-7" style={MUTED}>
-          {children}
+          {sections.map((section, index) => (
+            <Fragment key={section.title}>
+            <Block title={section.title}>
+              {section.paras.map((p) => (
+                <p key={p} className="mb-3"><Rich text={p} /></p>
+              ))}
+              {section.list && (
+                <ul className="list-disc pl-5">
+                  {section.list.map((item) => <li key={item}><Rich text={item} /></li>)}
+                </ul>
+              )}
+            </Block>
+            {index === 0 && children}
+            </Fragment>
+          ))}
+          <ListBox title="Common Uses" items={uses} />
+          <ListBox title="Who Should Use This?" items={who} />
+          <ListBox title="Features" items={features} />
           <div className="rounded-2xl border border-slate-200 bg-white/70 p-5">
             <p className="text-sm font-semibold text-slate-700 mb-3">
               You may also find these free tools helpful:
@@ -141,7 +187,7 @@ export function ToolSections({ benefits, steps, related, faqs, ctaTitle, ctaText
               <details key={faq.q} className="uc-faq-item">
                 <summary className="flex items-center justify-between gap-4">
                   <span className="font-semibold text-sm" style={{ color: "#374151" }}>{faq.q}</span>
-                  <ChevronDown className="w-4 h-4 shrink-0" style={{ color: "#6366F1" }} />
+                  <ChevronDown className="w-4 h-4 shrink-0" style={ACCENT} />
                 </summary>
                 <p className="mt-3 text-sm leading-relaxed" style={MUTED}>{faq.a}</p>
               </details>

@@ -1,22 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ArrowRightLeft, RefreshCw, Globe, ShieldCheck } from "lucide-react";
 import { ToolHero, ToolSections, CopyButton, Block } from "@/components/ToolSections";
+import { TOOL_CONTENT } from "@/lib/toolContent";
 import { CURRENCIES, PAIR_AMOUNTS, convertCurrency, formatMoney } from "@/lib/currencies";
 
 const PAIRS = [
   ["/usd-to-pkr", "USD to PKR"],
   ["/sar-to-pkr", "SAR to PKR"],
   ["/aed-to-pkr", "AED to PKR"],
-];
-
-const FAQS = [
-  { q: "Where do the exchange rates come from?", a: "Rates come from Exchange Rate API. The provider updates them once a day, and this page shows when the rates were last updated." },
-  { q: "Are these the rates I will get at a bank or exchange company?", a: "No. They are indicative reference rates. Banks, exchange companies and remittance services add their own margin and fees, so ask them for the rate you will actually receive." },
-  { q: "Is the currency converter live?", a: "It is not a tick-by-tick trading feed. Rates refresh daily, which suits estimates and planning but not trading decisions." },
-  { q: "Is it free?", a: "Yes. The converter is free and needs no signup." },
 ];
 
 const dateTime = (ms) =>
@@ -48,7 +41,7 @@ export default function CurrencyConverter({ seo, rates: data }) {
   );
 
   return (
-    <main className="uc-page">
+    <main className="uc-page dc-page dc-currency">
       <ToolHero
         crumb={seo.breadcrumb || "Currency Converter"}
         title={pair ? seo.h1 : "Currency"}
@@ -86,7 +79,7 @@ export default function CurrencyConverter({ seo, rates: data }) {
                   <div className="uc-result">
                     <div className="uc-result-number">{`${formatMoney(result)} ${to}`}</div>
                     <p className="uc-result-unit">{`${formatMoney(value)} ${from} = ${formatMoney(result)} ${to}`}</p>
-                    <p className="uc-result-unit">{`1 ${from} = ${formatMoney(unit)} ${to}`}</p>
+                    {value !== 1 && <p className="uc-result-unit">{`1 ${from} = ${formatMoney(unit)} ${to}`}</p>}
                     <CopyButton text={`${formatMoney(value)} ${from} = ${formatMoney(result)} ${to}`} />
                   </div>
                 )}
@@ -107,7 +100,7 @@ export default function CurrencyConverter({ seo, rates: data }) {
 
       <ToolSections
         benefits={[
-          { icon: RefreshCw, color: "#6366F1", title: "Daily Rates", desc: "Reference rates with the last update time shown." },
+          { icon: RefreshCw, color: "#0369A1", title: "Daily Rates", desc: "Reference rates with the last update time shown." },
           { icon: Globe, color: "#10B981", title: "Gulf and Major Currencies", desc: "PKR, SAR, AED, USD, GBP, EUR and more." },
           { icon: ShieldCheck, color: "#F59E0B", title: "No Made-Up Numbers", desc: "If rates cannot be loaded, the page says so." },
         ]}
@@ -117,7 +110,7 @@ export default function CurrencyConverter({ seo, rates: data }) {
           ...PAIRS.filter(([href]) => href !== seo.canonical),
           ["/unit-converter", "Unit Converter"],
         ]}
-        faqs={seo.faqs || FAQS}
+        content={TOOL_CONTENT[seo.canonical.slice(1)]}
         ctaTitle="Convert another amount"
         ctaText="Free, no signup. Check the final rate with your provider before you send money."
       >
@@ -140,41 +133,6 @@ export default function CurrencyConverter({ seo, rates: data }) {
             </div>
             <p className="mt-2 text-xs">Indicative values based on the rates shown above.</p>
           </Block>
-        )}
-
-        {pair ? (
-          <>
-            <Block title={seo.extraTitle}>
-              <p>{seo.extra}</p>
-            </Block>
-            <Block title="Other conversions">
-              <p>
-                Change either currency in the box above, or open the main{" "}
-                <Link href="/currency-converter" className="dc-link">currency converter</Link>. For length, weight or
-                temperature, use the <Link href="/unit-converter" className="dc-link">unit converter</Link>.
-              </p>
-            </Block>
-          </>
-        ) : (
-          <>
-            <Block title="Free online currency converter">
-              <p>
-                This <strong>currency converter</strong> gives a quick estimate for budgeting, invoices, shopping and
-                money sent home from abroad. Popular pages:{" "}
-                {PAIRS.map(([href, label], i) => (
-                  <span key={href}>{i > 0 && ", "}<Link href={href} className="dc-link">{label}</Link></span>
-                ))}.
-              </p>
-            </Block>
-            <Block title="Why your actual rate differs">
-              <p>
-                A reference rate sits between the buying and selling price. When you exchange cash or send money,
-                the provider usually offers a less favourable rate and may charge a fee as well. Compare the final
-                amount the receiver gets, not only the headline rate. For measurements rather than money, use the{" "}
-                <Link href="/unit-converter" className="dc-link">unit converter</Link>.
-              </p>
-            </Block>
-          </>
         )}
       </ToolSections>
     </main>
