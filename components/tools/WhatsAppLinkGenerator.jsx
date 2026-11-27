@@ -6,6 +6,9 @@ import Script from 'next/script';
 import '@/styles/WhatsAppLinkGenerator.css';
 import Link from 'next/link';
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#059669' };
+
 export default function WhatsAppLinkGenerator() {
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
@@ -287,6 +290,13 @@ export default function WhatsAppLinkGenerator() {
                 and social media ads. Use the QR code version for anything physical — shop counters,
                 product packaging, restaurant menus, business cards, and flyers — where customers can
                 scan with their phone camera to open the chat instantly.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Want more control over a printed code? Create a custom QR code with your own
+                colors and logo using the <Link href="/qr-generator" className={linkCls} style={linkStyle}>QR Code Generator</Link>. Sharing
+                the link on your website or social posts? Preview how it looks when shared with
+                the <Link href="/og-preview-checker" className={linkCls} style={linkStyle}>OG Preview Checker</Link> and
+                write a better title and description with the <Link href="/metatag-generator" className={linkCls} style={linkStyle}>Meta Tag Generator</Link>.
               </p>
             </div>
 

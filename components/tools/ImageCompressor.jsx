@@ -426,6 +426,13 @@ export default function ImageCompressor() {
                 </Link>{' '}
                 tools.
               </p>
+              <p className="leading-7 text-sm mt-3">
+                Working with video instead of photos? Reduce its size with the{' '}
+                <Link href="/video-compressor" className="text-emerald-600 font-semibold underline hover:text-emerald-800">
+                  Video Compressor
+                </Link>
+                .
+              </p>
             </div>
 
             <div>

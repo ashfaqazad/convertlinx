@@ -18,6 +18,9 @@ const POSITIONS = [
   { id: 'bot-right',    label: 'Bot Right' },
 ];
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#059669' };
+
 export default function AddWatermark() {
   const [image,       setImage]       = useState(null);   // { src, name, width, height }
   const [wmType,      setWmType]      = useState('text'); // 'text' | 'logo'
@@ -465,6 +468,13 @@ export default function AddWatermark() {
                 and brands that want their visual identity on every image. Upload a PNG with a
                 transparent background for the cleanest result. Position it in a corner at around
                 15–20% of the image width for a professional, unobtrusive look.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                No transparent logo yet? Remove its background first with the <Link href="/background-remover" className={linkCls} style={linkStyle}>Background Remover</Link>, or
+                create a handwritten-style mark with the <Link href="/signature-maker" className={linkCls} style={linkStyle}>Signature Maker</Link> and
+                use the transparent PNG as your watermark. After watermarking, reduce the file
+                size with the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link> or
+                fit a platform size with the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>.
               </p>
             </div>
 

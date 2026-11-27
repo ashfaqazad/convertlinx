@@ -42,6 +42,9 @@ function parseMetaTags(html) {
   };
 }
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#059669' };
+
 export default function OgPreviewChecker() {
   const [html, setHtml] = useState('');
   const [copied, setCopied] = useState(false);
@@ -354,6 +357,13 @@ export default function OgPreviewChecker() {
                 A broken or missing link preview can quietly hurt click-through rates on every post,
                 ad, and shared link — since people are far less likely to click a link with no image
                 or a confusing snippet next to it.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Fix what the checker finds by generating complete tags with the <Link href="/metatag-generator" className={linkCls} style={linkStyle}>Meta Tag Generator</Link>. Use
+                a preview image of the right size: crop it with the <Link href="/image-cropper" className={linkCls} style={linkStyle}>Image Cropper</Link> or
+                resize it with the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>, then
+                shrink it with the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link> so
+                the preview loads fast. Sharing on WhatsApp? Build a click-to-chat link with the <Link href="/whatsapp-link-generator" className={linkCls} style={linkStyle}>WhatsApp Link Generator</Link>.
               </p>
             </div>
 

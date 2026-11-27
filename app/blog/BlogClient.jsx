@@ -14,7 +14,7 @@ import { useMemo, useState } from "react";
 // const blogs: Blog[] = [
 const blogs = [
   {
-    title: "How to Generate QR Codes Instantly — Free, No Signup, Fully Customizable",
+    title: "How to Make a QR Code for Free (Step-by-Step Guide)",
     description:
       "Create QR codes for URLs, Wi-Fi passwords, business cards, and more in under 20 seconds. No watermarks, no signup — just a clean, downloadable PNG ready to use anywhere.",
     date: "2025-12-02",

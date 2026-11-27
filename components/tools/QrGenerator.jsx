@@ -1146,7 +1146,7 @@ export default function QRGenerator() {
               className="text-4xl md:text-5xl font-extrabold leading-tight mb-4"
               style={{ color: "#1a1a2e" }}
             >
-              QR Code <span className="grad-text">Generator</span>
+              Create QR Codes <span className="grad-text">Free Online</span>
             </h1>
             <p
               className="text-base md:text-lg max-w-2xl mx-auto leading-relaxed"

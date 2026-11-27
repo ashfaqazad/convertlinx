@@ -6,6 +6,9 @@ import Script from 'next/script';
 import '@/styles/HeicToJpg.css';
 import Link from 'next/link';
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#C026D3' };
+
 export default function HeicToJpg() {
   const [converted, setConverted] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -274,6 +277,14 @@ export default function HeicToJpg() {
                 JPG files, however, are more widely supported across Windows computers, Android phones,
                 browsers, websites, online forms, and editing apps. If your iPhone photos are not opening
                 properly or not uploading correctly, converting HEIC to JPG is the easiest fix.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                After converting, reduce the file size with the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link>, set
+                exact dimensions with the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>, or
+                crop with the <Link href="/image-cropper" className={linkCls} style={linkStyle}>Image Cropper</Link>. Need
+                another format? The <Link href="/image-converter" className={linkCls} style={linkStyle}>Image Converter</Link> handles
+                JPG, PNG and WebP, and files that end in .jfif can be opened with the <Link href="/jfif-to-jpg" className={linkCls} style={linkStyle}>JFIF to JPG</Link> converter.
+                Want the text from a photo? Try <Link href="/image-to-text" className={linkCls} style={linkStyle}>Image to Text</Link>.
               </p>
             </div>
 

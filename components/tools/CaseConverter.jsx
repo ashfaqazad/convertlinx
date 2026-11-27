@@ -19,6 +19,9 @@ const CASES = [
   { id: 'alternating', label: 'aLtErNaTiNg',   preview: 'hElLo WoRlD',  fn: t => t.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('') },
 ];
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#EA580C' };
+
 export default function CaseConverter() {
   const [text, setText]     = useState('');
   const [active, setActive] = useState('title');
@@ -245,6 +248,14 @@ export default function CaseConverter() {
                 Our free online case converter supports 10 different formats including everyday text
                 styles and developer-specific naming conventions, all running entirely in your browser
                 with zero setup and no account required.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Cleaning up text for the web? Turn a title into a URL-friendly slug with the <Link href="/text-to-slug" className={linkCls} style={linkStyle}>Text to Slug</Link> tool,
+                check its length with the <Link href="/word-counter" className={linkCls} style={linkStyle}>Word Counter</Link>, or
+                generate placeholder copy with the <Link href="/lorem-ipsum" className={linkCls} style={linkStyle}>Lorem Ipsum Generator</Link>. Developers
+                can format payloads with the <Link href="/json-formatter" className={linkCls} style={linkStyle}>JSON Formatter</Link> and
+                test patterns with the <Link href="/regex-tester" className={linkCls} style={linkStyle}>Regex Tester</Link>. Text
+                trapped in an image? Extract it first with <Link href="/image-to-text" className={linkCls} style={linkStyle}>Image to Text</Link>.
               </p>
             </div>
 

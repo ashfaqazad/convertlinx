@@ -45,6 +45,9 @@ const faqs = [
     a: 'Yes — using unique passwords for every account is the most important security habit. If one account is breached, your other accounts stay safe. A password manager can help you store them all.' },
 ];
 
+const linkCls = 'font-semibold underline underline-offset-2 hover:opacity-80';
+const linkStyle = { color: '#6366F1' };
+
 export default function PasswordGenerator() {
   const [options, setOptions] = useState({
     length:         16,
@@ -310,6 +313,11 @@ export default function PasswordGenerator() {
                 This free online password generator runs entirely in your browser — nothing is
                 sent to any server, and no passwords are ever logged or stored. Generate as many
                 passwords as you need, instantly and privately.
+              </p>
+              <p className="leading-7 text-sm mt-3">
+                Setting up Wi-Fi for guests? Put the new password into a scannable code with the <Link href="/qr-generator" className={linkCls} style={linkStyle}>QR Code Generator</Link> so
+                visitors can join without typing it. Developers who need test credentials can also
+                encode them for an HTTP Basic Auth header with the <Link href="/base64-tool" className={linkCls} style={linkStyle}>Base64 Tool</Link>.
               </p>
             </div>
 
