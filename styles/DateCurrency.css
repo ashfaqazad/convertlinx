@@ -1,0 +1,88 @@
+/* Extras for the date and currency tools. The page look comes from UnitConverter.css */
+.dc-field {
+  width: 100%;
+  background: #F8F7FF;
+  border: 1.5px solid #E0DCFF;
+  color: #1a1a2e;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 13px 14px;
+  border-radius: 14px;
+  outline: none;
+}
+.dc-field:focus { border-color: #6366F1; background-color: #fff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+
+.dc-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.dc-tab {
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1.5px solid rgba(99, 102, 241, 0.2);
+  background: #fff;
+  color: #6366F1;
+}
+.dc-tab[aria-pressed="true"] { background: linear-gradient(135deg, #6366F1, #8B5CF6); border-color: transparent; color: #fff; }
+
+.dc-big { font-size: clamp(2rem, 8vw, 3.25rem); font-weight: 800; line-height: 1.15; color: #fff; }
+.dc-rtl { font-size: 1.5rem; color: rgba(255, 255, 255, 0.92); margin-top: 8px; line-height: 1.9; }
+.dc-copy {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 999px;
+}
+
+.dc-note {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  color: #92400E;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+.dc-error {
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.dc-table-wrap { overflow-x: auto; }
+.dc-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; background: #fff; }
+.dc-table th, .dc-table td { border: 1px solid #E0DCFF; padding: 10px 14px; text-align: left; }
+.dc-table th { background: #F5F3FF; color: #1a1a2e; }
+
+.dc-link { color: #6366F1; font-weight: 600; text-decoration: underline; }
+.dc-chip {
+  display: inline-flex;
+  border-radius: 999px;
+  border: 1px solid #C7D2FE;
+  background: #EEF2FF;
+  color: #4338CA;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+}
+.dc-chip:hover { background: #E0E7FF; }
+
+.dc-swap-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: 12px; align-items: end; }
+@media (max-width: 520px) {
+  .dc-swap-row { grid-template-columns: minmax(0, 1fr); }
+  .dc-swap-row > button { justify-self: center; }
+}

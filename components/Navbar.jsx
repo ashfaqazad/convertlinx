@@ -43,6 +43,9 @@ import {
   Clapperboard,
   Menu,
   X,
+  CalendarDays,
+  Moon,
+  Banknote,
 } from "lucide-react";
 
 // ─────────────────────────────────────────
@@ -97,6 +100,9 @@ const textTools = [
       { href: "/audio-converter",   icon: Music,    color: "#E11D48", label: "Audio Converter"    },
       { href: "/mp4-to-mp3",        icon: Video,    color: "#7C3AED", label: "MP4 to MP3"         },
       { href: "/video-compressor",  icon: Clapperboard, color: "#0891B2", label: "Video Compressor" },
+      { href: "/today-islamic-date",   icon: Moon,         color: "#059669", label: "Today Islamic Date" },
+      { href: "/hijri-date-converter", icon: CalendarDays, color: "#6366F1", label: "Hijri Date Converter" },
+      { href: "/currency-converter",   icon: Banknote,     color: "#16A34A", label: "Currency Converter" },
     ],
   },
 ];

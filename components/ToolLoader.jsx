@@ -39,11 +39,14 @@ const toolMap = {
   'audio-converter':              dynamic(() => import('@/components/tools/Audioconverter')),
   'mp4-to-mp3':              dynamic(() => import('@/components/tools/Mp4tomp3')),
   'video-compressor':        dynamic(() => import('@/components/tools/VideoCompressor')),
+  'hijri-date-converter':    dynamic(() => import('@/components/tools/HijriDateConverter')),
+  'today-islamic-date':      dynamic(() => import('@/components/tools/TodayIslamicDate')),
+  'currency-converter':      dynamic(() => import('@/components/tools/CurrencyConverter')),
 
 }
 
-export default function ToolLoader({ tool, seo }) {
+export default function ToolLoader({ tool, ...props }) {
   const Component = toolMap[tool]
   if (!Component) return null
-  return <Component seo={seo} />
+  return <Component {...props} />
 }

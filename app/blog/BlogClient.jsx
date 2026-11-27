@@ -229,6 +229,22 @@ const blogs = [
     slug: "remove-bg-alternative-free",
     category: "Image Tools",
   },
+  {
+    title: "Hijri to Gregorian Date Conversion Guide",
+    description:
+      "How Hijri and Gregorian dates relate, why they can differ by a day, and how to convert between them for free.",
+    date: "2026-11-27",
+    slug: "hijri-to-gregorian-date-conversion-guide",
+    category: "Utilities",
+  },
+  {
+    title: "USD, SAR and AED to PKR Rate Guide",
+    description:
+      "What a reference exchange rate means, why your bank or exchange company quotes a different one, and how to compare what you will receive.",
+    date: "2026-11-27",
+    slug: "usd-sar-aed-to-pkr-currency-guide",
+    category: "Utilities",
+  },
 ];
 
 // Newest first

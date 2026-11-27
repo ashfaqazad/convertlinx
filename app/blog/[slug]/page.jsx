@@ -300,6 +300,8 @@ const blogs = [
 
 <p><strong>Science and engineering homework:</strong> Physics problems routinely mix metric and imperial. Converting between SI units, converting between newtons and pounds-force, switching between joules and calories — having a fast, accurate tool beats re-deriving conversion factors from first principles every time.</p>
 
+<p><strong>Money and dates:</strong> Units are not the only thing that needs converting. For rupee amounts use the <a href="/currency-converter" class="text-teal-600 hover:underline">Currency Converter</a>, and for Islamic dates the <a href="/hijri-date-converter" class="text-teal-600 hover:underline">Hijri Date Converter</a>.</p>
+
 <h3>Metric vs. Imperial: Why Is This Still a Thing?</h3>
 
 <p>The United States, Liberia, and Myanmar are the only countries that haven't officially adopted the metric system. The UK is officially metric but culturally still uses miles, pints, and stones. This global inconsistency means unit conversion isn't going away any time soon.</p>
@@ -3209,6 +3211,135 @@ const blogs = [
   </p>
   <a href="/background-remover" class="inline-block bg-teal-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-teal-700 transition shadow-lg">
     Try the Background Remover →
+  </a>
+</div>
+
+<p class="text-center text-gray-600">
+  <a href="/blog" class="text-teal-600 hover:underline">← Back to all guides</a>
+</p>
+    `,
+  },
+
+  {
+    slug: "hijri-to-gregorian-date-conversion-guide",
+    title: "Hijri to Gregorian Date Conversion Guide",
+    date: "Nov 27, 2026",
+    description:
+      "How Hijri and Gregorian dates relate, why they can differ by a day, and how to convert between them for free.",
+    keywords: ["hijri to gregorian","islamic date converter","hijri date converter","today islamic date","islamic months in urdu"],
+    content: `
+<h2>Hijri to Gregorian: How to Convert Dates Without Guesswork</h2>
+
+<p>Many of us live with two calendars. School, work and banks follow the Gregorian date, while Ramadan, Eid, Hajj and family occasions follow the Hijri date. The <a href="/hijri-date-converter"><strong>Hijri Date Converter</strong></a> on ConvertLinx moves between the two in either direction, and the <a href="/today-islamic-date"><strong>Today Islamic Date</strong></a> page shows today's date at a glance.</p>
+
+<h3>Why the two calendars do not line up</h3>
+
+<p>The Gregorian calendar follows the sun and has 365 or 366 days. The Hijri calendar follows the moon: twelve months of 29 or 30 days, 354 or 355 days in a year. The Hijri year is therefore about 11 days shorter, so Ramadan arrives earlier each Gregorian year and moves through all the seasons over roughly three decades.</p>
+
+<h3>The Islamic months</h3>
+
+<ol class="list-decimal list-inside space-y-1 ml-4">
+  <li>Muharram (محرم)</li>
+  <li>Safar (صفر)</li>
+  <li>Rabi al-Awwal (ربیع الاول)</li>
+  <li>Rabi al-Thani (ربیع الثانی)</li>
+  <li>Jumada al-Awwal (جمادی الاول)</li>
+  <li>Jumada al-Thani (جمادی الثانی)</li>
+  <li>Rajab (رجب)</li>
+  <li>Shaban (شعبان)</li>
+  <li>Ramadan (رمضان)</li>
+  <li>Shawwal (شوال)</li>
+  <li>Dhu al-Qadah (ذوالقعدہ)</li>
+  <li>Dhu al-Hijjah (ذوالحجہ)</li>
+</ol>
+
+<h3>How to convert a date</h3>
+
+<ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
+  <li>Open the <a href="/hijri-date-converter" class="text-teal-600 hover:underline">Hijri Date Converter</a></li>
+  <li>Choose Gregorian to Hijri, or Hijri to Gregorian</li>
+  <li>Enter the date and read the result with the Urdu month name</li>
+  <li>Use -1 or +1 if your local announced date differs, then copy the result</li>
+</ol>
+
+<h3>Why your date may differ by one day</h3>
+
+<p>The converter uses the Umm al-Qura calendar, which Saudi Arabia calculates in advance for civil use. Pakistan and a number of other countries begin a month after the new moon is sighted. Both approaches are in use, so a one day difference is normal. For fasting, Eid and other religious duties, follow the announcement of your local moon sighting authority rather than any website.</p>
+
+<h3>Where date conversion is useful</h3>
+
+<ul>
+  <li>Filling forms that ask for both dates</li>
+  <li>Finding the Gregorian date of a birth or marriage recorded in Hijri</li>
+  <li>Planning leave and travel around Eid or Hajj, keeping a margin of a day</li>
+  <li>Writing invitations that show both calendars</li>
+</ul>
+
+<p>Writing an invitation or a short notice? The <a href="/word-counter" class="text-teal-600 hover:underline">Word Counter</a> helps you keep it to length.</p>
+
+<div class="bg-teal-50 border border-teal-200 rounded-xl p-8 text-center my-12">
+  <p class="text-xl font-semibold text-teal-800 mb-4">
+    Convert Hijri and Gregorian dates free, with no signup.
+  </p>
+  <a href="/hijri-date-converter" class="inline-block bg-teal-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-teal-700 transition shadow-lg">
+    Open the Hijri Date Converter →
+  </a>
+</div>
+
+<p class="text-center text-gray-600">
+  <a href="/blog" class="text-teal-600 hover:underline">← Back to all guides</a>
+</p>
+    `,
+  },
+  {
+    slug: "usd-sar-aed-to-pkr-currency-guide",
+    title: "USD, SAR and AED to PKR Rate Guide",
+    date: "Nov 27, 2026",
+    description:
+      "What a reference exchange rate means, why your bank or exchange company quotes a different one, and how to compare what you will receive.",
+    keywords: ["usd to pkr","sar to pkr","aed to pkr","currency converter","exchange rate explained"],
+    content: `
+<h2>USD, SAR and AED to PKR: What the Rate on Your Screen Really Means</h2>
+
+<p>You check a rate, send money, and fewer rupees arrive than you expected. Usually nothing went wrong: the number you checked and the number you were offered are different kinds of rate. This guide explains the difference, using the <a href="/currency-converter"><strong>ConvertLinx Currency Converter</strong></a>.</p>
+
+<h3>Quick links</h3>
+
+<ul>
+  <li><a href="/usd-to-pkr" class="text-teal-600 hover:underline">USD to PKR</a>: freelance income, online payments, imports</li>
+  <li><a href="/sar-to-pkr" class="text-teal-600 hover:underline">SAR to PKR</a>: remittances from Saudi Arabia and Umrah budgeting</li>
+  <li><a href="/aed-to-pkr" class="text-teal-600 hover:underline">AED to PKR</a>: remittances from the UAE and Dubai travel costs</li>
+</ul>
+
+<h3>Reference rate, bank rate, open market rate</h3>
+
+<p>A <strong>reference rate</strong> is an indicative figure used for estimates. A <strong>bank or payment service rate</strong> is what that company actually applies to your transaction, normally with a margin. An <strong>open market rate</strong> is what exchange companies quote for cash, with separate buying and selling prices. The converter shows indicative daily rates only.</p>
+
+<h3>How to compare two services fairly</h3>
+
+<ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
+  <li>Fix the amount you want to send</li>
+  <li>Ask each service how many rupees the receiver will get after all fees</li>
+  <li>Compare that final figure, not the advertised rate</li>
+  <li>Check how long the transfer takes and whether the quoted rate is locked</li>
+</ol>
+
+<h3>Why SAR and AED follow the dollar</h3>
+
+<p>Saudi Arabia pegs the riyal to the US dollar at 3.75, and the UAE pegs the dirham at about 3.6725. Because both are fixed against the dollar, their value in rupees mostly changes when the rupee moves against the dollar.</p>
+
+<h3>About our data</h3>
+
+<p>Rates come from <a href="https://www.exchangerate-api.com" target="_blank" rel="noopener" class="text-teal-600 hover:underline">Exchange Rate API</a> and are updated once a day. The converter shows the last update time, and if rates cannot be loaded it shows an error instead of a guessed number. Do not rely on it for trading or for settling a contract.</p>
+
+<p>Also converting measurements for a parcel or a purchase abroad? Try the <a href="/unit-converter" class="text-teal-600 hover:underline">Unit Converter</a>.</p>
+
+<div class="bg-teal-50 border border-teal-200 rounded-xl p-8 text-center my-12">
+  <p class="text-xl font-semibold text-teal-800 mb-4">
+    Estimate USD, SAR, AED and more in rupees, free.
+  </p>
+  <a href="/currency-converter" class="inline-block bg-teal-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-teal-700 transition shadow-lg">
+    Open the Currency Converter →
   </a>
 </div>
 

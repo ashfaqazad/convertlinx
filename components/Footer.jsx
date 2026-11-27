@@ -61,6 +61,9 @@ const Footer = () => {
               <li><Link href="/signature-maker" className="hover:text-indigo-400 transition">Signature Maker</Link></li>
               <li><Link href="/image-resizer" className="hover:text-indigo-400 transition">Image Resizer</Link></li>
               <li><Link href="/image-cropper" className="hover:text-indigo-400 transition">Image Cropper</Link></li>
+              <li><Link href="/today-islamic-date" className="hover:text-indigo-400 transition">Today Islamic Date</Link></li>
+              <li><Link href="/hijri-date-converter" className="hover:text-indigo-400 transition">Hijri Date Converter</Link></li>
+              <li><Link href="/currency-converter" className="hover:text-indigo-400 transition">Currency Converter</Link></li>
             </ul>
           </div>
 

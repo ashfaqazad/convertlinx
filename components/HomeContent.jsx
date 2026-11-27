@@ -24,6 +24,9 @@ import {
   Music,
   Video,
   Clapperboard,
+  CalendarDays,
+  Moon,
+  Banknote,
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
@@ -670,6 +673,33 @@ export default function HomeContent() {
       cat: "convert",
     },
 
+    {
+      title: "Today Islamic Date",
+      desc: "Today's Hijri date with Urdu and Arabic month names.",
+      link: "/today-islamic-date",
+      icon: <Moon className="w-7 h-7" />,
+      accent: "#059669",
+      tag: "Utility",
+      cat: "utility",
+    },
+    {
+      title: "Hijri Date Converter",
+      desc: "Convert Hijri and Gregorian dates in both directions.",
+      link: "/hijri-date-converter",
+      icon: <CalendarDays className="w-7 h-7" />,
+      accent: "#4F46E5",
+      tag: "Utility",
+      cat: "utility",
+    },
+    {
+      title: "Currency Converter",
+      desc: "Indicative daily rates for PKR, USD, SAR, AED and more.",
+      link: "/currency-converter",
+      icon: <Banknote className="w-7 h-7" />,
+      accent: "#16A34A",
+      tag: "Utility",
+      cat: "utility",
+    },
   ];
 
   const stats = [

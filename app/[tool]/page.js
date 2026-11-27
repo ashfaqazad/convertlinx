@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import { seoData } from "@/lib/seoData";
 import { generateSchemas } from "@/lib/generateSchemas";
 import ToolLoader from "@/components/ToolLoader";
+import { unstable_cache } from "next/cache";
+import { getExchangeRates } from "@/lib/exchangeRates";
+import { todayISO } from "@/lib/hijri";
 
 const SITE_URL = "https://convertlinx.com";
 
@@ -44,8 +47,25 @@ const BASE_TOOLS = new Set([
   "audio-converter",
   "mp4-to-mp3",
   "video-compressor",
+  "hijri-date-converter",
+  "today-islamic-date",
+  "currency-converter",
   
 ]);
+
+// Refreshed hourly, so the server-rendered "today" page does not stay on the build date
+const getTodayInPakistan = unstable_cache(
+  async () => todayISO("Asia/Karachi"),
+  ["today-pk"],
+  { revalidate: 3600 }
+);
+
+// Extra server data, fetched only for the tools that need it
+async function getToolProps(baseTool) {
+  if (baseTool === "currency-converter") return { rates: await getExchangeRates() };
+  if (baseTool === "today-islamic-date") return { today: await getTodayInPakistan() };
+  return {};
+}
 
 // 🔹 Resolve base tool (for variants)
 function resolveBaseTool(slug) {
@@ -190,6 +210,7 @@ export default async function ToolPage({ params }) {
 
   // ✅ Server-side JSON-LD (raw HTML mein aayega)
   const schemas = generateSchemas(pageData);
+  const toolProps = await getToolProps(baseTool);
 
   return (
     <>
@@ -203,7 +224,7 @@ export default async function ToolPage({ params }) {
         />
       ))}
       {/* ✅ ToolLoader client pe sahi tool ka chunk load karega */}
-      <ToolLoader tool={baseTool} seo={pageData} />
+      <ToolLoader key={tool} tool={baseTool} seo={pageData} {...toolProps} />
     </>
   );
 }

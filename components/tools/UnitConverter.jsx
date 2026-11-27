@@ -400,6 +400,14 @@ export default function UnitConverter() {
                   Password Generator
                 </a> */}
 
+                <a href="/currency-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Currency Converter
+                </a>
+
+                <a href="/hijri-date-converter" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
+                  Hijri Date Converter
+                </a>
+
                 <a href="/image-compressor" className="inline-flex items-center rounded-full border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 hover:bg-indigo-100 hover:border-indigo-300 transition">
                   Image Compressor
                 </a>

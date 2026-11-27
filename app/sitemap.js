@@ -41,6 +41,14 @@ const LAST_MODIFIED = {
   "/signature-maker": "2026-10-27",
   "/text-to-pdf": "2026-10-08",
   "/png-to-jpg": "2026-10-15",
+  "/hijri-date-converter": "2026-11-27",
+  "/today-islamic-date": "2026-11-27",
+  "/currency-converter": "2026-11-27",
+  "/usd-to-pkr": "2026-11-27",
+  "/sar-to-pkr": "2026-11-27",
+  "/aed-to-pkr": "2026-11-27",
+  "/blog/hijri-to-gregorian-date-conversion-guide": "2026-11-27",
+  "/blog/usd-sar-aed-to-pkr-currency-guide": "2026-11-27",
   "/jfif-to-jpg": "2026-10-15",
   "/blog/compress-images-without-losing-quality": "2025-12-06",
   "/blog/resize-image-online-free-tool": "2025-12-12",
@@ -140,6 +148,14 @@ export default function sitemap() {
     "/youtube-thumbnail",
     "/signature-maker",
     "/text-to-pdf",
+
+    // Date & Currency Tools
+    "/hijri-date-converter",
+    "/today-islamic-date",
+    "/currency-converter",
+    "/usd-to-pkr",
+    "/sar-to-pkr",
+    "/aed-to-pkr",
   ].map((url) => ({
     url,
     changeFrequency: "monthly",
@@ -196,6 +212,10 @@ export default function sitemap() {
     "/blog/create-digital-signature-online-free",
     "/blog/convert-text-to-pdf-online-free",
     "/blog/best-free-pdf-tools-online",
+
+    // Date & Currency
+    "/blog/hijri-to-gregorian-date-conversion-guide",
+    "/blog/usd-sar-aed-to-pkr-currency-guide",
   ].map((url) => ({
     url,
     changeFrequency: "weekly",
