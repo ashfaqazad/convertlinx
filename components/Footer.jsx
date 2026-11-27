@@ -104,6 +104,9 @@ const Footer = () => {
           <p className="text-gray-600 text-xs mt-2">
             Free tools • No data stored • No tracking • Processed in your browser
           </p>
+<p className="text-gray-500 text-xs mt-2">
+<a href="https://github.com/ashfaqazad/convertlinx" target="_blank" rel="noopener noreferrer" className="hover:text-indigo-400 transition">⭐ Star ConvertLinx on GitHub</a>
+</p>
         </div>
       </div>
     </footer>
