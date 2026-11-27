@@ -6,6 +6,8 @@
 
 [ConvertLinx](https://convertlinx.com) is a free online toolkit. Convert images, audio and video, generate files, and use handy text and developer utilities in your browser with no signup and no watermark.
 
+![ConvertLinx homepage](docs/screenshot.png)
+
 🌐 **Website:** [https://convertlinx.com](https://convertlinx.com)
 
 ## Image Tools
@@ -70,9 +72,24 @@
 - ✅ Fast, works on mobile and desktop
 - ✅ Runs in your browser, your files stay on your device
 
+## Run Locally
+
+```bash
+git clone https://github.com/ashfaqazad/convertlinx.git
+cd convertlinx
+npm install
+npm run dev
+```
+
+Then open http://localhost:3000.
+
 ## Tech Stack
 
 Next.js, Tailwind CSS, Framer Motion
+
+## Support
+
+If you find this project useful, please give it a ⭐ on GitHub.
 
 ## Author
 
