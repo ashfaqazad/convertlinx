@@ -1,6 +1,10 @@
 # ConvertLinx – Free Online Converter & Utility Tools
 
-[ConvertLinx](https://convertlinx.com) is a free online toolkit. Convert images, generate files, and use handy text and developer utilities in your browser with no signup and no watermark.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-convertlinx.com-blue?style=for-the-badge)](https://convertlinx.com)
+[![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js)](https://nextjs.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+
+[ConvertLinx](https://convertlinx.com) is a free online toolkit. Convert images, audio and video, generate files, and use handy text and developer utilities in your browser with no signup and no watermark.
 
 🌐 **Website:** [https://convertlinx.com](https://convertlinx.com)
 
@@ -11,12 +15,22 @@
 - [Image Resizer](https://convertlinx.com/image-resizer)
 - [Image Cropper](https://convertlinx.com/image-cropper)
 - [Rotate & Flip Image](https://convertlinx.com/rotate-flip-image)
+- [Background Remover](https://convertlinx.com/background-remover)
+- [PNG to JPG](https://convertlinx.com/png-to-jpg)
+- [PNG to ICO](https://convertlinx.com/png-to-ico)
+- [JFIF to JPG](https://convertlinx.com/jfif-to-jpg)
 - [HEIC to JPG](https://convertlinx.com/heic-to-jpg)
 - [Image to Text (OCR)](https://convertlinx.com/image-to-text)
 - [Add Watermark](https://convertlinx.com/add-watermark)
 - [Signature Maker](https://convertlinx.com/signature-maker)
 - [Favicon Generator](https://convertlinx.com/favicon-generator)
 - [YouTube Thumbnail Downloader](https://convertlinx.com/youtube-thumbnail)
+
+## Audio & Video Tools
+
+- [Audio Converter](https://convertlinx.com/audio-converter)
+- [MP4 to MP3](https://convertlinx.com/mp4-to-mp3)
+- [Video Compressor](https://convertlinx.com/video-compressor)
 
 ## Text & Document Tools
 
@@ -33,6 +47,7 @@
 - [Base64 Encoder / Decoder](https://convertlinx.com/base64-tool)
 - [Regex Tester](https://convertlinx.com/regex-tester)
 - [Color Picker](https://convertlinx.com/color-picker)
+- [Color Palette Generator](https://convertlinx.com/color-palette-generator)
 
 ## SEO & Web Tools
 
@@ -61,4 +76,4 @@ Next.js, Tailwind CSS, Framer Motion
 
 ## Author
 
-Built by [Ashfaque Ahmed](https://ashfaqdev.cloud)
+Built by [Ashfaque Azad](https://ashfaqdev.cloud)
