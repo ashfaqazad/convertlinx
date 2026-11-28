@@ -42,6 +42,8 @@ const toolMap = {
   'hijri-date-converter':    dynamic(() => import('@/components/tools/HijriDateConverter')),
   'today-islamic-date':      dynamic(() => import('@/components/tools/TodayIslamicDate')),
   'currency-converter':      dynamic(() => import('@/components/tools/CurrencyConverter')),
+  'age-calculator':          dynamic(() => import('@/components/tools/AgeCalculator')),
+  'percentage-calculator':   dynamic(() => import('@/components/tools/PercentageCalculator')),
 
 }
 

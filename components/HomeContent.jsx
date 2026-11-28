@@ -27,6 +27,8 @@ import {
   CalendarDays,
   Moon,
   Banknote,
+  Cake,
+  Percent,
 } from "lucide-react";
 import "@/styles/HomeContent.css";
 
@@ -698,6 +700,24 @@ export default function HomeContent() {
       icon: <Banknote className="w-7 h-7" />,
       accent: "#0369A1",
       tag: "Utility",
+      cat: "utility",
+    },
+    {
+      title: "Age Calculator",
+      desc: "Exact age in years, months and days, with your next birthday.",
+      link: "/age-calculator",
+      icon: <Cake className="w-7 h-7" />,
+      accent: "#BE123C",
+      tag: "New",
+      cat: "utility",
+    },
+    {
+      title: "Percentage Calculator",
+      desc: "Percent of a number, percentage change, add or subtract a percent.",
+      link: "/percentage-calculator",
+      icon: <Percent className="w-7 h-7" />,
+      accent: "#6D28D9",
+      tag: "New",
       cat: "utility",
     },
   ];

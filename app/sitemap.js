@@ -36,14 +36,17 @@ const LAST_MODIFIED = {
   "/qr-generator": "2026-10-29",
   "/password-gen": "2026-10-15",
   "/whatsapp-link-generator": "2026-10-08",
-  "/unit-converter": "2026-10-08",
+  "/unit-converter": "2026-11-28",
   "/youtube-thumbnail": "2026-10-10",
   "/signature-maker": "2026-10-27",
   "/text-to-pdf": "2026-10-08",
   "/png-to-jpg": "2026-10-15",
-  "/hijri-date-converter": "2026-11-27",
-  "/today-islamic-date": "2026-11-27",
-  "/currency-converter": "2026-11-27",
+  "/age-calculator": "2026-11-28",
+  "/percentage-calculator": "2026-11-28",
+  "/blog/how-to-calculate-age-and-percentage": "2026-11-28",
+  "/hijri-date-converter": "2026-11-28",
+  "/today-islamic-date": "2026-11-28",
+  "/currency-converter": "2026-11-28",
   "/usd-to-pkr": "2026-11-27",
   "/sar-to-pkr": "2026-11-27",
   "/aed-to-pkr": "2026-11-27",
@@ -156,6 +159,10 @@ export default function sitemap() {
     "/usd-to-pkr",
     "/sar-to-pkr",
     "/aed-to-pkr",
+
+    // Calculators
+    "/age-calculator",
+    "/percentage-calculator",
   ].map((url) => ({
     url,
     changeFrequency: "monthly",
@@ -216,6 +223,9 @@ export default function sitemap() {
     // Date & Currency
     "/blog/hijri-to-gregorian-date-conversion-guide",
     "/blog/usd-sar-aed-to-pkr-currency-guide",
+
+    // Calculators
+    "/blog/how-to-calculate-age-and-percentage",
   ].map((url) => ({
     url,
     changeFrequency: "weekly",

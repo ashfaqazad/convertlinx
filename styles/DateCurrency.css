@@ -1,4 +1,4 @@
-/* Extras for the date and currency tools. The page layout comes from UnitConverter.css;
+/* Extras for the date, currency and calculator tools. The page layout comes from UnitConverter.css;
    each tool sets its own colours below. */
 .dc-today {
   --dc-main: #047857; --dc-second: #059669; --dc-rgb: 4, 120, 87;
@@ -14,6 +14,17 @@
   --dc-main: #0369A1; --dc-second: #0284C7; --dc-rgb: 3, 105, 161;
   --dc-bg: #F0F9FF; --dc-soft: #F5FBFF; --dc-line: #BAE6FD;
   --dc-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230369A1' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.dc-age {
+  --dc-main: #BE123C; --dc-second: #E11D48; --dc-rgb: 190, 18, 60;
+  --dc-bg: #FFF1F2; --dc-soft: #FFF7F8; --dc-line: #FECDD3;
+  --dc-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23BE123C' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+.dc-percent {
+  --dc-main: #6D28D9; --dc-second: #7C3AED; --dc-rgb: 109, 40, 217;
+  --dc-bg: #F5F3FF; --dc-soft: #FAF8FF; --dc-line: #DDD6FE;
+  --dc-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236D28D9' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
 }
 
 .dc-page.uc-page { background: var(--dc-bg); }

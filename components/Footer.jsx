@@ -64,6 +64,8 @@ const Footer = () => {
               <li><Link href="/today-islamic-date" className="hover:text-indigo-400 transition">Today Islamic Date</Link></li>
               <li><Link href="/hijri-date-converter" className="hover:text-indigo-400 transition">Hijri Date Converter</Link></li>
               <li><Link href="/currency-converter" className="hover:text-indigo-400 transition">Currency Converter</Link></li>
+              <li><Link href="/age-calculator" className="hover:text-indigo-400 transition">Age Calculator</Link></li>
+              <li><Link href="/percentage-calculator" className="hover:text-indigo-400 transition">Percentage Calculator</Link></li>
             </ul>
           </div>
 

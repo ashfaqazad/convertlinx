@@ -50,6 +50,8 @@ const BASE_TOOLS = new Set([
   "hijri-date-converter",
   "today-islamic-date",
   "currency-converter",
+  "age-calculator",
+  "percentage-calculator",
   
 ]);
 
