@@ -759,7 +759,7 @@ export default function HomeContent() {
   ];
 
   const stats = [
-    { value: "32+", label: "Free Tools" },
+    { value: tools.length, label: "Free Tools" },
     { value: "0", label: "Ads" },
     { value: "100%", label: "Browser-based" },
     { value: "∞", label: "Free Forever" },
@@ -819,7 +819,7 @@ export default function HomeContent() {
             <div className="home-hero-text">
               <div className="home-hero-badge">
                 <span className="home-hero-badge-dot" />
-                32+ Free Tools · No Signup · No Ads
+                {tools.length} Free Tools · No Signup · No Ads
               </div>
 
               {/* <h1 className="home-hero-title">
