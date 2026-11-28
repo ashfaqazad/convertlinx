@@ -200,9 +200,11 @@ function SectionLabel({ children }) {
 // DESKTOP DROPDOWN WRAPPER
 // ─────────────────────────────────────────
 
-function DesktopDropdown({ label, accentFrom, accentTo, open, onOpen, onClose, onClick, width, children }) {
+// `wide`: panel is centred on the navbar instead of its button, so a large menu never leaves the screen.
+// The wrapper then spans the navbar height, keeping the hover path to the panel unbroken.
+function DesktopDropdown({ label, accentFrom, accentTo, open, onOpen, onClose, onClick, width, wide, children }) {
   return (
-    <div className="relative" onMouseEnter={onOpen} onMouseLeave={onClose}>
+    <div className={wide ? "flex h-16 items-center" : "relative"} onMouseEnter={onOpen} onMouseLeave={onClose}>
       <button
         type="button"
         onClick={onClick}
@@ -223,9 +225,9 @@ function DesktopDropdown({ label, accentFrom, accentTo, open, onOpen, onClose, o
 
       {/* Invisible bridge keeps the menu open while the pointer crosses the gap */}
       <div
-        className={`absolute left-1/2 top-full -translate-x-1/2 pt-3 transition-all duration-200 origin-top ${
-          open ? "visible scale-100 opacity-100" : "invisible scale-95 opacity-0"
-        }`}
+        className={`absolute left-1/2 top-full -translate-x-1/2 transition-all duration-200 origin-top ${
+          wide ? "pt-1" : "pt-3"
+        } ${open ? "visible scale-100 opacity-100" : "invisible scale-95 opacity-0"}`}
         style={{ width }}
       >
         <div className="max-h-[calc(100vh-110px)] overflow-y-auto rounded-2xl border border-white/70 bg-white/[0.97] shadow-[0_20px_50px_-12px_rgba(15,23,42,0.25)] ring-1 ring-slate-900/5 backdrop-blur-xl">
@@ -396,7 +398,7 @@ export default function Navbar() {
               Home
             </Link>
 
-            {/* TEXT TOOLS — width 580 to fit 3-col grid + bigger Writing Tools group */}
+            {/* TEXT TOOLS — wide 6-col grid so all groups fit without a scrollbar */}
             <DesktopDropdown
               label="Text Tools"
               accentFrom="#6366F1" accentTo="#A855F7"
@@ -404,13 +406,14 @@ export default function Navbar() {
               onOpen={() => setOpen("text")}
               onClose={() => setOpen(null)}
               onClick={() => toggle("text")}
-              width={780}
+              wide
+              width="min(1120px, calc(100vw - 32px))"
             >
               <div className="p-4">
                 {textTools.map((section) => (
                   <div key={section.group}>
                     <SectionLabel>{section.group}</SectionLabel>
-                    <div className="grid grid-cols-4 gap-0.5">
+                    <div className="grid grid-cols-6 gap-0.5">
                       {section.tools.map((t) => (
                         <ToolLink key={t.href} {...t} onClose={() => setOpen(null)} />
                       ))}
