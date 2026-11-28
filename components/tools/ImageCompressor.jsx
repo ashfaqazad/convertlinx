@@ -400,6 +400,15 @@ export default function ImageCompressor() {
                 size with a free tool like this saves time and data without needing any software.
               </p>
               <p className="leading-7 text-sm mt-3">
+                Is a site asking for JPG when you have WebP? Use{' '}
+                <Link href="/webp-to-jpg" className="text-emerald-600 font-semibold underline hover:text-emerald-800">
+                  WebP to JPG
+                </Link>
+                , or make web copies of your photos with{' '}
+                <Link href="/jpg-to-webp" className="text-emerald-600 font-semibold underline hover:text-emerald-800">
+                  JPG to WebP
+                </Link>
+                .{' '}
                 Need to perform other image edits? You can convert formats using our{' '}
                 <Link href="/image-converter" className="text-emerald-600 font-semibold underline hover:text-emerald-800">
                   Image Converter

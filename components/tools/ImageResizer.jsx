@@ -646,7 +646,7 @@ export default function ImageResizer() {
                 you need to change the aspect ratio rather than just the size, and the <Link href="/image-compressor" className={linkCls} style={linkStyle}>Image Compressor</Link> afterwards
                 to keep the file light. Making a video? Grab its cover image with the <Link href="/youtube-thumbnail" className={linkCls} style={linkStyle}>YouTube Thumbnail</Link> downloader.
                 You can also switch formats with the <Link href="/image-converter" className={linkCls} style={linkStyle}>Image Converter</Link> or
-                cut out a subject with the <Link href="/background-remover" className={linkCls} style={linkStyle}>Background Remover</Link> first. Sizing for print? Convert inches to centimetres with the <Link href="/unit-converter" className={linkCls} style={linkStyle}>Unit Converter</Link> before you enter the dimensions.
+                cut out a subject with the <Link href="/background-remover" className={linkCls} style={linkStyle}>Background Remover</Link> first. Sizing for print? Convert inches to centimetres with the <Link href="/unit-converter" className={linkCls} style={linkStyle}>Unit Converter</Link> before you enter the dimensions. Publishing the resized photo online? <Link href="/jpg-to-webp" className={linkCls} style={linkStyle}>JPG to WebP</Link> can make it lighter.
               </p>
             </div>
 

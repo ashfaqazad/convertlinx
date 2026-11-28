@@ -44,6 +44,7 @@ const toolMap = {
   'currency-converter':      dynamic(() => import('@/components/tools/CurrencyConverter')),
   'age-calculator':          dynamic(() => import('@/components/tools/AgeCalculator')),
   'percentage-calculator':   dynamic(() => import('@/components/tools/PercentageCalculator')),
+  'format-converter':        dynamic(() => import('@/components/tools/FormatConverter')),
 
 }
 

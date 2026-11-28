@@ -965,6 +965,11 @@ export default function BackgroundRemover() {
                 After You Remove the Background: Resize, Convert and Compress
               </h3>
               <p className="leading-7 text-sm">
+                Starting from a WebP picture that another app will not open?{" "}
+                <Link href="/webp-to-png" className={linkCls}>
+                  WebP to PNG
+                </Link>{" "}
+                converts it and keeps any transparency.{" "}
                 Transparent PNG files can get large. Once your cutout is ready,
                 you can switch it to WebP with the{" "}
                 <Link href="/image-converter" className={linkCls}>
