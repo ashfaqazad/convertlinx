@@ -22,7 +22,7 @@ const faqs = [
   },
   {
     q: 'What happens to transparent backgrounds when I convert PNG to JPG?',
-    a: 'JPG does not support transparency, so transparent areas are filled with white. If you need to keep transparency, keep the PNG or use the [Image Converter](/image-converter) to switch to WebP instead.',
+    a: 'JPG does not support transparency, so transparent areas are filled with white, or with another background colour you choose before uploading. If you need to keep transparency, keep the PNG or use the [Image Converter](/image-converter) to switch to WebP instead.',
   },
   {
     q: 'Will converting PNG to JPG reduce image quality?',
@@ -71,7 +71,7 @@ const renderLinks = (text) => {
   return parts;
 };
 
-const pngToJpgBlob = (file, quality) =>
+const pngToJpgBlob = (file, quality, background) =>
   new Promise((resolve, reject) => {
     const src = URL.createObjectURL(file);
     const img = new window.Image();
@@ -80,7 +80,7 @@ const pngToJpgBlob = (file, quality) =>
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#FFFFFF'; // JPG has no alpha, so fill transparent areas with white
+      ctx.fillStyle = background; // JPG has no alpha, so transparent areas get a solid colour
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0);
       canvas.toBlob(
@@ -106,6 +106,7 @@ export default function PngToJpg() {
   const [converted, setConverted] = useState([]);
   const [loading, setLoading] = useState(false);
   const [quality, setQuality] = useState(92);
+  const [background, setBackground] = useState('#ffffff');
 
   const convert = async (e) => {
     const files = Array.from(e.target.files || []);
@@ -118,7 +119,7 @@ export default function PngToJpg() {
     try {
       const results = [];
       for (const file of files) {
-        const blob = await pngToJpgBlob(file, quality / 100);
+        const blob = await pngToJpgBlob(file, quality / 100, background);
         results.push({
           name: file.name.replace(/\.png$/i, '') + '.jpg',
           url: URL.createObjectURL(blob),
@@ -234,6 +235,19 @@ export default function PngToJpg() {
                 <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>
                   Lower quality = smaller file. Set the quality before uploading.
                 </p>
+              </div>
+
+              <div className="mt-5 flex items-center justify-between gap-4">
+                <label htmlFor="png-background" className="text-xs font-semibold" style={{ color: '#374151' }}>
+                  Background colour for transparent areas (set before uploading)
+                </label>
+                <input
+                  id="png-background"
+                  type="color"
+                  value={background}
+                  onChange={(e) => setBackground(e.target.value)}
+                  className="hj-color"
+                />
               </div>
 
               {loading && (
@@ -365,6 +379,7 @@ export default function PngToJpg() {
                 instead, the <Link href="/heic-to-jpg" style={linkStyle}>HEIC to JPG converter</Link> is the right tool,
                 and for other formats like WebP or GIF you can use the general{' '}
                 <Link href="/image-converter" style={linkStyle}>Image Converter</Link>.
+                WebP files also have their own <Link href="/webp-to-jpg" style={linkStyle}>WebP to JPG</Link> page.
               </p>
               <p className="leading-7 text-sm mt-3">
                 Need to protect your pictures before sharing? Add a{' '}
@@ -396,7 +411,7 @@ export default function PngToJpg() {
               </h3>
               <div className="grid sm:grid-cols-2 gap-3">
                 {[
-                  'Transparent areas become white in the JPG',
+                  'Transparent areas become white unless you pick another colour',
                   'JPG is lossy, so keep the original PNG as a backup',
                   'Quality 85–92% is a good balance for photos',
                   'Logos and text look best as PNG',

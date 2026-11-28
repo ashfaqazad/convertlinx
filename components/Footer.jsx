@@ -46,6 +46,10 @@ const Footer = () => {
               <li><Link href="/image-compressor" className="hover:text-indigo-400 transition">Image Compressor</Link></li>
               <li><Link href="/image-converter" className="hover:text-indigo-400 transition">Image Converter</Link></li>
               <li><Link href="/heic-to-jpg" className="hover:text-indigo-400 transition">HEIC to JPG</Link></li>
+              <li><Link href="/webp-to-jpg" className="hover:text-indigo-400 transition">WebP to JPG</Link></li>
+              <li><Link href="/jpg-to-webp" className="hover:text-indigo-400 transition">JPG to WebP</Link></li>
+              <li><Link href="/webp-to-png" className="hover:text-indigo-400 transition">WebP to PNG</Link></li>
+              <li><Link href="/avif-to-jpg" className="hover:text-indigo-400 transition">AVIF to JPG</Link></li>
               <li><Link href="/text-to-pdf" className="hover:text-indigo-400 transition">Text to PDF</Link></li>
               <li><Link href="/unit-converter" className="hover:text-indigo-400 transition">Unit Converter</Link></li>
             </ul>

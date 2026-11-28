@@ -253,6 +253,14 @@ const blogs = [
     slug: "how-to-calculate-age-and-percentage",
     category: "Utilities",
   },
+  {
+    title: "WebP and AVIF Files: Convert to JPG or PNG",
+    description:
+      "When to keep WebP or AVIF, when to convert, and which format to choose for forms, websites and transparent images.",
+    date: "2026-11-28",
+    slug: "webp-avif-to-jpg-png-guide",
+    category: "Image Tools",
+  },
 ];
 
 // Newest first

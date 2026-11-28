@@ -46,7 +46,10 @@ const ACCEPT_TYPES = 'image/*,.heic,.heif,.avif,.tif,.tiff,.svg,.psd,.jxl,.tga,.
 // ─────────────────────────────────────────────
 const FORMAT_PAIR_PAGES = [
   { name: 'HEIC to JPG',  href: '/heic-to-jpg',  live: true },
-  { name: 'WebP to PNG',  href: '/webp-to-png',  live: false },
+  { name: 'WebP to PNG',  href: '/webp-to-png',  live: true },
+  { name: 'WebP to JPG',  href: '/webp-to-jpg',  live: true },
+  { name: 'JPG to WebP',  href: '/jpg-to-webp',  live: true },
+  { name: 'AVIF to JPG',  href: '/avif-to-jpg',  live: true },
   { name: 'PNG to WebP',  href: '/png-to-webp',  live: false },
   { name: 'JPG to PNG',   href: '/jpg-to-png',   live: false },
   { name: 'PNG to JPG',   href: '/png-to-jpg',   live: true },

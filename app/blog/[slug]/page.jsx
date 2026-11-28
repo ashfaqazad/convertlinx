@@ -3411,6 +3411,62 @@ const blogs = [
     `,
   },
 
+  {
+    slug: "webp-avif-to-jpg-png-guide",
+    title: "WebP and AVIF Files: Convert to JPG or PNG",
+    date: "Nov 28, 2026",
+    description:
+      "When to keep WebP or AVIF, when to convert, and which format to choose for forms, websites and transparent images.",
+    keywords: ["webp to jpg","webp to png","avif to jpg","jpg to webp","convert webp"],
+    content: `
+<h2>WebP and AVIF: Why a Saved Picture Will Not Always Open</h2>
+
+<p>You save a picture from a website, try to attach it to a form, and the form refuses it. The file ends in .webp or .avif. Both are formats designed to keep web pages light, but not every program accepts them yet. This guide shows what to convert them to, using free converters that work inside your browser.</p>
+
+<h3>Which format should you pick?</h3>
+
+<ul>
+  <li><strong>JPG</strong> for photos that must open or upload anywhere: <a href="/webp-to-jpg" class="text-teal-600 hover:underline">WebP to JPG</a> or <a href="/avif-to-jpg" class="text-teal-600 hover:underline">AVIF to JPG</a></li>
+  <li><strong>PNG</strong> when the background is transparent: <a href="/webp-to-png" class="text-teal-600 hover:underline">WebP to PNG</a></li>
+  <li><strong>WebP</strong> for your own website: <a href="/jpg-to-webp" class="text-teal-600 hover:underline">JPG to WebP</a></li>
+</ul>
+
+<h3>How to convert in four steps</h3>
+
+<ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
+  <li>Open the converter that matches your file</li>
+  <li>Drop in one picture or a whole batch</li>
+  <li>For JPG and WebP, set the quality. For JPG, choose a background colour if the picture has transparent parts</li>
+  <li>Download one by one or as a ZIP</li>
+</ol>
+
+<h3>Things that surprise people</h3>
+
+<p>A converted JPG or PNG is often larger than the WebP or AVIF you started with. That is normal, because the newer formats store pictures more compactly. Converting to JPG also compresses the image again, so keep the original. Animated files give a single still frame.</p>
+
+<h3>Is it private?</h3>
+
+<p>Yes. These converters run on your own device and your pictures are not uploaded to a server. That matters for documents, ID photos and family pictures.</p>
+
+<h3>After converting</h3>
+
+<p>Shrink a file for an upload limit with the <a href="/image-compressor" class="text-teal-600 hover:underline">Image Compressor</a>, set exact dimensions with the <a href="/image-resizer" class="text-teal-600 hover:underline">Image Resizer</a>, or remove a background with the <a href="/background-remover" class="text-teal-600 hover:underline">Background Remover</a>. For other formats there are <a href="/png-to-jpg" class="text-teal-600 hover:underline">PNG to JPG</a>, <a href="/heic-to-jpg" class="text-teal-600 hover:underline">HEIC to JPG</a> and the general <a href="/image-converter" class="text-teal-600 hover:underline">Image Converter</a>.</p>
+
+<div class="bg-teal-50 border border-teal-200 rounded-xl p-8 text-center my-12">
+  <p class="text-xl font-semibold text-teal-800 mb-4">
+    Convert WebP pictures to JPG free, with no upload.
+  </p>
+  <a href="/webp-to-jpg" class="inline-block bg-teal-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-teal-700 transition shadow-lg">
+    Open the WebP to JPG Converter →
+  </a>
+</div>
+
+<p class="text-center text-gray-600">
+  <a href="/blog" class="text-teal-600 hover:underline">← Back to all guides</a>
+</p>
+    `,
+  },
+
 ];
 
 // ── Metadata ──

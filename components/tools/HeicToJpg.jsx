@@ -284,6 +284,7 @@ export default function HeicToJpg() {
                 crop with the <Link href="/image-cropper" className={linkCls} style={linkStyle}>Image Cropper</Link>. Need
                 another format? The <Link href="/image-converter" className={linkCls} style={linkStyle}>Image Converter</Link> handles
                 JPG, PNG and WebP, and files that end in .jfif can be opened with the <Link href="/jfif-to-jpg" className={linkCls} style={linkStyle}>JFIF to JPG</Link> converter.
+                Files ending in .avif or .webp have their own <Link href="/avif-to-jpg" className={linkCls} style={linkStyle}>AVIF to JPG</Link> and <Link href="/webp-to-jpg" className={linkCls} style={linkStyle}>WebP to JPG</Link> pages.
                 Want the text from a photo? Try <Link href="/image-to-text" className={linkCls} style={linkStyle}>Image to Text</Link>.
               </p>
             </div>

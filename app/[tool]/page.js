@@ -52,6 +52,7 @@ const BASE_TOOLS = new Set([
   "currency-converter",
   "age-calculator",
   "percentage-calculator",
+  "format-converter",
   
 ]);
 

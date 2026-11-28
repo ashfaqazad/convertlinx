@@ -2,11 +2,11 @@
 
 // Real last-change date of each page. Update the date when a page changes.
 const LAST_MODIFIED = {
-  "/image-compressor": "2026-10-08",
-  "/image-resizer": "2026-10-08",
+  "/image-compressor": "2026-11-28",
+  "/image-resizer": "2026-11-28",
   "/image-cropper": "2026-10-08",
-  "/image-converter": "2026-11-07",
-  "/background-remover": "2026-10-26",
+  "/image-converter": "2026-11-28",
+  "/background-remover": "2026-11-28",
   "/png-to-ico": "2026-10-29",
   "/image-to-text": "2026-11-04",
   "/scan-to-text": "2026-11-04",
@@ -14,7 +14,7 @@ const LAST_MODIFIED = {
   "/urdu-ocr": "2026-11-04",
   "/arabic-ocr": "2026-11-04",
   "/scanned-pdf-to-text": "2026-11-04",
-  "/heic-to-jpg": "2026-10-08",
+  "/heic-to-jpg": "2026-11-28",
   "/add-watermark": "2026-10-08",
   "/audio-converter": "2026-11-10",
   "/mp4-to-mp3": "2026-11-10",
@@ -40,7 +40,12 @@ const LAST_MODIFIED = {
   "/youtube-thumbnail": "2026-10-10",
   "/signature-maker": "2026-10-27",
   "/text-to-pdf": "2026-10-08",
-  "/png-to-jpg": "2026-10-15",
+  "/png-to-jpg": "2026-11-28",
+  "/webp-to-jpg": "2026-11-28",
+  "/jpg-to-webp": "2026-11-28",
+  "/webp-to-png": "2026-11-28",
+  "/avif-to-jpg": "2026-11-28",
+  "/blog/webp-avif-to-jpg-png-guide": "2026-11-28",
   "/age-calculator": "2026-11-28",
   "/percentage-calculator": "2026-11-28",
   "/blog/how-to-calculate-age-and-percentage": "2026-11-28",
@@ -160,6 +165,12 @@ export default function sitemap() {
     "/sar-to-pkr",
     "/aed-to-pkr",
 
+    // Format converters
+    "/webp-to-jpg",
+    "/jpg-to-webp",
+    "/webp-to-png",
+    "/avif-to-jpg",
+
     // Calculators
     "/age-calculator",
     "/percentage-calculator",
@@ -226,6 +237,9 @@ export default function sitemap() {
 
     // Calculators
     "/blog/how-to-calculate-age-and-percentage",
+
+    // Format converters
+    "/blog/webp-avif-to-jpg-png-guide",
   ].map((url) => ({
     url,
     changeFrequency: "weekly",

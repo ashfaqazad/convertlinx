@@ -13,10 +13,10 @@ const MUTED = { color: "#6B7280" };
 const ACCENT = { color: "var(--dc-main)" };
 
 // Turns **bold** and [anchor text](/path) inside content strings into elements
-function Rich({ text }) {
+export function Rich({ text, linkClass = "dc-link" }) {
   return text.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
     const link = /^\[([^\]]+)\]\(([^)]+)\)$/.exec(part);
-    if (link) return <Link key={i} href={link[2]} className="dc-link">{link[1]}</Link>;
+    if (link) return <Link key={i} href={link[2]} className={linkClass}>{link[1]}</Link>;
     if (part.startsWith("**")) return <strong key={i}>{part.slice(2, -2)}</strong>;
     return part;
   });
