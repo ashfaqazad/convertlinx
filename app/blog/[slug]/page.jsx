@@ -3352,6 +3352,65 @@ const blogs = [
     `,
   },
 
+  {
+    slug: "how-to-calculate-age-and-percentage",
+    title: "How to Calculate Age and Percentages",
+    date: "Nov 28, 2026",
+    description:
+      "Work out an exact age from a date of birth, and the percentage sums used for discounts, marks and price changes.",
+    keywords: ["how to calculate age","age calculator","how to calculate percentage","percentage calculator","percentage increase"],
+    content: `
+<h2>Two Everyday Sums: Age and Percentage</h2>
+
+<p>An application asks for your age on a closing date. A shop offers 30% off. Both are simple sums that are easy to get slightly wrong. This guide shows how they work, and how to check them with the <a href="/age-calculator"><strong>Age Calculator</strong></a> and the <a href="/percentage-calculator"><strong>Percentage Calculator</strong></a> on ConvertLinx.</p>
+
+<h3>How to calculate age from a date of birth</h3>
+
+<p>Count the completed years first, then the completed months since the last birthday, then the days left over. Take someone born on 10 March 2000 and an age needed on 25 June 2026: they completed 26 years on 10 March 2026, three more months on 10 June, and then 15 days.</p>
+
+<ol class="list-decimal list-inside space-y-3 ml-4 text-lg">
+  <li>Open the <a href="/age-calculator" class="text-teal-600 hover:underline">Age Calculator</a></li>
+  <li>Enter the date of birth</li>
+  <li>Keep today, or choose the date printed on your form</li>
+  <li>Read the age and copy it</li>
+</ol>
+
+<h3>Leap day birthdays</h3>
+
+<p>Someone born on 29 February has no matching date in most years. Our calculator completes the new age on 1 March in those years. Offices may follow their own rule, so check when a deadline depends on it.</p>
+
+<h3>Percentage sums worth knowing</h3>
+
+<ul>
+  <li><strong>Discount:</strong> 30% of 2,500 is 750, so you pay 1,750</li>
+  <li><strong>Marks:</strong> 510 out of 600 is 85%</li>
+  <li><strong>Price change:</strong> from 200 to 250 is a 25% increase</li>
+  <li><strong>Reverse discount:</strong> 1,750 after 30% off was 1,750 divided by 0.7, which is 2,500</li>
+</ul>
+
+<h3>Why 20% up and 20% down is not zero</h3>
+
+<p>1,000 raised by 20% is 1,200. Taking 20% off 1,200 removes 240 and leaves 960. Each percentage applies to the number in front of it, not to the one you started with.</p>
+
+<h3>Related tools</h3>
+
+<p>Need the Islamic date of birth too? Use the <a href="/hijri-date-converter" class="text-teal-600 hover:underline">Hijri Date Converter</a>. Working with prices from abroad? Convert them first with the <a href="/currency-converter" class="text-teal-600 hover:underline">Currency Converter</a>, and match measurements with the <a href="/unit-converter" class="text-teal-600 hover:underline">Unit Converter</a>.</p>
+
+<div class="bg-teal-50 border border-teal-200 rounded-xl p-8 text-center my-12">
+  <p class="text-xl font-semibold text-teal-800 mb-4">
+    Calculate your exact age free, with no signup.
+  </p>
+  <a href="/age-calculator" class="inline-block bg-teal-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-teal-700 transition shadow-lg">
+    Open the Age Calculator →
+  </a>
+</div>
+
+<p class="text-center text-gray-600">
+  <a href="/blog" class="text-teal-600 hover:underline">← Back to all guides</a>
+</p>
+    `,
+  },
+
 ];
 
 // ── Metadata ──

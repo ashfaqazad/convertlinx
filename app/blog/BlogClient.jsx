@@ -245,6 +245,14 @@ const blogs = [
     slug: "usd-sar-aed-to-pkr-currency-guide",
     category: "Utilities",
   },
+  {
+    title: "How to Calculate Age and Percentages",
+    description:
+      "Work out an exact age from a date of birth, and the percentage sums used for discounts, marks and price changes.",
+    date: "2026-11-28",
+    slug: "how-to-calculate-age-and-percentage",
+    category: "Utilities",
+  },
 ];
 
 // Newest first

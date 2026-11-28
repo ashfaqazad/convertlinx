@@ -350,7 +350,7 @@ export default function UnitConverter() {
               </p>
               <p className="leading-7 text-sm mt-3">
                 Preparing images for print or a product page? Convert the physical size here, for
-                example inches to centimetres, then enter the exact dimensions in the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>.
+                example inches to centimetres, then enter the exact dimensions in the <Link href="/image-resizer" className={linkCls} style={linkStyle}>Image Resizer</Link>. To compare two measurements as a share or a change, use the <Link href="/percentage-calculator" className={linkCls} style={linkStyle}>Percentage Calculator</Link>.
               </p>
             </div>
 

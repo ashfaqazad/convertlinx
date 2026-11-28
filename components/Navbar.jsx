@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 
 import {
   ChevronDown,
+  Cake,
+  Percent,
   QrCode,
   Lock,
   Ruler,
@@ -103,6 +105,8 @@ const textTools = [
       { href: "/today-islamic-date",   icon: Moon,         color: "#047857", label: "Today Islamic Date" },
       { href: "/hijri-date-converter", icon: CalendarDays, color: "#B45309", label: "Hijri Date Converter" },
       { href: "/currency-converter",   icon: Banknote,     color: "#0369A1", label: "Currency Converter" },
+      { href: "/age-calculator",        icon: Cake,    color: "#BE123C", label: "Age Calculator"        },
+      { href: "/percentage-calculator", icon: Percent, color: "#6D28D9", label: "Percentage Calculator" },
     ],
   },
 ];
